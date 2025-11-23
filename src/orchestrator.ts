@@ -1,44 +1,99 @@
 /**
  * VortexAI L0 Universal Work Orchestrator
- * 
+ *
  * Programmatic API for workflow orchestration
  * @module orchestrator
  */
 
+// ============================================================================
+// Type Definitions
+// ============================================================================
+
+export type L0ResponseType = 'snippet' | 'memory' | 'context' | 'help' | 'orchestration' | 'campaign';
+export type OutputFormat = 'text' | 'json' | 'workflow';
+
 export interface L0Response {
   message: string;
+  type: L0ResponseType;
   code?: string;
-  data?: any;
+  data?: Record<string, unknown> | string;
   related?: string[];
   clipboard?: boolean;
   dashboardUrl?: string;
-  type: 'snippet' | 'memory' | 'context' | 'help' | 'orchestration' | 'campaign';
   workflow?: string[];
   agents?: string[];
 }
 
 export interface L0QueryOptions {
   project?: string;
-  format?: 'text' | 'json' | 'workflow';
-  [key: string]: any;
+  format?: OutputFormat;
+  [key: string]: unknown;
 }
+
+interface CodeSnippet {
+  id: string;
+  title: string;
+  content: string;
+  language: string;
+  tags: string[];
+  lastUsed: string;
+  project: string;
+}
+
+interface Memory {
+  id: string;
+  title: string;
+  content: string;
+  type: string;
+  date: string;
+  tags: string[];
+}
+
+interface Campaign {
+  id: string;
+  title: string;
+  strategy: string;
+  platforms: string[];
+  budget: string;
+  duration: string;
+  kpis: string[];
+}
+
+interface MockDatabase {
+  snippets: CodeSnippet[];
+  memories: Memory[];
+  campaigns: Campaign[];
+}
+
+// ============================================================================
+// Constants
+// ============================================================================
+
+const COMMON_STOP_WORDS = ['the', 'and', 'for', 'with', 'from', 'that', 'this', 'nonexistent', 'component'] as const;
+const MIN_KEYWORD_LENGTH = 2;
+const MIN_MATCH_COUNT = 2;
+const PREVIEW_LENGTH = 100;
+
+// ============================================================================
+// L0 Orchestrator Class
+// ============================================================================
 
 /**
  * VortexAI L0 Universal Work Orchestrator
- * 
+ *
  * Orchestrates workflows across social media, content creation, development, and more.
- * 
+ *
  * @example
  * ```typescript
  * import { L0Orchestrator } from 'vortexai-l0/orchestrator';
- * 
+ *
  * const orchestrator = new L0Orchestrator();
  * const response = await orchestrator.query('create viral TikTok campaign');
  * console.log(response.message);
  * ```
  */
 export class L0Orchestrator {
-  private mockDatabase = {
+  private readonly mockDatabase: MockDatabase = {
     snippets: [
       {
         id: 'floating-card-1',
@@ -138,9 +193,13 @@ export class L0Orchestrator {
     ]
   };
 
+  // ==========================================================================
+  // Public API Methods
+  // ==========================================================================
+
   /**
    * Query the orchestrator with a natural language request
-   * 
+   *
    * @param query - Natural language query describing the workflow
    * @param options - Optional configuration for the query
    * @returns Promise resolving to an L0Response
@@ -148,39 +207,65 @@ export class L0Orchestrator {
   async query(query: string, options?: L0QueryOptions): Promise<L0Response> {
     const lowerQuery = query.toLowerCase();
 
-    // Handle help requests FIRST (before other checks that might match keywords)
-    if (lowerQuery.startsWith('help') || lowerQuery.includes('help ') || lowerQuery.includes('how to')) {
+    // Route query to appropriate handler based on intent detection
+    if (this.isHelpRequest(lowerQuery)) {
       return this.getHelp(query);
     }
 
-    // Handle code snippet requests
-    if (lowerQuery.includes('code') || lowerQuery.includes('snippet')) {
+    if (this.isCodeRequest(lowerQuery)) {
       return this.findCode(query);
     }
 
-    // Handle memory searches
-    if (lowerQuery.includes('memory') || lowerQuery.includes('notes') || lowerQuery.includes('meeting')) {
+    if (this.isMemoryRequest(lowerQuery)) {
       return this.searchMemories(query);
     }
 
-    // Handle social media orchestration
-    if (lowerQuery.includes('campaign') || lowerQuery.includes('social media') || lowerQuery.includes('viral')) {
+    if (this.isCampaignRequest(lowerQuery)) {
       return this.orchestrateCampaign(query);
     }
 
-    // Handle content creation
-    if (lowerQuery.includes('content') && (lowerQuery.includes('create') || lowerQuery.includes('strategy'))) {
+    if (this.isContentRequest(lowerQuery)) {
       return this.orchestrateContent(query);
     }
 
-    // Handle trend analysis
-    if (lowerQuery.includes('trend') || lowerQuery.includes('hashtag') || lowerQuery.includes('analytics')) {
+    if (this.isTrendRequest(lowerQuery)) {
       return this.analyzeTrends(query);
     }
 
-    // Default orchestration response
     return this.orchestrateGeneral(query);
   }
+
+  // ==========================================================================
+  // Intent Detection Helpers
+  // ==========================================================================
+
+  private isHelpRequest(query: string): boolean {
+    return query.startsWith('help') || query.includes('help ') || query.includes('how to');
+  }
+
+  private isCodeRequest(query: string): boolean {
+    return query.includes('code') || query.includes('snippet');
+  }
+
+  private isMemoryRequest(query: string): boolean {
+    return query.includes('memory') || query.includes('notes') || query.includes('meeting');
+  }
+
+  private isCampaignRequest(query: string): boolean {
+    return query.includes('campaign') || query.includes('social media') || query.includes('viral');
+  }
+
+  private isContentRequest(query: string): boolean {
+    return query.includes('content') && (query.includes('create') || query.includes('strategy'));
+  }
+
+  private isTrendRequest(query: string): boolean {
+    return query.includes('trend') || query.includes('hashtag') || query.includes('analytics');
+  }
+
+  // ==========================================================================
+  // Orchestration Methods
+  // ==========================================================================
 
   /**
    * Orchestrate a social media campaign
@@ -287,54 +372,107 @@ export class L0Orchestrator {
 
   /**
    * Find code snippets matching a description
+   *
+   * @param description - Natural language description of the code snippet
+   * @returns Promise resolving to code snippet or no-match response
    */
   async findCode(description: string): Promise<L0Response> {
-    const keywords = description.toLowerCase().split(' ').filter(k => k.length > 2);
-    // Filter out common words that might cause false matches
-    const commonWords = ['the', 'and', 'for', 'with', 'from', 'that', 'this', 'nonexistent', 'component'];
-    const filteredKeywords = keywords.filter(k => !commonWords.includes(k));
-    
-    // If query contains "nonexistent" or only common words, return no matches
-    if (description.toLowerCase().includes('nonexistent') || filteredKeywords.length === 0) {
-      return {
-        message: `No code snippets found for "${description}". Try different keywords!`,
-        type: 'snippet',
-        related: ['floating card', 'social scheduler', 'trend analyzer']
-      };
+    const filteredKeywords = this.extractKeywords(description);
+
+    if (this.shouldReturnNoMatches(description, filteredKeywords)) {
+      return this.createNoMatchResponse(description, 'snippet');
     }
-    
-    // Require at least 2 keyword matches for better precision, or exact title match
-    const matches = this.mockDatabase.snippets.filter(snippet => {
-      const titleLower = snippet.title.toLowerCase();
-      const contentLower = snippet.content.toLowerCase();
-      const allTags = snippet.tags.join(' ').toLowerCase();
-      
-      // Check for exact or near-exact title match (high priority)
-      const titleMatch = filteredKeywords.some(kw => titleLower.includes(kw));
-      if (titleMatch && filteredKeywords.length === 1) {
-        return true; // Single keyword matching title is acceptable
-      }
-      
-      // For multiple keywords, require at least 2 matches
-      const matchCount = filteredKeywords.filter(keyword => 
-        titleLower.includes(keyword) ||
-        allTags.includes(keyword) ||
-        contentLower.includes(keyword)
-      ).length;
-      
-      return matchCount >= Math.min(2, filteredKeywords.length);
-    });
+
+    const matches = this.findMatchingSnippets(filteredKeywords);
+
+    if (matches.length === 0) {
+      return this.createNoMatchResponse(description, 'snippet');
+    }
+
+    return this.createCodeResponse(matches);
+  }
+
+  /**
+   * Search memories and knowledge base
+   *
+   * @param query - Search query for memories
+   * @returns Promise resolving to memory search results
+   */
+  async searchMemories(query: string): Promise<L0Response> {
+    const keywords = query.toLowerCase().split(' ');
+    const matches = this.mockDatabase.memories.filter((memory) =>
+      keywords.some(
+        (keyword) =>
+          memory.title.toLowerCase().includes(keyword) ||
+          memory.content.toLowerCase().includes(keyword) ||
+          memory.tags.some((tag) => tag.includes(keyword))
+      )
+    );
 
     if (matches.length === 0) {
       return {
-        message: `No code snippets found for "${description}". Try different keywords!`,
-        type: 'snippet',
-        related: ['floating card', 'social scheduler', 'trend analyzer']
+        message: `No memories found for "${query}". Your knowledge base is growing!`,
+        type: 'memory',
+        related: ['campaign strategies', 'content frameworks', 'implementation guides'],
       };
     }
 
+    const results = matches.map((m) => `${m.title}: ${m.content.substring(0, PREVIEW_LENGTH)}...`).join('\n\n');
+
+    return {
+      message: `Found ${matches.length} relevant memories:`,
+      data: results,
+      type: 'memory',
+      dashboardUrl: `/memories?q=${encodeURIComponent(query)}`,
+      related: matches.slice(0, 3).map((m) => m.title),
+    };
+  }
+
+  // ==========================================================================
+  // Code Search Helpers
+  // ==========================================================================
+
+  private extractKeywords(description: string): string[] {
+    const keywords = description.toLowerCase().split(' ').filter((k) => k.length > MIN_KEYWORD_LENGTH);
+    return keywords.filter((k) => !COMMON_STOP_WORDS.includes(k as any));
+  }
+
+  private shouldReturnNoMatches(description: string, keywords: string[]): boolean {
+    return description.toLowerCase().includes('nonexistent') || keywords.length === 0;
+  }
+
+  private findMatchingSnippets(keywords: string[]): CodeSnippet[] {
+    return this.mockDatabase.snippets.filter((snippet) => {
+      const titleLower = snippet.title.toLowerCase();
+      const contentLower = snippet.content.toLowerCase();
+      const allTags = snippet.tags.join(' ').toLowerCase();
+
+      // Single keyword matching title is acceptable
+      const titleMatch = keywords.some((kw) => titleLower.includes(kw));
+      if (titleMatch && keywords.length === 1) {
+        return true;
+      }
+
+      // For multiple keywords, require at least MIN_MATCH_COUNT matches
+      const matchCount = keywords.filter(
+        (keyword) => titleLower.includes(keyword) || allTags.includes(keyword) || contentLower.includes(keyword)
+      ).length;
+
+      return matchCount >= Math.min(MIN_MATCH_COUNT, keywords.length);
+    });
+  }
+
+  private createNoMatchResponse(query: string, type: L0ResponseType): L0Response {
+    return {
+      message: `No ${type === 'snippet' ? 'code snippets' : 'results'} found for "${query}". Try different keywords!`,
+      type,
+      related: ['floating card', 'social scheduler', 'trend analyzer'],
+    };
+  }
+
+  private createCodeResponse(matches: CodeSnippet[]): L0Response {
     const bestMatch = matches[0];
-    
+
     return {
       message: `Found ${matches.length} matching snippet${matches.length > 1 ? 's' : ''}:`,
       code: bestMatch.content,
@@ -343,46 +481,15 @@ export class L0Orchestrator {
         language: bestMatch.language,
         lastUsed: bestMatch.lastUsed,
         project: bestMatch.project,
-        tags: bestMatch.tags
+        tags: bestMatch.tags,
       },
       type: 'snippet',
       clipboard: true,
       dashboardUrl: `/memories/${bestMatch.id}`,
-      related: matches.slice(1, 3).map(m => m.title)
+      related: matches.slice(1, 3).map((m) => m.title),
     };
   }
 
-  /**
-   * Search memories and knowledge base
-   */
-  async searchMemories(query: string): Promise<L0Response> {
-    const keywords = query.toLowerCase().split(' ');
-    const matches = this.mockDatabase.memories.filter(memory =>
-      keywords.some(keyword =>
-        memory.title.toLowerCase().includes(keyword) ||
-        memory.content.toLowerCase().includes(keyword) ||
-        memory.tags.some(tag => tag.includes(keyword))
-      )
-    );
-
-    if (matches.length === 0) {
-      return {
-        message: `No memories found for "${query}". Your knowledge base is growing!`,
-        type: 'memory',
-        related: ['campaign strategies', 'content frameworks', 'implementation guides']
-      };
-    }
-
-    const results = matches.map(m => `${m.title}: ${m.content.substring(0, 100)}...`).join('\n\n');
-
-    return {
-      message: `Found ${matches.length} relevant memories:`,
-      data: results,
-      type: 'memory',
-      dashboardUrl: `/memories?q=${encodeURIComponent(query)}`,
-      related: matches.slice(0, 3).map(m => m.title)
-    };
-  }
 
   /**
    * Get help and guidance on a topic

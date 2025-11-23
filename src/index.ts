@@ -7,33 +7,64 @@ import { fileURLToPath } from 'url';
 import chalk from 'chalk';
 import { l0Commands } from './commands/l0.js';
 
-// Export programmatic API
+// ============================================================================
+// Public API Exports
+// ============================================================================
+
 export { L0Orchestrator, orchestrator, type L0Response, type L0QueryOptions } from './orchestrator.js';
+
+// ============================================================================
+// Configuration
+// ============================================================================
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Read package.json
+interface PackageJson {
+  version: string;
+  name: string;
+  description?: string;
+}
+
 const packagePath = join(__dirname, '..', 'package.json');
-const packageJson = JSON.parse(readFileSync(packagePath, 'utf8'));
+const packageJson = JSON.parse(readFileSync(packagePath, 'utf8')) as PackageJson;
+
+// ============================================================================
+// Constants
+// ============================================================================
+
+const CLI_NAME = 'vortex';
+const CLI_ALIASES = ['vortexai', 'l0'];
+const CLI_DESCRIPTION = '🌪️  VortexAI L0 - Universal Work Orchestrator';
+const VORTEX_EMOJI = '🌪️';
+const DEFAULT_CAMPAIGN_DURATION = '7';
+const DEFAULT_PLATFORMS = 'all';
+const SEPARATOR = '═'.repeat(70);
+
+// ============================================================================
+// CLI Setup
+// ============================================================================
 
 const program = new Command();
 
 program
-  .name('vortex')
-  .alias('vortexai')
-  .alias('l0')
-  .description('🌪️  VortexAI L0 - Universal Work Orchestrator')
+  .name(CLI_NAME)
+  .aliases(CLI_ALIASES)
+  .description(CLI_DESCRIPTION)
   .version(packageJson.version);
 
 // Add L0 Commands (Real-World Orchestration)
 l0Commands(program);
 
+// ============================================================================
+// Command Definitions
+// ============================================================================
+
 program
   .command('init')
   .description('Initialize VortexAI L0 workspace')
   .action(() => {
-    console.log('🌪️  VortexAI L0 v' + packageJson.version);
+    console.log(`${VORTEX_EMOJI}  VortexAI L0 v${packageJson.version}`);
     console.log('');
     console.log('🎯 Initialize your Universal Work Orchestrator:');
     console.log('');
@@ -57,7 +88,7 @@ program
   .command('status')
   .description('Show VortexAI L0 orchestrator status')
   .action(() => {
-    console.log('🌪️  VortexAI L0 Status');
+    console.log(`${VORTEX_EMOJI}  VortexAI L0 Status`);
     console.log('========================');
     console.log('Version:', packageJson.version);
     console.log('Status: 🟢 Ready for orchestration');
@@ -70,21 +101,22 @@ program
     console.log('• Code Snippet & Memory Retrieval');
   });
 
-// Orchestration command examples
 program
   .command('campaign')
   .description('Social media campaign orchestration')
   .argument('<objective>', 'Campaign objective')
-  .option('-p, --platform <platforms>', 'Target platforms (comma-separated)', 'all')
-  .option('-d, --duration <days>', 'Campaign duration in days', '7')
+  .option('-p, --platform <platforms>', 'Target platforms (comma-separated)', DEFAULT_PLATFORMS)
+  .option('-d, --duration <days>', 'Campaign duration in days', DEFAULT_CAMPAIGN_DURATION)
   .option('--budget <amount>', 'Campaign budget')
-  .action((objective, options) => {
+  .action((objective: string, options: { platform: string; duration: string; budget?: string }) => {
     console.log('🎯 Campaign Orchestration');
     console.log('=========================');
     console.log('Objective:', objective);
     console.log('Platforms:', options.platform);
-    console.log('Duration:', options.duration + ' days');
-    if (options.budget) console.log('Budget:', options.budget);
+    console.log('Duration:', `${options.duration} days`);
+    if (options.budget) {
+      console.log('Budget:', options.budget);
+    }
     console.log('');
     console.log('🤖 Delegating to specialized agents:');
     console.log('  • Research Agent: Analyzing market trends...');
@@ -101,13 +133,16 @@ program
   .argument('<request>', 'Natural language request')
   .option('--agents <list>', 'Specify agents to use')
   .option('--format <type>', 'Output format (interactive, json, report)', 'interactive')
-  .action((request, options) => {
+  .action((request: string, options: { agents?: string; format: string }) => {
     console.log('🧠 L0 Orchestrating:', chalk.cyan(request));
     console.log('');
-    
+
     // Simulate orchestration logic
     const lowerRequest = request.toLowerCase();
-    if (lowerRequest.includes('social') || lowerRequest.includes('campaign')) {
+    const isSocialRequest = lowerRequest.includes('social') || lowerRequest.includes('campaign');
+    const isContentRequest = lowerRequest.includes('content') || lowerRequest.includes('create');
+
+    if (isSocialRequest) {
       console.log('🎯 Social Media Campaign detected');
       console.log('📋 Workflow Plan:');
       console.log('  1. Market research & competitor analysis');
@@ -115,7 +150,7 @@ program
       console.log('  3. Visual content creation');
       console.log('  4. Post scheduling & automation');
       console.log('  5. Performance tracking & optimization');
-    } else if (lowerRequest.includes('content') || lowerRequest.includes('create')) {
+    } else if (isContentRequest) {
       console.log('📝 Content Creation detected');
       console.log('📋 Workflow Plan:');
       console.log('  1. Topic research & trend analysis');
@@ -127,20 +162,19 @@ program
       console.log('🤖 General Orchestration');
       console.log('📋 Analyzing request and delegating to appropriate agents...');
     }
-    
+
     console.log('');
     console.log('💫 L0 orchestrates. You achieve.');
   });
 
-// Help command
 program
   .command('help')
   .description('Show detailed help and examples')
   .action(() => {
-    console.log('🌪️  VortexAI L0 - Universal Work Orchestrator');
+    console.log(`${VORTEX_EMOJI}  VortexAI L0 - Universal Work Orchestrator`);
     console.log('===============================================');
     console.log('');
-    console.log('L0 doesn\'t just answer questions. L0 orchestrates your entire workflow.');
+    console.log("L0 doesn't just answer questions. L0 orchestrates your entire workflow.");
     console.log('');
     console.log('🎯 Social Media & Content:');
     console.log('• vortex l0 "create viral campaign for eco-friendly product"');
@@ -166,20 +200,27 @@ program
     console.log('🐛 Issues: https://github.com/vortexai/l0/issues');
   });
 
-// Handle unknown commands
+// ============================================================================
+// Error Handling
+// ============================================================================
+
 program.on('command:*', () => {
-  console.error('❌ Unknown command: %s', program.args.join(' '));
+  const unknownCommand = program.args.join(' ');
+  console.error('❌ Unknown command: %s', unknownCommand);
   console.log('');
-  console.log('💡 Try: vortex automate "' + program.args.join(' ') + '"');
+  console.log(`💡 Try: vortex automate "${unknownCommand}"`);
   console.log('Run "vortex help" for available commands');
   process.exit(1);
 });
 
-// Show enhanced welcome if no arguments provided
+// ============================================================================
+// Welcome Message
+// ============================================================================
+
 if (process.argv.length === 2) {
-  console.log(chalk.magenta.bold('\n🌪️  VortexAI L0 v' + packageJson.version));
+  console.log(chalk.magenta.bold(`\n${VORTEX_EMOJI}  VortexAI L0 v${packageJson.version}`));
   console.log(chalk.cyan('Universal Work Orchestrator - Beyond AI chat. True orchestration.'));
-  console.log(chalk.gray('═'.repeat(70)));
+  console.log(chalk.gray(SEPARATOR));
   console.log('\n🎯 Real-World Orchestration Examples:');
   console.log(chalk.yellow('  vortex automate "create viral TikTok campaign for our new product"'));
   console.log(chalk.yellow('  vortex automate "analyze trending topics and create 20 posts"'));
@@ -195,5 +236,9 @@ if (process.argv.length === 2) {
   console.log('\n🚀 ' + chalk.bold('L0 orchestrates everything. Social media, content, code, strategy.'));
   console.log(chalk.gray('Your productivity multiplied. Not just assisted.\n'));
 }
+
+// ============================================================================
+// Parse CLI Arguments
+// ============================================================================
 
 program.parse();

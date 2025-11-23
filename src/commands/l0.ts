@@ -6,95 +6,210 @@ import boxen from 'boxen';
 import clipboardy from 'clipboardy';
 import { L0Orchestrator, L0Response } from '../orchestrator.js';
 
-// Use the exported orchestrator class
+// ============================================================================
+// Constants
+// ============================================================================
+
+const BOX_MIN_WIDTH = 50;
+const BOX_MAX_WIDTH = 80;
+const BOX_PADDING = 4;
+const SEPARATOR_LENGTH = 55;
+const VORTEX_EMOJI = '🌪️';
+
+// ============================================================================
+// Orchestrator Instance
+// ============================================================================
+
 const l0Orchestrator = new L0Orchestrator();
 
-// Enhanced display functions for CLI
-function displayL0Response(response: L0Response) {
-  console.log('\n' + chalk.magenta.bold('🌪️  L0:'), response.message);
-  
-  if (response.code) {
-    const boxContent = response.code;
-    const title = response.data?.title || 'Code Snippet';
-    
-    console.log(boxen(boxContent, {
+// ============================================================================
+// Display Functions
+// ============================================================================
+
+/**
+ * Display L0 response in a formatted CLI output
+ *
+ * @param response - The L0 response to display
+ */
+function displayL0Response(response: L0Response): void {
+  console.log('\n' + chalk.magenta.bold(`${VORTEX_EMOJI}  L0:`), response.message);
+
+  displayCodeSnippet(response);
+  displayWorkflow(response);
+  displayAgents(response);
+  displayData(response);
+  displayRelated(response);
+  displayDashboardUrl(response);
+
+  console.log('');
+}
+
+/**
+ * Display code snippet with metadata
+ */
+function displayCodeSnippet(response: L0Response): void {
+  if (!response.code) return;
+
+  const boxContent = response.code;
+  const data = response.data as Record<string, unknown> | undefined;
+  const title = (data?.title as string) || 'Code Snippet';
+
+  const boxWidth = calculateBoxWidth(boxContent);
+
+  console.log(
+    boxen(boxContent, {
       title: chalk.yellow(`📝 ${title}`),
       padding: 1,
       borderColor: 'yellow',
       borderStyle: 'round',
-      width: Math.min(80, Math.max(50, boxContent.split('\n').reduce((max, line) => Math.max(max, line.length), 0) + 4))
-    }));
+      width: boxWidth,
+    })
+  );
 
-    if (response.data) {
-      console.log(chalk.gray(`Last used: ${response.data.lastUsed} | Project: ${response.data.project}`));
-      console.log(chalk.cyan(`Tags: ${response.data.tags.join(', ')}`));
-    }
-
-    if (response.clipboard) {
-      try {
-        clipboardy.writeSync(response.code);
-        console.log(chalk.green('📋 Copied to clipboard'));
-      } catch {
-        console.log(chalk.yellow('📋 Copy to clipboard failed'));
-      }
-    }
-  }
-  
-  if (response.workflow) {
-    console.log(chalk.blue.bold('\n📋 Orchestration Workflow:'));
-    response.workflow.forEach((step, index) => {
-      console.log(`  ${index + 1}. ${step}`);
-    });
+  if (data) {
+    console.log(chalk.gray(`Last used: ${data.lastUsed} | Project: ${data.project}`));
+    console.log(chalk.cyan(`Tags: ${(data.tags as string[]).join(', ')}`));
   }
 
-  if (response.agents) {
-    console.log(chalk.green.bold('\n🤖 Agent Delegation:'));
-    response.agents.forEach(agent => {
-      console.log(`  • ${agent}`);
-    });
+  if (response.clipboard) {
+    copyToClipboard(response.code);
   }
-  
-  if (response.data && !response.code && !response.workflow) {
-    if (typeof response.data === 'object') {
-      console.log(boxen(JSON.stringify(response.data, null, 2), {
-        padding: 1,
-        borderColor: 'green',
-        borderStyle: 'round'
-      }));
-    } else {
-      console.log(boxen(response.data, {
-        padding: 1,
-        borderColor: 'green',
-        borderStyle: 'round'
-      }));
-    }
-  }
-  
-  if (response.related && response.related.length > 0) {
-    console.log(chalk.gray('\n✨ Related:'), 
-      response.related.map(r => chalk.cyan(r)).join(', ')
-    );
-  }
-  
-  if (response.dashboardUrl) {
-    console.log(chalk.gray(`🔗 View in dashboard: https://dashboard.vortexai.com${response.dashboardUrl}`));
-  }
-  
-  console.log(''); // Empty line for spacing
 }
 
-// VortexAI L0 Commands - Universal Work Orchestrator
-export const l0Commands = (program: Command) => {
+/**
+ * Display workflow steps
+ */
+function displayWorkflow(response: L0Response): void {
+  if (!response.workflow) return;
+
+  console.log(chalk.blue.bold('\n📋 Orchestration Workflow:'));
+  response.workflow.forEach((step, index) => {
+    console.log(`  ${index + 1}. ${step}`);
+  });
+}
+
+/**
+ * Display agent delegation
+ */
+function displayAgents(response: L0Response): void {
+  if (!response.agents) return;
+
+  console.log(chalk.green.bold('\n🤖 Agent Delegation:'));
+  response.agents.forEach((agent) => {
+    console.log(`  • ${agent}`);
+  });
+}
+
+/**
+ * Display data payload
+ */
+function displayData(response: L0Response): void {
+  if (!response.data || response.code || response.workflow) return;
+
+  const content = typeof response.data === 'object' ? JSON.stringify(response.data, null, 2) : response.data;
+
+  console.log(
+    boxen(content, {
+      padding: 1,
+      borderColor: 'green',
+      borderStyle: 'round',
+    })
+  );
+}
+
+/**
+ * Display related items
+ */
+function displayRelated(response: L0Response): void {
+  if (!response.related || response.related.length === 0) return;
+
+  console.log(chalk.gray('\n✨ Related:'), response.related.map((r) => chalk.cyan(r)).join(', '));
+}
+
+/**
+ * Display dashboard URL
+ */
+function displayDashboardUrl(response: L0Response): void {
+  if (!response.dashboardUrl) return;
+
+  console.log(chalk.gray(`🔗 View in dashboard: https://dashboard.vortexai.com${response.dashboardUrl}`));
+}
+
+// ============================================================================
+// Helper Functions
+// ============================================================================
+
+/**
+ * Calculate optimal box width for content
+ */
+function calculateBoxWidth(content: string): number {
+  const maxLineLength = content.split('\n').reduce((max, line) => Math.max(max, line.length), 0);
+  return Math.min(BOX_MAX_WIDTH, Math.max(BOX_MIN_WIDTH, maxLineLength + BOX_PADDING));
+}
+
+/**
+ * Copy content to clipboard with error handling
+ */
+function copyToClipboard(content: string): void {
+  try {
+    clipboardy.writeSync(content);
+    console.log(chalk.green('📋 Copied to clipboard'));
+  } catch {
+    console.log(chalk.yellow('📋 Copy to clipboard failed'));
+  }
+}
+
+// ============================================================================
+// Command Options Interfaces
+// ============================================================================
+
+interface QueryOptions {
+  project?: string;
+  format: 'text' | 'json' | 'workflow';
+  [key: string]: unknown;
+}
+
+interface CodeOptions {
+  language?: string;
+  copy: boolean;
+}
+
+interface MemoryOptions {
+  type?: string;
+  limit: string;
+}
+
+interface CampaignOptions {
+  platforms?: string;
+  budget?: string;
+  duration?: string;
+}
+
+interface TrendsOptions {
+  timeframe: string;
+  location: string;
+}
+
+// ============================================================================
+// Command Registration
+// ============================================================================
+
+/**
+ * Register L0 commands with the CLI program
+ *
+ * @param program - Commander.js program instance
+ */
+export const l0Commands = (program: Command): void => {
   const l0Cmd = program
     .command('l0')
     .alias('orchestrate')
-    .description(chalk.magenta.bold('🌪️  VortexAI L0 - Universal Work Orchestrator'))
+    .description(chalk.magenta.bold(`${VORTEX_EMOJI}  VortexAI L0 - Universal Work Orchestrator`))
     .action(() => {
-      console.log(chalk.magenta.bold('\n🌪️  VortexAI L0 - Universal Work Orchestrator'));
-      console.log(chalk.gray('═'.repeat(55)));
+      console.log(chalk.magenta.bold(`\n${VORTEX_EMOJI}  VortexAI L0 - Universal Work Orchestrator`));
+      console.log(chalk.gray('═'.repeat(SEPARATOR_LENGTH)));
       console.log('\n🎯 L0 orchestrates your entire workflow:');
       console.log(chalk.cyan('  • Social media campaigns & viral content creation'));
-      console.log(chalk.cyan('  • Multi-platform content strategy & automation'));  
+      console.log(chalk.cyan('  • Multi-platform content strategy & automation'));
       console.log(chalk.cyan('  • Real-time trend analysis & competitor research'));
       console.log(chalk.cyan('  • Code development & memory management'));
       console.log(chalk.cyan('  • Multi-agent task coordination & delegation'));
@@ -103,7 +218,7 @@ export const l0Commands = (program: Command) => {
       console.log(chalk.yellow('  vortex l0 "analyze trending hashtags and create content calendar"'));
       console.log(chalk.yellow('  vortex l0 "research competitors and update our Q4 strategy"'));
       console.log(chalk.yellow('  vortex l0 code "social media scheduler component"'));
-      console.log('\n💫 L0 doesn\'t just answer. L0 orchestrates, delegates, and delivers.');
+      console.log("\n💫 L0 doesn't just answer. L0 orchestrates, delegates, and delivers.");
       console.log('');
     });
 
@@ -112,7 +227,7 @@ export const l0Commands = (program: Command) => {
     .description('Ask L0 to orchestrate any workflow')
     .option('-p, --project <name>', 'scope to specific project')
     .option('-f, --format <type>', 'output format (text, json, workflow)', 'text')
-    .action(async (query, options) => {
+    .action(async (query: string, options: QueryOptions) => {
       try {
         const response = await l0Orchestrator.query(query, options);
         if (options.format === 'json') {
@@ -121,7 +236,7 @@ export const l0Commands = (program: Command) => {
           displayL0Response(response);
         }
       } catch (error) {
-        console.error(chalk.red('❌ L0 Orchestration Error:'), error instanceof Error ? error.message : String(error));
+        handleError('L0 Orchestration Error', error);
       }
     });
 
@@ -130,12 +245,12 @@ export const l0Commands = (program: Command) => {
     .description('Get code snippets from L0 memory')
     .option('-l, --language <lang>', 'filter by language')
     .option('--copy', 'copy to clipboard automatically', true)
-    .action(async (description, options) => {
+    .action(async (description: string, options: CodeOptions) => {
       try {
         const response = await l0Orchestrator.findCode(description);
         displayL0Response(response);
       } catch (error) {
-        console.error(chalk.red('❌ Code search failed:'), error instanceof Error ? error.message : String(error));
+        handleError('Code search failed', error);
       }
     });
 
@@ -144,12 +259,12 @@ export const l0Commands = (program: Command) => {
     .description('Search your organized memories')
     .option('--type <type>', 'memory type filter')
     .option('-l, --limit <limit>', 'number of results', '5')
-    .action(async (query, options) => {
+    .action(async (query: string, options: MemoryOptions) => {
       try {
         const response = await l0Orchestrator.searchMemories(query);
         displayL0Response(response);
       } catch (error) {
-        console.error(chalk.red('❌ Memory search failed:'), error instanceof Error ? error.message : String(error));
+        handleError('Memory search failed', error);
       }
     });
 
@@ -159,13 +274,13 @@ export const l0Commands = (program: Command) => {
     .option('-p, --platforms <list>', 'target platforms (comma-separated)')
     .option('-b, --budget <amount>', 'campaign budget')
     .option('-d, --duration <days>', 'campaign duration')
-    .action(async (objective, options) => {
+    .action(async (objective: string, options: CampaignOptions) => {
       try {
         const query = `social media campaign: ${objective}`;
         const response = await l0Orchestrator.orchestrateCampaign(query);
         displayL0Response(response);
       } catch (error) {
-        console.error(chalk.red('❌ Campaign orchestration failed:'), error instanceof Error ? error.message : String(error));
+        handleError('Campaign orchestration failed', error);
       }
     });
 
@@ -174,27 +289,42 @@ export const l0Commands = (program: Command) => {
     .description('Analyze trending topics and hashtags')
     .option('-t, --timeframe <period>', 'analysis timeframe (24h, 7d, 30d)', '24h')
     .option('-l, --location <loc>', 'geographic location', 'global')
-    .action(async (platform = 'all', options) => {
+    .action(async (platform = 'all', options: TrendsOptions) => {
       try {
         const query = `analyze trends for ${platform} platform`;
         const response = await l0Orchestrator.analyzeTrends(query);
         displayL0Response(response);
       } catch (error) {
-        console.error(chalk.red('❌ Trend analysis failed:'), error instanceof Error ? error.message : String(error));
+        handleError('Trend analysis failed', error);
       }
     });
 
   l0Cmd
     .command('help <topic>')
     .description('Get help and guidance from L0')
-    .action(async (topic) => {
+    .action(async (topic: string) => {
       try {
         const response = await l0Orchestrator.getHelp(topic);
         displayL0Response(response);
       } catch (error) {
-        console.error(chalk.red('❌ Help request failed:'), error instanceof Error ? error.message : String(error));
+        handleError('Help request failed', error);
       }
     });
 };
+
+// ============================================================================
+// Error Handling
+// ============================================================================
+
+/**
+ * Handle and display errors in a consistent format
+ *
+ * @param context - Error context message
+ * @param error - The error object
+ */
+function handleError(context: string, error: unknown): void {
+  const errorMessage = error instanceof Error ? error.message : String(error);
+  console.error(chalk.red(`❌ ${context}:`), errorMessage);
+}
 
 export default l0Commands;
