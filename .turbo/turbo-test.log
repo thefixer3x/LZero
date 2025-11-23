@@ -1,0 +1,3 @@
+
+[0m[2m[35m$[0m [2m[1mecho "Testing VortexAI L0 orchestration..." && node dist/index.js l0 code "floating card"[0m
+Testing VortexAI L0 orchestration...
