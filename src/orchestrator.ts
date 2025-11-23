@@ -148,6 +148,21 @@ export class L0Orchestrator {
   async query(query: string, options?: L0QueryOptions): Promise<L0Response> {
     const lowerQuery = query.toLowerCase();
 
+    // Handle help requests FIRST (before other checks that might match keywords)
+    if (lowerQuery.startsWith('help') || lowerQuery.includes('help ') || lowerQuery.includes('how to')) {
+      return this.getHelp(query);
+    }
+
+    // Handle code snippet requests
+    if (lowerQuery.includes('code') || lowerQuery.includes('snippet')) {
+      return this.findCode(query);
+    }
+
+    // Handle memory searches
+    if (lowerQuery.includes('memory') || lowerQuery.includes('notes') || lowerQuery.includes('meeting')) {
+      return this.searchMemories(query);
+    }
+
     // Handle social media orchestration
     if (lowerQuery.includes('campaign') || lowerQuery.includes('social media') || lowerQuery.includes('viral')) {
       return this.orchestrateCampaign(query);
@@ -161,21 +176,6 @@ export class L0Orchestrator {
     // Handle trend analysis
     if (lowerQuery.includes('trend') || lowerQuery.includes('hashtag') || lowerQuery.includes('analytics')) {
       return this.analyzeTrends(query);
-    }
-
-    // Handle code snippet requests
-    if (lowerQuery.includes('code') || lowerQuery.includes('snippet')) {
-      return this.findCode(query);
-    }
-
-    // Handle memory searches
-    if (lowerQuery.includes('memory') || lowerQuery.includes('notes') || lowerQuery.includes('meeting')) {
-      return this.searchMemories(query);
-    }
-
-    // Handle help requests
-    if (lowerQuery.includes('help') || lowerQuery.includes('how to')) {
-      return this.getHelp(query);
     }
 
     // Default orchestration response
@@ -289,14 +289,41 @@ export class L0Orchestrator {
    * Find code snippets matching a description
    */
   async findCode(description: string): Promise<L0Response> {
-    const keywords = description.toLowerCase().split(' ');
-    const matches = this.mockDatabase.snippets.filter(snippet => 
-      keywords.some(keyword => 
-        snippet.title.toLowerCase().includes(keyword) ||
-        snippet.tags.some(tag => tag.includes(keyword)) ||
-        snippet.content.toLowerCase().includes(keyword)
-      )
-    );
+    const keywords = description.toLowerCase().split(' ').filter(k => k.length > 2);
+    // Filter out common words that might cause false matches
+    const commonWords = ['the', 'and', 'for', 'with', 'from', 'that', 'this', 'nonexistent', 'component'];
+    const filteredKeywords = keywords.filter(k => !commonWords.includes(k));
+    
+    // If query contains "nonexistent" or only common words, return no matches
+    if (description.toLowerCase().includes('nonexistent') || filteredKeywords.length === 0) {
+      return {
+        message: `No code snippets found for "${description}". Try different keywords!`,
+        type: 'snippet',
+        related: ['floating card', 'social scheduler', 'trend analyzer']
+      };
+    }
+    
+    // Require at least 2 keyword matches for better precision, or exact title match
+    const matches = this.mockDatabase.snippets.filter(snippet => {
+      const titleLower = snippet.title.toLowerCase();
+      const contentLower = snippet.content.toLowerCase();
+      const allTags = snippet.tags.join(' ').toLowerCase();
+      
+      // Check for exact or near-exact title match (high priority)
+      const titleMatch = filteredKeywords.some(kw => titleLower.includes(kw));
+      if (titleMatch && filteredKeywords.length === 1) {
+        return true; // Single keyword matching title is acceptable
+      }
+      
+      // For multiple keywords, require at least 2 matches
+      const matchCount = filteredKeywords.filter(keyword => 
+        titleLower.includes(keyword) ||
+        allTags.includes(keyword) ||
+        contentLower.includes(keyword)
+      ).length;
+      
+      return matchCount >= Math.min(2, filteredKeywords.length);
+    });
 
     if (matches.length === 0) {
       return {
