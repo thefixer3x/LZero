@@ -7,6 +7,9 @@ import { fileURLToPath } from 'url';
 import chalk from 'chalk';
 import { l0Commands } from './commands/l0.js';
 
+// Export programmatic API
+export { L0Orchestrator, orchestrator, type L0Response, type L0QueryOptions } from './orchestrator.js';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 

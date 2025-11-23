@@ -4,16 +4,45 @@
   "type": "module",
   "description": "VortexAI L0 - Universal Work Orchestrator CLI",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "module": "dist/index.js",
   "bin": {
     "vortex": "dist/index.js",
     "vortexai": "dist/index.js",
     "l0": "dist/index.js"
   },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./orchestrator": {
+      "types": "./dist/orchestrator.d.ts",
+      "import": "./dist/orchestrator.js",
+      "default": "./dist/orchestrator.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "examples"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
     "start": "node dist/index.js",
-    "test": "echo \"Testing VortexAI L0 orchestration...\" && node dist/index.js l0 code \"floating card\""
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest --coverage",
+    "prepublishOnly": "npm run build",
+    "type-check": "tsc --noEmit",
+    "lint": "echo \"Linting not configured yet\""
   },
   "keywords": [
     "ai",
@@ -35,11 +64,13 @@
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
-    "typescript": "^5.0.0"
+    "@vitest/coverage-v8": "^1.0.4",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.4"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/vortexai/l0-orchestrator"
+    "url": "https://github.com/thefixer3x/LZero.git"
   },
   "homepage": "https://vortexai.com/l0",
   "engines": {

@@ -15,10 +15,19 @@ Traditional AI assistants chat. **L0 orchestrates.**
 
 ## 🚀 Quick Start
 
+### CLI Installation
+
 ```bash
-# Install VortexAI L0
+# Install VortexAI L0 globally
 npm install -g vortexai-l0
 
+# Or use as a project dependency
+npm install vortexai-l0
+```
+
+### CLI Usage
+
+```bash
 # Initialize workspace
 vortex init
 
@@ -34,6 +43,29 @@ vortex campaign "increase brand awareness among millennials"
 vortex l0 code "social media scheduler component"
 vortex l0 memory "oauth implementation patterns"
 ```
+
+### Programmatic API
+
+```typescript
+import { L0Orchestrator } from 'vortexai-l0/orchestrator';
+
+const orchestrator = new L0Orchestrator();
+
+// Orchestrate a campaign
+const response = await orchestrator.query('create viral TikTok campaign');
+console.log(response.workflow);
+console.log(response.agents);
+
+// Find code snippets
+const code = await orchestrator.findCode('floating notification card');
+console.log(code.code);
+
+// Search memories
+const memories = await orchestrator.searchMemories('oauth');
+console.log(memories.data);
+```
+
+See [examples/](examples/) for more usage examples.
 
 ## 🎯 Real-World Use Cases
 
