@@ -1,0 +1,491 @@
+def operate_computer_system(command, user):
+    """
+    Operate a computer system with the given command and user permissions.
+    
+    Args:
+        command (str): The command to execute on the computer system
+        user (dict): User information including username and permissions
+            - username (str): The name of the user operating the system
+            - permissions (list): Array of permissions granted to the user
+    
+    Returns:
+        dict: Result of the operation
+    """
+    # Validate user has required permissions
+    required_permissions = ["execute"]
+    if not all(perm in user["permissions"] for perm in required_permissions):
+        return {
+            "success": False,
+            "error": f"User {user['username']} lacks required permissions: {required_permissions}"
+        }
+    
+    # Log the operation
+    print(f"User {user['username']} executing command: {command}")
+    
+    try:
+        # Execute the command based on its type
+        if command.startswith("browse:"):
+            url = command.replace("browse:", "").strip()
+            return browse_url(url, user)
+        elif command.startswith("search:"):
+            query = command.replace("search:", "").strip()
+            return search_web(query, user)
+        elif command.startswith("system:"):
+            sys_cmd = command.replace("system:", "").strip()
+            # Only allow system commands for admin users
+            if "admin" in user["permissions"]:
+                return execute_system_command(sys_cmd)
+            else:
+                return {"success": False, "error": "Insufficient permissions for system commands"}
+        else:
+            # Default to basic command processing
+            return process_command(command, user)
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+def browse_url(url, user):
+    """Browse to a specific URL"""
+    # Implementation for browser navigation
+    return {"success": True, "action": "browse", "url": url}
+
+def search_web(query, user):
+    """Search the web for a query"""
+    # Implementation for web search
+    return {"success": True, "action": "search", "query": query, "results": ["Result 1", "Result 2"]}
+
+def execute_system_command(command):
+    """Execute a system command (restricted to admin users)"""
+    # Implementation for system command execution
+    # SECURITY NOTE: In a real implementation, this would need careful sandboxing
+    return {"success": True, "action": "system", "command": command, "output": "Command executed"}
+
+def process_command(command, user):
+    """Process a generic command"""
+    # Implementation for general command processing
+    return {"success": True, "action": "process", "command": command}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# In your message handling code
+if message["type"] == "function_call" and message["name"] == "operate_computer_system":
+    args = json.loads(message["arguments"])
+    result = operate_computer_system(args["command"], args["user"])
+    return [
+        {
+            "type": "function_call_output",
+            "call_id": message["call_id"],
+            "output": json.dumps(result)
+        }
+    ]
+
+
+
+
+
+{
+  "name": "operate_computer_system",
+  "description": "Operate a computer system",
+  "strict": true,
+  "parameters": {
+    "type": "object",
+    "required": [
+      "command",
+      "user"
+    ],
+    "properties": {
+      "command": {
+        "type": "string",
+        "description": "The command to execute on the computer system"
+      },
+      "user": {
+        "type": "object",
+        "required": [
+          "username",
+          "permissions"
+        ],
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "The name of the user operating the system"
+          },
+          "permissions": {
+            "type": "array",
+            "description": "Array of permissions granted to the user",
+            "items": {
+              "type": "string",
+              "description": "A specific permission level for the user"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "additionalProperties": false
+  }
+}
+
+
+
+
+
+
+
+
+
+The model will intelligently decide to call functions based on input it receives from the user. 
+
+{
+  "name": "get_stock_price",
+  "description": "Get the current stock price",
+  "strict": true,
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "symbol": {
+        "type": "string",
+        "description": "The stock symbol"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "symbol"
+    ]
+  }
+}
+
+{
+  "name": "get_weather",
+  "description": "Determine weather in my location",
+  "strict": true,
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "location": {
+        "type": "string",
+        "description": "The city and state e.g. San Francisco, CA"
+      },
+      "unit": {
+        "type": "string",
+        "enum": [
+          "c",
+          "f"
+        ]
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "location",
+      "unit"
+    ]
+  }
+}
+
+
+
+
+
+
+#!/usr/bin/env python3
+"""
+CUA Orchestrator Test
+
+This script demonstrates how to create an orchestrator that bridges between
+language model responses and actual system actions. It provides a separate
+testing environment for the Computer Using Agent (CUA) functionality.
+"""
+
+import os
+import json
+import time
+from dotenv import load_dotenv
+from openai import OpenAI
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Initialize OpenAI client
+client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY"),
+    organization=os.getenv("OPENAI_ORG")
+)
+
+# System actions that can be performed
+def system_action(action_type, **params):
+    """Execute a system action and return the result"""
+    print(f"\n🔧 EXECUTING ACTION: {action_type}")
+    print(f"   Parameters: {params}")
+    
+    if action_type == "open_application":
+        app_name = params.get("app_name", "")
+        print(f"   📱 Opening application: {app_name}")
+        # Simulate app opening
+        time.sleep(1)
+        return {"status": "success", "message": f"Opened {app_name}"}
+    
+    elif action_type == "browse_url":
+        url = params.get("url", "")
+        print(f"   🌐 Browsing to URL: {url}")
+        # Simulate browser navigation
+        time.sleep(1)
+        return {"status": "success", "message": f"Navigated to {url}"}
+    
+    elif action_type == "file_operation":
+        operation = params.get("operation", "")
+        path = params.get("path", "")
+        print(f"   📂 File operation: {operation} on {path}")
+        # Simulate file operation
+        time.sleep(1)
+        return {"status": "success", "message": f"{operation} on {path}"}
+    
+    elif action_type == "system_info":
+        info_type = params.get("info_type", "")
+        print(f"   💻 Getting system info: {info_type}")
+        # Simulate system info retrieval
+        time.sleep(1)
+        if info_type == "memory":
+            return {"status": "success", "data": {"total": "16GB", "used": "8.2GB"}}
+        elif info_type == "disk":
+            return {"status": "success", "data": {"total": "512GB", "used": "256GB"}}
+        else:
+            return {"status": "success", "data": {"cpu": "45%", "uptime": "3d 4h"}}
+    
+    else:
+        return {"status": "error", "message": f"Unknown action type: {action_type}"}
+
+def extract_action_from_response(response_text):
+    """
+    Parse the model's response to extract structured action information.
+    Looks for JSON-formatted action data.
+    """
+    try:
+        # Try to find JSON block in the response
+        start_idx = response_text.find('{')
+        end_idx = response_text.rfind('}') + 1
+        
+        if start_idx >= 0 and end_idx > start_idx:
+            json_str = response_text[start_idx:end_idx]
+            action_data = json.loads(json_str)
+            return action_data
+        else:
+            print("⚠️ No JSON found in response")
+            return None
+    except json.JSONDecodeError:
+        print("⚠️ Failed to parse JSON from response")
+        return None
+    except Exception as e:
+        print(f"⚠️ Error extracting action: {str(e)}")
+        return None
+
+def get_model_response(prompt, model="gpt-4"):
+    """Get a response from the language model"""
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=[
+                {
+                    "role": "system", 
+                    "content": """You are a Computer Using Agent that can perform actions on a computer system.
+When asked to perform an action, respond with a JSON object containing:
+1. action_type: The type of action to perform (open_application, browse_url, file_operation, system_info)
+2. parameters: A dictionary of parameters needed for the action
+
+Example response format:
+```json
+{
+  "action_type": "open_application",
+  "parameters": {
+    "app_name": "Calculator"
+  }
+}
+```
+
+DO NOT include any explanations or text outside of the JSON object."""
+                },
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.2
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        print(f"Error getting model response: {str(e)}")
+        return None
+
+def run_orchestrator():
+    """Run the orchestrator test loop"""
+    print("🤖 CUA Orchestrator Test")
+    print("Type 'exit' to quit\n")
+    
+    while True:
+        # Get user input
+        user_input = input("👤 You: ")
+        if user_input.lower() in ('exit', 'quit'):
+            print("Goodbye!")
+            break
+        
+        # Get model response
+        print("\n⏳ Getting AI response...")
+        model_response = get_model_response(user_input)
+        print(f"🤖 AI: {model_response}")
+        
+        # Extract action from response
+        action_data = extract_action_from_response(model_response)
+        
+        # Execute action if found
+        if action_data and "action_type" in action_data and "parameters" in action_data:
+            result = system_action(action_data["action_type"], **action_data["parameters"])
+            print(f"✅ Action result: {result}")
+        else:
+            print("❌ No valid action found in response")
+
+if __name__ == "__main__":
+    run_orchestrator()
+
+
+
+
+
+Orchestrator helper
+
+
+ fields, ignoring disclaimers.
+Example Prompt for OpenAI API:
+You are a home automation agent. Extract the target device and action (on/off) from the user's command.
+Respond ONLY in JSON: {"device": "<device>", "action": "<on/off>"}.
+
+User: Turn off the living room fan.
+Likely Model Response:
+{"device": "living room fan", "action": "off"}
+Sample Python Extractor
+import openai
+import requests
+import json
+
+def get_intent(user_input):
+    prompt = (
+        "Extract the device and action (on/off) from the user's command. "
+        "Respond ONLY in JSON: {\"device\": \"<device>\", \"action\": \"<on/off>\"}\n\n"
+        f"User: {user_input}"
+    )
+
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": prompt}]
+    )
+    # Parse just the JSON from model's reply
+    intent = json.loads(response['choices'][0]['message']['content'])
+    return intent['device'], intent['action']
+
+def toggle_device_homebridge(device, action):
+    # Format device name for URL if needed
+    url_device = device.replace(" ", "_")
+    url = f"http://localhost:8080/device/{url_device}/{action}"
+    requests.post(url)
+
+# Example usage
+user_command = "Turn on the hallway lamp."
+device, action = get_intent(user_command)
+toggle_device_homebridge(device, action)
+Tips
+If GPT still returns disclaimers, use more explicit instruction, e.g., “DO NOT include anything except the JSON output.”
+Sanitize device names to match your HomeBridge config.
+Implement error handling for invalid/unexpected model output.
+Summary:
+Your AI agent must:
+Structure prompt to enforce output for code parsing.
+Your middleware Python app does all system action work.
+Ignore/discard any language model disclaimers.
+*If you share your existing prompt and code, I can suggest corrections to make this seamless!
+User
+thank for the heads up I will keep running my tests
+I just adapted your suggestions on a simple remote control switch agent confirmed task successful
+Copy of orchestrator
+That’s fantastic news—congratulations on your successful implementation! 🎉
+You’ve made a big leap by combining natural language, structured output, and system control through HomeBridge. The approach you now have will scale well as you add more devices or complex actions.
+Quick Recap for Future Reference:
+Use structured (preferably JSON) output from your AI prompt.
+Let your middleware handle the device mapping and action logic.
+Always validate/sanitize the AI output before performing actions.
+If you need help:
+Expanding to more devices or multi-step actions
+Improving the agent’s reliability or adding confirmations
+Securing your agent (auth, logging, fail-safes)
+Or anything else—just ask!
+Good luck with your next experiments! 🚀
+User
+this was an isolated test from my entire project and it actually brought about positive results. but I needed to support it with a middle utility solution. not direct
+Copy of orchestrator
+That’s a wise and professional approach! Integrating a middle utility solution (middleware) between your AI agent and HomeKit/HomeBridge system is:
+Best Practice:
+ - Adds a critical layer of control, validation, and security between user input and real-world actions.  - Allows you to log requests, handle authentication, sanitize device names, and implement fallback/error handling.
+Flexible Architecture:
+ - Lets you test, swap, or update components (like switching from HomeBridge to another API, or swapping your AI model) without breaking the entire system.  - Makes expansion easier as your home automation project grows.
+Typical Middle Utility Design
+Components Might Include:
+NLP/Interpretation Layer: Handles prompt parsing and intent extraction (your AI agent, GPT, etc.).
+Middleware (Utility App): Receives structured action requests, translates them to system commands, manages device lists, logging, error checks, etc.
+Home Automation Gateway: Your HomeBridge HTTP API or similar service.
+Example Request Flow:
+User Prompt →
+AI Agent (Get structured intent) →
+Middleware Utility App (Validate, map device, confirm permissions, log, send command) →
+HomeBridge API (Trigger device)
+Middleware App (Report success/failure to user)
+Advantages:
+Security: Can restrict direct access to the home automation system.
+Reliability: Can retry, queue, or override commands if needed.
+Auditability: Easy to keep logs of user actions.
+Maintainability: Easy to debug and expand.
+If you’d like, I can help you design or optimize your middleware/utility solution, offer architecture diagrams, or provide code patterns for robust integration!
+Just let me know how you want to proceed—whether you’re looking for code, design documentation, or just a sounding board for your ideas.
+User
+its not leveraging the LLM's tool usage capabilities without the helper, the process flow will drop off.
+open ai can do multiple actions and return if the result is not the desired, this one is one track.
+Copy of orchestrator
+Absolutely, you’re making a key architectural observation about Large Language Models (LLMs) and their interaction with external tools/environments.
+LLMs and Tool Usage Capabilities
+Modern LLMs (like GPT-4, API versions with tool-use/plugins/functions):
+Can “reason” over multiple steps.
+Can dynamically decide to call tools or APIs, process results, and follow up if the first step isn’t successful (“agentic” behavior).
+Can chain actions (e.g., if light is already on, try another action or confirm state).
+But…
+This requires the platform/environment where LLM runs to support such tool-use or “function calling” protocols (sometimes called “function calling,” “plugins,” “actions,” or “tools”).
+The LLM must have real access to tools via a defined interface and orchestration runtime (such as OpenAI’s function calling endpoints, Microsoft’s Copilot, LangChain, LlamaIndex, etc.).
+A simple text-only LLM (classic GPT-3/3.5/4 completions) without orchestration cannot invoke external actions or loop without the “middleman” helper.
+Why Helper Utility/Middleware Is Needed
+Without built-in tool-use orchestration:
+The LLM is limited to single-shot text generation—it tells you what to do or how to do it, but doesn't "do" it.
+Any sense of “retries,” “checking,” or “chaining” must be handled by your own code that parses LLM output, takes action, and re-prompts the LLM as needed.
+Example Limitation
+Ask: "Turn on the light."
+LLM: "Turned on the light." (But it's just text, the light isn't really toggled).
+Without middleware, nothing happens in the real world.
+With Orchestration (e.g., Function Calling API or Helper Script)
+User: "Turn on the light."
+LLM: [issues structured tool call] "turn_on_light(device=living_room)"
+Middleware utility: Calls actual API, gets result (success/failure).
+If failed, utility can re-invoke LLM: “Turning on the light failed, what should I try?”
+LLM: "Try turning on kitchen light instead." etc.
+More Advanced: Agentic Loops
+null.
+Summary Table
+| Approach | Single-shot LLM | LLM+Tool Orchestration | LLM+Middleware Utility | |-------------------------|-----------------|------------------------|-------------------------| | Tool use | ❌ | ✅ | ✅ | | Multi-step/Agent Behavior| ❌ | ✅ | ✅ (if programmed) | | Handles retries/validation| ❌ | ✅ | ✅ (in your code) | | Needs orchestration | Manual | Platform Provided | Manual (middleware) |
+You’re right:
+Pure LLMs without orchestration are “single track”—they won’t check results, retry, or chain actions on their own.
+Today, robust applications wrap LLMs with helper utilities, orchestrators, or frameworks to enable tool use and agentic flows.
+If you want to unlock true LLM multi-step tool-using agents:
+Explore OpenAI’s function calling, LangChain, LlamaIndex, or Microsoft Copilot APIs as possible backbones.
+Your current helper utility is exactly the right kind of component to bridge that gap until such orchestration is natively available in your environment.
+If you'd like, I can give you a sample design pattern or code using one of these agent frameworks! Just let me know your preferred stack/platform.
