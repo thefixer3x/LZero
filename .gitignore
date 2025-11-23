@@ -116,3 +116,4 @@ docs/*.js
 docs/*.js.map
 docs/*.d.ts.map
 
+package.json.tmp
