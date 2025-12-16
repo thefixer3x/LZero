@@ -5,6 +5,7 @@ import chalk from 'chalk';
 import boxen from 'boxen';
 import clipboardy from 'clipboardy';
 import { L0Orchestrator, L0Response } from '../orchestrator.js';
+import { pluginManager } from '../plugins.js';
 
 // ============================================================================
 // Constants
@@ -308,6 +309,91 @@ export const l0Commands = (program: Command): void => {
         displayL0Response(response);
       } catch (error) {
         handleError('Help request failed', error);
+      }
+    });
+
+  // Plugin management commands
+  const pluginsCmd = l0Cmd
+    .command('plugins')
+    .description('Manage L0 plugins and extensions');
+
+  pluginsCmd
+    .command('list')
+    .description('List all registered plugins')
+    .option('--json', 'Output as JSON')
+    .action((options: { json?: boolean }) => {
+      const plugins = pluginManager.listDetailed();
+
+      if (options.json) {
+        console.log(JSON.stringify(plugins, null, 2));
+        return;
+      }
+
+      console.log(chalk.magenta.bold(`\n${VORTEX_EMOJI}  L0 Plugins`));
+      console.log(chalk.gray('═'.repeat(SEPARATOR_LENGTH)));
+      console.log(`\n📦 ${chalk.bold(`${pluginManager.count} plugins registered`)} (${pluginManager.enabledCount} enabled)\n`);
+
+      if (plugins.length === 0) {
+        console.log(chalk.yellow('No plugins registered. Use custom plugins to extend L0 capabilities.'));
+        return;
+      }
+
+      plugins.forEach((plugin) => {
+        const status = plugin.enabled ? chalk.green('●') : chalk.gray('○');
+        console.log(`${status} ${chalk.bold(plugin.name)} ${chalk.gray(`v${plugin.version}`)}`);
+        console.log(`  ${chalk.dim(plugin.description)}`);
+        console.log(`  ${chalk.cyan('Triggers:')} ${plugin.triggers.join(', ')}`);
+        console.log('');
+      });
+    });
+
+  pluginsCmd
+    .command('info <name>')
+    .description('Show detailed information about a plugin')
+    .action((name: string) => {
+      const plugin = pluginManager.get(name);
+
+      if (!plugin) {
+        console.error(chalk.red(`Plugin "${name}" not found`));
+        process.exit(1);
+      }
+
+      const { metadata, triggers, priority } = plugin;
+
+      console.log(chalk.magenta.bold(`\n${VORTEX_EMOJI}  Plugin: ${metadata.name}`));
+      console.log(chalk.gray('═'.repeat(SEPARATOR_LENGTH)));
+      console.log(`\n${chalk.bold('Version:')} ${metadata.version}`);
+      console.log(`${chalk.bold('Description:')} ${metadata.description}`);
+      if (metadata.author) {
+        console.log(`${chalk.bold('Author:')} ${metadata.author}`);
+      }
+      if (metadata.keywords?.length) {
+        console.log(`${chalk.bold('Keywords:')} ${metadata.keywords.join(', ')}`);
+      }
+      console.log(`${chalk.bold('Priority:')} ${priority || 0}`);
+      console.log(`${chalk.bold('Triggers:')} ${triggers.join(', ')}`);
+      console.log('');
+    });
+
+  pluginsCmd
+    .command('enable <name>')
+    .description('Enable a plugin')
+    .action((name: string) => {
+      if (pluginManager.setEnabled(name, true)) {
+        console.log(chalk.green(`✅ Plugin "${name}" enabled`));
+      } else {
+        console.error(chalk.red(`Plugin "${name}" not found`));
+      }
+    });
+
+  pluginsCmd
+    .command('disable <name>')
+    .description('Disable a plugin')
+    .action((name: string) => {
+      if (pluginManager.setEnabled(name, false)) {
+        console.log(chalk.yellow(`⏸️  Plugin "${name}" disabled`));
+      } else {
+        console.error(chalk.red(`Plugin "${name}" not found`));
       }
     });
 };

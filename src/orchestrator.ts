@@ -5,6 +5,8 @@
  * @module orchestrator
  */
 
+import { pluginManager, PluginManager } from './plugins.js';
+
 // ============================================================================
 // Type Definitions
 // ============================================================================
@@ -93,6 +95,12 @@ const PREVIEW_LENGTH = 100;
  * ```
  */
 export class L0Orchestrator {
+  private readonly plugins: PluginManager;
+
+  constructor(plugins?: PluginManager) {
+    this.plugins = plugins || pluginManager;
+  }
+
   private readonly mockDatabase: MockDatabase = {
     snippets: [
       {
@@ -232,7 +240,20 @@ export class L0Orchestrator {
       return this.analyzeTrends(query);
     }
 
+    // Try plugins before falling back to general orchestration
+    const pluginResponse = await this.plugins.execute(query, options as Record<string, unknown>);
+    if (pluginResponse) {
+      return pluginResponse;
+    }
+
     return this.orchestrateGeneral(query);
+  }
+
+  /**
+   * Get the plugin manager for direct access
+   */
+  getPluginManager(): PluginManager {
+    return this.plugins;
   }
 
   // ==========================================================================

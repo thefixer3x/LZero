@@ -2,14 +2,13 @@
 
 **Beyond AI chat. True orchestration.**
 
-VortexAI L0 is a revolutionary CLI tool that doesn't just answer questions—it orchestrates your entire workflow. From viral social media campaigns to code development, L0 delegates tasks to specialized agents and delivers complete solutions.
+VortexAI L0 is a revolutionary CLI tool that doesn't just answer questions—it orchestrates your entire workflow. From development workflow to task execution deep research, viral social media campaigns to code development, L0 delegates tasks to specialized agents and delivers complete solutions.
 
 ## 🎯 What Makes L0 Different
 
 Traditional AI assistants chat. **L0 orchestrates.**
 
-- **Social Media Campaigns**: Create viral TikTok campaigns, analyze trends, schedule content
-- **Content Strategy**: Research, plan, create, and optimize content across platforms  
+- **Content Strategy**: Research, plan, create, and optimize content across platforms
 - **Multi-Agent Delegation**: Coordinate specialized agents for complex workflows
 - **Real-World Results**: Not just advice—actual deliverables and implementations
 
@@ -25,14 +24,27 @@ npm install -g vortexai-l0
 npm install vortexai-l0
 ```
 
-### CLI Usage
+### CLI Usage (Node)
+
+The CLI is available under multiple command names for convenience:
+- `vortex` - Full name
+- `vortexai` - Alternative full name
+- `l0` - Short alias
+- `vxai` - Short alias (new)
+- `lzero` - Short alias (new)
 
 ```bash
-# Initialize workspace
+# Initialize workspace (any command works)
 vortex init
+lzero init
+vxai init
 
 # Real-world orchestration examples
-vortex orchestrate "create viral TikTok campaign for eco-friendly product"
+vortex l0 "develop a new feature for my application"
+vortex l0 "research options for security tools"
+vortex l0 "research options for marketing"
+vortex l0 "research options for sales"
+vortex l0 "research options for customer support"
 vortex orchestrate "analyze trending hashtags and create content calendar"
 vortex orchestrate "research competitors and update Q4 strategy"
 
@@ -69,12 +81,15 @@ See [examples/](examples/) for more usage examples.
 
 ## 🎯 Real-World Use Cases
 
-### Social Media & Marketing
-- **Viral Campaign Creation**: Full strategy, content, and execution plan
-- **Trend Analysis**: Real-time hashtag research and competitor monitoring
-- **Content Calendar**: Automated planning with platform optimization
-- **Influencer Outreach**: Strategy and coordination workflows
+## 🤖 Agent Orchestration
 
+L0 coordinates specialized agents for maximum efficiency:
+
+- **Research Agent**: Market analysis, competitor research, trend monitoring
+- **Creative Agent**: Content creation, visual design, copywriting
+- **Platform Agent**: Algorithm optimization for TikTok, Instagram, Twitter, LinkedIn
+- **Analytics Agent**: Performance tracking, KPI monitoring, ROI analysis
+- **Development Agent**: Code generation, architecture planning, testing
 ### Content Creation
 - **Blog Posts**: Research, outline, draft, and SEO optimization
 - **Video Scripts**: Platform-specific optimization for TikTok, YouTube, Instagram
@@ -86,15 +101,12 @@ See [examples/](examples/) for more usage examples.
 - **Architecture Planning**: Multi-service coordination and planning
 - **Implementation Workflows**: Step-by-step development orchestration
 
-## 🤖 Agent Orchestration
 
-L0 coordinates specialized agents for maximum efficiency:
-
-- **Research Agent**: Market analysis, competitor research, trend monitoring
-- **Creative Agent**: Content creation, visual design, copywriting
-- **Platform Agent**: Algorithm optimization for TikTok, Instagram, Twitter, LinkedIn
-- **Analytics Agent**: Performance tracking, KPI monitoring, ROI analysis
-- **Development Agent**: Code generation, architecture planning, testing
+### Social Media & Marketing
+- **Viral Campaign Creation**: Full strategy, content, and execution plan
+- **Trend Analysis**: Real-time hashtag research and competitor monitoring
+- **Content Calendar**: Automated planning with platform optimization
+- **Influencer Outreach**: Strategy and coordination workflows
 
 ## 🛠️ Available Commands
 
@@ -238,10 +250,10 @@ MIT License - Use VortexAI L0 for personal and commercial projects.
 
 ## 🔗 Links
 
-- **Documentation**: https://docs.vortexai.com/l0
-- **Platform**: https://vortexai.com
+- **Documentation**: https://docs.vortexcore.app/l0
+- **Platform**: https://vortexcore.app
 - **Community**: https://discord.gg/vortexai
-- **Issues**: https://github.com/vortexai/l0/issues
+- **Issues**: https://github.com/vortexcore/vortexai-l0/issues
 
 ---
 

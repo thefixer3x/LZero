@@ -1,28 +1,48 @@
 {
   "name": "vortexai-l0",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
   "description": "VortexAI L0 - Universal Work Orchestrator CLI",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "module": "dist/index.js",
+  "main": "./dist/node/index.js",
+  "types": "./dist/browser/index.d.ts",
+  "module": "./dist/browser/index.js",
   "bin": {
-    "vortex": "dist/index.js",
-    "vortexai": "dist/index.js",
-    "l0": "dist/index.js"
+    "vortex": "dist/node/cli.js",
+    "vortexai": "dist/node/cli.js",
+    "l0": "dist/node/cli.js",
+    "vxai": "dist/node/cli.js",
+    "lzero": "dist/node/cli.js"
   },
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
+      "types": "./dist/browser/index.d.ts",
+      "import": "./dist/browser/index.js",
+      "require": "./dist/node/index.js",
+      "default": "./dist/browser/index.js"
+    },
+    "./cli": "./dist/node/cli.js",
+    "./browser": {
+      "types": "./dist/browser/index.d.ts",
+      "default": "./dist/browser/index.js"
     },
     "./orchestrator": {
-      "types": "./dist/orchestrator.d.ts",
-      "import": "./dist/orchestrator.js",
-      "default": "./dist/orchestrator.js"
+      "types": "./dist/browser/orchestrator.d.ts",
+      "import": "./dist/browser/orchestrator.js",
+      "require": "./dist/node/orchestrator.js",
+      "default": "./dist/browser/orchestrator.js"
+    },
+    "./plugins": {
+      "types": "./dist/browser/plugins.d.ts",
+      "import": "./dist/browser/plugins.js",
+      "require": "./dist/node/plugins.js",
+      "default": "./dist/browser/plugins.js"
     },
     "./package.json": "./package.json"
+  },
+  "browser": {
+    "./dist/node/index.js": "./dist/browser/index.js",
+    "./dist/node/orchestrator.js": "./dist/browser/orchestrator.js",
+    "./dist/node/plugins.js": "./dist/browser/plugins.js"
   },
   "files": [
     "dist",
@@ -34,9 +54,11 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "npm run build:browser && npm run build:node",
+    "build:browser": "tsc -p tsconfig.browser.json",
+    "build:node": "tsc -p tsconfig.node.json",
     "dev": "tsc --watch",
-    "start": "node dist/index.js",
+    "start": "node dist/node/cli.js",
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
