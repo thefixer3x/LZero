@@ -506,16 +506,39 @@ export const collaborationPlugin: L0Plugin = {
 // Singleton Instance & Factory
 // ============================================================================
 
+export interface PluginManagerOptions {
+  includeBuiltins?: boolean;
+  includeMemoryServices?: boolean;
+}
+
 /**
  * Create a new plugin manager with built-in plugins
+ *
+ * @param options - Configuration options
+ * @param options.includeBuiltins - Include dev, analytics, collaboration plugins (default: true)
+ * @param options.includeMemoryServices - Include LanOnasis memory services plugin (default: false)
  */
-export function createPluginManager(includeBuiltins = true): PluginManager {
+export function createPluginManager(options: PluginManagerOptions | boolean = true): PluginManager {
   const manager = new PluginManager();
 
-  if (includeBuiltins) {
+  // Handle legacy boolean parameter
+  const opts: PluginManagerOptions =
+    typeof options === 'boolean' ? { includeBuiltins: options } : options;
+
+  if (opts.includeBuiltins !== false) {
     manager.register(devToolsPlugin);
     manager.register(analyticsPlugin);
     manager.register(collaborationPlugin);
+  }
+
+  // Memory services plugin is opt-in (requires API config)
+  if (opts.includeMemoryServices) {
+    // Dynamically import to avoid bundling when not needed
+    import('./memory-plugin.js').then(({ memoryServicesPlugin }) => {
+      manager.register(memoryServicesPlugin);
+    }).catch(() => {
+      // Memory plugin not available - that's ok
+    });
   }
 
   return manager;

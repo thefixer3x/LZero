@@ -1,6 +1,6 @@
 {
   "name": "vortexai-l0",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "type": "module",
   "description": "VortexAI L0 - Universal Work Orchestrator CLI",
   "main": "./dist/node/index.js",
@@ -36,6 +36,12 @@
       "import": "./dist/browser/plugins.js",
       "require": "./dist/node/plugins.js",
       "default": "./dist/browser/plugins.js"
+    },
+    "./memory-plugin": {
+      "types": "./dist/browser/memory-plugin.d.ts",
+      "import": "./dist/browser/memory-plugin.js",
+      "require": "./dist/node/memory-plugin.js",
+      "default": "./dist/browser/memory-plugin.js"
     },
     "./package.json": "./package.json"
   },

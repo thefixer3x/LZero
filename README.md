@@ -194,6 +194,43 @@ L0 understands platform-specific requirements:
 - **Twitter**: Thread strategies, hashtag optimization
 - **LinkedIn**: Professional tone, B2B messaging
 
+### Memory Services Integration (v1.2.0+)
+
+L0 integrates with LanOnasis Memory-as-a-Service (MaaS) for persistent, AI-powered memory:
+
+```typescript
+import { memoryAPI, configureMemoryPlugin } from 'vortexai-l0/memory-plugin';
+
+// Configure the memory plugin
+configureMemoryPlugin({
+  apiUrl: 'https://api.lanonasis.com',
+  authToken: 'your-token',
+  timeout: 30000
+});
+
+// Core Memory Operations
+await memoryAPI.create({ title: 'Meeting Notes', content: '...', type: 'context' });
+await memoryAPI.search('project requirements');
+await memoryAPI.list({ type: 'project', limit: 10 });
+
+// Intelligence Features
+await memoryAPI.suggestTags('memory-id');      // AI tag suggestions
+await memoryAPI.findRelated('memory-id');       // Find similar memories
+await memoryAPI.detectDuplicates(0.9);          // Find redundant content
+
+// Behavioral Features
+await memoryAPI.recallBehavior({ task: 'deploy app', directory: '/project' });
+await memoryAPI.suggestNextAction({ task: 'fix bug', completed: ['identified issue'] });
+await memoryAPI.recordPattern({ trigger: 'user asked to deploy', actions: [...] });
+```
+
+**Natural Language Support** - L0 understands 38 trigger phrases:
+- *"remember this for later"* → Creates a memory
+- *"what do I know about OAuth?"* → Searches memories
+- *"suggest tags for this"* → AI tag suggestions
+- *"find similar memories"* → Semantic search
+- *"what should I do next?"* → Behavioral suggestions
+
 ### Memory System
 L0 maintains context across sessions:
 - Campaign strategies and learnings

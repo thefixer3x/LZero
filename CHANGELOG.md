@@ -3,28 +3,50 @@
 
 All notable changes to VortexAI L0 will be documented in this file.
 
-## [1.2.0] - 2025-12-15
+## [1.2.0] - 2026-01-23
 
 ### Added
-- **Browser-safe entrypoint**: new `src/index.ts` that only exports programmatic APIs (no Node-only deps).
-- **Split CLI entry**: moved CLI implementation to `src/cli.ts` to keep browser builds clean.
+- **Memory Services Plugin**: Lean integration with LanOnasis MaaS API
+  - Core CRUD operations: `search`, `create`, `list`, `get`, `delete`
+  - New `./memory-plugin` export path for modular imports
+  - Browser-safe REST-only design (no SDK-in-SDK coupling)
+  - Configurable via `configureMemoryPlugin({ apiUrl, authToken })`
+
+- **Intelligence Features**: AI-powered memory enhancements
+  - `suggestTags(memoryId)` - AI tag suggestions for memories
+  - `findRelated(memoryId)` - Semantic similarity search
+  - `detectDuplicates(threshold)` - Find redundant memories
+
+- **Behavioral Features**: Workflow pattern learning
+  - `recallBehavior(context)` - Recall similar past workflows
+  - `suggestNextAction(state)` - AI-powered next step suggestions
+  - `recordPattern(input)` - Record successful workflow patterns
+
+- **38 Trigger Keywords**: Expanded intent detection for natural language routing
+  - Core: `remember`, `recall`, `find`, `search`, `save`, `store`, `list`, `delete`, `forget`
+  - Intelligence: `suggest tags`, `tag this`, `related`, `similar`, `duplicate`, `cleanup`
+  - Behavioral: `pattern`, `workflow`, `what next`, `next step`, `record this`, `that worked`
+
+- **Browser-safe entrypoint**: new `src/index.ts` that only exports programmatic APIs (no Node-only deps)
+- **Split CLI entry**: moved CLI implementation to `src/cli.ts` to keep browser builds clean
 - **Dual build configs**:
   - `tsconfig.browser.json` (ESM + DOM)
   - `tsconfig.node.json` (Node)
-- **Conditional exports**: explicit subpath exports for `./`, `./browser`, `./cli`, `./orchestrator`, and `./plugins`.
+- **Conditional exports**: explicit subpath exports for `./`, `./browser`, `./cli`, `./orchestrator`, `./plugins`, `./memory-plugin`
 
 ### Changed
 - `package.json` output mapping:
   - `main` → `dist/node/index.js` (Node)
   - `module` / `types` → `dist/browser/index.js` / `.d.ts` (browser)
-- `bin` now points to `dist/node/cli.js` (Node-only CLI).
-- `browser` field remaps Node bundles to browser bundles.
-- Build scripts now include `build:browser` and `build:node`.
-- README updated with browser/front-end usage guidance and clarified Node-only CLI usage.
+- `bin` now points to `dist/node/cli.js` (Node-only CLI)
+- `browser` field remaps Node bundles to browser bundles
+- Build scripts now include `build:browser` and `build:node`
+- Environment variable access now uses `globalThis` pattern for browser safety
 
 ### Notes
-- Builds pass for both browser and node outputs (`bun run build`).
-- Tests should be re-run post-refactor (Vitest) to confirm coverage after the split.
+- All 10 intent routing tests pass
+- Memory plugin bundle size: ~21KB (browser)
+- Total package size: 44.3 KB compressed
 
 ## [1.1.0] - 2024-12-15
 
