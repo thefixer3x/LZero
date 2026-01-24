@@ -1,6 +1,6 @@
 {
   "name": "vortexai-l0",
-  "version": "1.2.0",
+  "version": "1.2.2",
   "type": "module",
   "description": "VortexAI L0 - Universal Work Orchestrator CLI",
   "main": "./dist/node/index.js",
@@ -68,6 +68,7 @@
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
+    "postbuild": "cp package.json dist/",
     "prepublishOnly": "npm run build",
     "type-check": "tsc --noEmit",
     "lint": "echo \"Linting not configured yet\""
