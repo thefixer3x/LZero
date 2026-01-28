@@ -1,0 +1,711 @@
+Error: A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <Home>
+      <script>
+      <Home>
+        <div className="flex min-h...">
+          <Navbar>
+          <section>
+          <FeaturesSection>
+            <section className="py-20 bg-m..." id="features" aria-labelledby="features-h...">
+              <div className="container ...">
+                <div>
+                <div className="grid grid-...">
+                  <FeatureCard icon={<svg>} title="Advanced L..." description="Switch bet..." accentColor="rgba(36, 1...">
+                    <motion.div className="relative g..." initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} ...>
+                      <div className="relative g..." style={{opacity:0, ...}} ref={function useMotionRef.useCallback}>
+                        <_c className="h-full ove...">
+                          <div ref={null} className="rounded-lg...">
+                            <div className="p-6 h-full...">
+                              <FrostedGlassIcon icon={<svg>} color="rgba(36, 1..." className="mb-4 self-...">
+                                <div
+                                  className="relative rounded-xl flex items-center justify-center w-12 h-12 mb-4 self-..."
+                                  style={{
++                                   background: "linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255,..."
++                                   backdropFilter: "blur(10px)"
++                                   WebkitBackdropFilter: "blur(10px)"
++                                   border: "1px solid rgba(255, 255, 255, 0.1)"
++                                   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1)"
+-                                   background-image: "linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255..."
+-                                   background-position-x: "initial"
+-                                   background-position-y: "initial"
+-                                   background-size: "initial"
+-                                   background-repeat: "initial"
+-                                   background-attachment: "initial"
+-                                   background-origin: "initial"
+-                                   background-clip: "initial"
+-                                   background-color: "initial"
+-                                   backdrop-filter: "blur(10px)"
+-                                   border-top-width: "1px"
+-                                   border-right-width: "1px"
+-                                   border-bottom-width: "1px"
+-                                   border-left-width: "1px"
+-                                   border-top-style: "solid"
+-                                   border-right-style: "solid"
+-                                   border-bottom-style: "solid"
+-                                   border-left-style: "solid"
+-                                   border-top-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-right-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-bottom-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-left-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-image-source: "initial"
+-                                   border-image-slice: "initial"
+-                                   border-image-width: "initial"
+-                                   border-image-outset: "initial"
+-                                   border-image-repeat: "initial"
+-                                   box-shadow: "rgba(0, 0, 0, 0.05) 0px 4px 12px, rgba(255, 255, 255, 0.7) 0px 1px 1p..."
+                                  }}
+                                >
+                              ...
+                            ...
+                  <FeatureCard icon={<svg>} title="Customizab..." description="Use our bu..." accentColor="rgba(236, ...">
+                    <motion.div className="relative g..." initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} ...>
+                      <div className="relative g..." style={{opacity:0, ...}} ref={function useMotionRef.useCallback}>
+                        <_c className="h-full ove...">
+                          <div ref={null} className="rounded-lg...">
+                            <div className="p-6 h-full...">
+                              <FrostedGlassIcon icon={<svg>} color="rgba(236, ..." className="mb-4 self-...">
+                                <div
+                                  className="relative rounded-xl flex items-center justify-center w-12 h-12 mb-4 self-..."
+                                  style={{
++                                   background: "linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255,..."
++                                   backdropFilter: "blur(10px)"
++                                   WebkitBackdropFilter: "blur(10px)"
++                                   border: "1px solid rgba(255, 255, 255, 0.1)"
++                                   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1)"
+-                                   background-image: "linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255..."
+-                                   background-position-x: "initial"
+-                                   background-position-y: "initial"
+-                                   background-size: "initial"
+-                                   background-repeat: "initial"
+-                                   background-attachment: "initial"
+-                                   background-origin: "initial"
+-                                   background-clip: "initial"
+-                                   background-color: "initial"
+-                                   backdrop-filter: "blur(10px)"
+-                                   border-top-width: "1px"
+-                                   border-right-width: "1px"
+-                                   border-bottom-width: "1px"
+-                                   border-left-width: "1px"
+-                                   border-top-style: "solid"
+-                                   border-right-style: "solid"
+-                                   border-bottom-style: "solid"
+-                                   border-left-style: "solid"
+-                                   border-top-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-right-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-bottom-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-left-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-image-source: "initial"
+-                                   border-image-slice: "initial"
+-                                   border-image-width: "initial"
+-                                   border-image-outset: "initial"
+-                                   border-image-repeat: "initial"
+-                                   box-shadow: "rgba(0, 0, 0, 0.05) 0px 4px 12px, rgba(255, 255, 255, 0.7) 0px 1px 1p..."
+                                  }}
+                                >
+                              ...
+                            ...
+                  <FeatureCard icon={<svg>} title="Enterprise..." description="Secure kno..." accentColor="rgba(34, 2...">
+                    <motion.div className="relative g..." initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} ...>
+                      <div className="relative g..." style={{opacity:0, ...}} ref={function useMotionRef.useCallback}>
+                        <_c className="h-full ove...">
+                          <div ref={null} className="rounded-lg...">
+                            <div className="p-6 h-full...">
+                              <FrostedGlassIcon icon={<svg>} color="rgba(34, 2..." className="mb-4 self-...">
+                                <div
+                                  className="relative rounded-xl flex items-center justify-center w-12 h-12 mb-4 self-..."
+                                  style={{
++                                   background: "linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255,..."
++                                   backdropFilter: "blur(10px)"
++                                   WebkitBackdropFilter: "blur(10px)"
++                                   border: "1px solid rgba(255, 255, 255, 0.1)"
++                                   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1)"
+-                                   background-image: "linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255..."
+-                                   background-position-x: "initial"
+-                                   background-position-y: "initial"
+-                                   background-size: "initial"
+-                                   background-repeat: "initial"
+-                                   background-attachment: "initial"
+-                                   background-origin: "initial"
+-                                   background-clip: "initial"
+-                                   background-color: "initial"
+-                                   backdrop-filter: "blur(10px)"
+-                                   border-top-width: "1px"
+-                                   border-right-width: "1px"
+-                                   border-bottom-width: "1px"
+-                                   border-left-width: "1px"
+-                                   border-top-style: "solid"
+-                                   border-right-style: "solid"
+-                                   border-bottom-style: "solid"
+-                                   border-left-style: "solid"
+-                                   border-top-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-right-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-bottom-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-left-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-image-source: "initial"
+-                                   border-image-slice: "initial"
+-                                   border-image-width: "initial"
+-                                   border-image-outset: "initial"
+-                                   border-image-repeat: "initial"
+-                                   box-shadow: "rgba(0, 0, 0, 0.05) 0px 4px 12px, rgba(255, 255, 255, 0.7) 0px 1px 1p..."
+                                  }}
+                                >
+                              ...
+                            ...
+                  <FeatureCard icon={<svg>} title="Enterprise..." description="Bank-level..." accentColor="rgba(132, ...">
+                    <motion.div className="relative g..." initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} ...>
+                      <div className="relative g..." style={{opacity:0, ...}} ref={function useMotionRef.useCallback}>
+                        <_c className="h-full ove...">
+                          <div ref={null} className="rounded-lg...">
+                            <div className="p-6 h-full...">
+                              <FrostedGlassIcon icon={<svg>} color="rgba(132, ..." className="mb-4 self-...">
+                                <div
+                                  className="relative rounded-xl flex items-center justify-center w-12 h-12 mb-4 self-..."
+                                  style={{
++                                   background: "linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255,..."
++                                   backdropFilter: "blur(10px)"
++                                   WebkitBackdropFilter: "blur(10px)"
++                                   border: "1px solid rgba(255, 255, 255, 0.1)"
++                                   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1)"
+-                                   background-image: "linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255..."
+-                                   background-position-x: "initial"
+-                                   background-position-y: "initial"
+-                                   background-size: "initial"
+-                                   background-repeat: "initial"
+-                                   background-attachment: "initial"
+-                                   background-origin: "initial"
+-                                   background-clip: "initial"
+-                                   background-color: "initial"
+-                                   backdrop-filter: "blur(10px)"
+-                                   border-top-width: "1px"
+-                                   border-right-width: "1px"
+-                                   border-bottom-width: "1px"
+-                                   border-left-width: "1px"
+-                                   border-top-style: "solid"
+-                                   border-right-style: "solid"
+-                                   border-bottom-style: "solid"
+-                                   border-left-style: "solid"
+-                                   border-top-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-right-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-bottom-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-left-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-image-source: "initial"
+-                                   border-image-slice: "initial"
+-                                   border-image-width: "initial"
+-                                   border-image-outset: "initial"
+-                                   border-image-repeat: "initial"
+-                                   box-shadow: "rgba(0, 0, 0, 0.05) 0px 4px 12px, rgba(255, 255, 255, 0.7) 0px 1px 1p..."
+                                  }}
+                                >
+                              ...
+                            ...
+                  <FeatureCard icon={<svg>} title="Prompt Tem..." description="Access our..." accentColor="rgba(249, ...">
+                    <motion.div className="relative g..." initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} ...>
+                      <div className="relative g..." style={{opacity:0, ...}} ref={function useMotionRef.useCallback}>
+                        <_c className="h-full ove...">
+                          <div ref={null} className="rounded-lg...">
+                            <div className="p-6 h-full...">
+                              <FrostedGlassIcon icon={<svg>} color="rgba(249, ..." className="mb-4 self-...">
+                                <div
+                                  className="relative rounded-xl flex items-center justify-center w-12 h-12 mb-4 self-..."
+                                  style={{
++                                   background: "linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255,..."
++                                   backdropFilter: "blur(10px)"
++                                   WebkitBackdropFilter: "blur(10px)"
++                                   border: "1px solid rgba(255, 255, 255, 0.1)"
++                                   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1)"
+-                                   background-image: "linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255..."
+-                                   background-position-x: "initial"
+-                                   background-position-y: "initial"
+-                                   background-size: "initial"
+-                                   background-repeat: "initial"
+-                                   background-attachment: "initial"
+-                                   background-origin: "initial"
+-                                   background-clip: "initial"
+-                                   background-color: "initial"
+-                                   backdrop-filter: "blur(10px)"
+-                                   border-top-width: "1px"
+-                                   border-right-width: "1px"
+-                                   border-bottom-width: "1px"
+-                                   border-left-width: "1px"
+-                                   border-top-style: "solid"
+-                                   border-right-style: "solid"
+-                                   border-bottom-style: "solid"
+-                                   border-left-style: "solid"
+-                                   border-top-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-right-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-bottom-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-left-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-image-source: "initial"
+-                                   border-image-slice: "initial"
+-                                   border-image-width: "initial"
+-                                   border-image-outset: "initial"
+-                                   border-image-repeat: "initial"
+-                                   box-shadow: "rgba(0, 0, 0, 0.05) 0px 4px 12px, rgba(255, 255, 255, 0.7) 0px 1px 1p..."
+                                  }}
+                                >
+                              ...
+                            ...
+                  <FeatureCard icon={<svg>} title="MCP Server..." description="Configure ..." accentColor="rgba(168, ...">
+                    <motion.div className="relative g..." initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} ...>
+                      <div className="relative g..." style={{opacity:0, ...}} ref={function useMotionRef.useCallback}>
+                        <_c className="h-full ove...">
+                          <div ref={null} className="rounded-lg...">
+                            <div className="p-6 h-full...">
+                              <FrostedGlassIcon icon={<svg>} color="rgba(168, ..." className="mb-4 self-...">
+                                <div
+                                  className="relative rounded-xl flex items-center justify-center w-12 h-12 mb-4 self-..."
+                                  style={{
++                                   background: "linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255,..."
++                                   backdropFilter: "blur(10px)"
++                                   WebkitBackdropFilter: "blur(10px)"
++                                   border: "1px solid rgba(255, 255, 255, 0.1)"
++                                   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1)"
+-                                   background-image: "linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255..."
+-                                   background-position-x: "initial"
+-                                   background-position-y: "initial"
+-                                   background-size: "initial"
+-                                   background-repeat: "initial"
+-                                   background-attachment: "initial"
+-                                   background-origin: "initial"
+-                                   background-clip: "initial"
+-                                   background-color: "initial"
+-                                   backdrop-filter: "blur(10px)"
+-                                   border-top-width: "1px"
+-                                   border-right-width: "1px"
+-                                   border-bottom-width: "1px"
+-                                   border-left-width: "1px"
+-                                   border-top-style: "solid"
+-                                   border-right-style: "solid"
+-                                   border-bottom-style: "solid"
+-                                   border-left-style: "solid"
+-                                   border-top-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-right-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-bottom-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-left-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-image-source: "initial"
+-                                   border-image-slice: "initial"
+-                                   border-image-width: "initial"
+-                                   border-image-outset: "initial"
+-                                   border-image-repeat: "initial"
+-                                   box-shadow: "rgba(0, 0, 0, 0.05) 0px 4px 12px, rgba(255, 255, 255, 0.7) 0px 1px 1p..."
+                                  }}
+                                >
+                              ...
+                            ...
+                  <FeatureCard icon={<svg>} title={"Data Pri..."} description="Meet regul..." accentColor="rgba(251, ...">
+                    <motion.div className="relative g..." initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} ...>
+                      <div className="relative g..." style={{opacity:0, ...}} ref={function useMotionRef.useCallback}>
+                        <_c className="h-full ove...">
+                          <div ref={null} className="rounded-lg...">
+                            <div className="p-6 h-full...">
+                              <FrostedGlassIcon icon={<svg>} color="rgba(251, ..." className="mb-4 self-...">
+                                <div
+                                  className="relative rounded-xl flex items-center justify-center w-12 h-12 mb-4 self-..."
+                                  style={{
++                                   background: "linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255,..."
++                                   backdropFilter: "blur(10px)"
++                                   WebkitBackdropFilter: "blur(10px)"
++                                   border: "1px solid rgba(255, 255, 255, 0.1)"
++                                   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1)"
+-                                   background-image: "linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255..."
+-                                   background-position-x: "initial"
+-                                   background-position-y: "initial"
+-                                   background-size: "initial"
+-                                   background-repeat: "initial"
+-                                   background-attachment: "initial"
+-                                   background-origin: "initial"
+-                                   background-clip: "initial"
+-                                   background-color: "initial"
+-                                   backdrop-filter: "blur(10px)"
+-                                   border-top-width: "1px"
+-                                   border-right-width: "1px"
+-                                   border-bottom-width: "1px"
+-                                   border-left-width: "1px"
+-                                   border-top-style: "solid"
+-                                   border-right-style: "solid"
+-                                   border-bottom-style: "solid"
+-                                   border-left-style: "solid"
+-                                   border-top-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-right-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-bottom-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-left-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-image-source: "initial"
+-                                   border-image-slice: "initial"
+-                                   border-image-width: "initial"
+-                                   border-image-outset: "initial"
+-                                   border-image-repeat: "initial"
+-                                   box-shadow: "rgba(0, 0, 0, 0.05) 0px 4px 12px, rgba(255, 255, 255, 0.7) 0px 1px 1p..."
+                                  }}
+                                >
+                              ...
+                            ...
+                  <FeatureCard icon={<svg>} title="Real-time ..." description="Enable tea..." accentColor="rgba(16, 1...">
+                    <motion.div className="relative g..." initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} ...>
+                      <div className="relative g..." style={{opacity:0, ...}} ref={function useMotionRef.useCallback}>
+                        <_c className="h-full ove...">
+                          <div ref={null} className="rounded-lg...">
+                            <div className="p-6 h-full...">
+                              <FrostedGlassIcon icon={<svg>} color="rgba(16, 1..." className="mb-4 self-...">
+                                <div
+                                  className="relative rounded-xl flex items-center justify-center w-12 h-12 mb-4 self-..."
+                                  style={{
++                                   background: "linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255,..."
++                                   backdropFilter: "blur(10px)"
++                                   WebkitBackdropFilter: "blur(10px)"
++                                   border: "1px solid rgba(255, 255, 255, 0.1)"
++                                   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1)"
+-                                   background-image: "linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255..."
+-                                   background-position-x: "initial"
+-                                   background-position-y: "initial"
+-                                   background-size: "initial"
+-                                   background-repeat: "initial"
+-                                   background-attachment: "initial"
+-                                   background-origin: "initial"
+-                                   background-clip: "initial"
+-                                   background-color: "initial"
+-                                   backdrop-filter: "blur(10px)"
+-                                   border-top-width: "1px"
+-                                   border-right-width: "1px"
+-                                   border-bottom-width: "1px"
+-                                   border-left-width: "1px"
+-                                   border-top-style: "solid"
+-                                   border-right-style: "solid"
+-                                   border-bottom-style: "solid"
+-                                   border-left-style: "solid"
+-                                   border-top-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-right-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-bottom-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-left-color: "rgba(255, 255, 255, 0.7)"
+-                                   border-image-source: "initial"
+-                                   border-image-slice: "initial"
+-                                   border-image-width: "initial"
+-                                   border-image-outset: "initial"
+-                                   border-image-repeat: "initial"
+-                                   box-shadow: "rgba(0, 0, 0, 0.05) 0px 4px 12px, rgba(255, 255, 255, 0.7) 0px 1px 1p..."
+                                  }}
+                                >
+                              ...
+                            ...
+          <section>
+          ...
+            <motion.div className="grid grid-..." variants={{hidden:{...}, ...}} initial="hidden" whileInView="visible" ...>
+              <div className="grid grid-..." style={{opacity:0}} ref={function useMotionRef.useCallback}>
+                <motion.div variants={{hidden:{...}, ...}}>
+                  <div style={{opacity:0, ...}} ref={function useMotionRef.useCallback}>
+                    <_c className="h-full bg-...">
+                      <div ref={null} className="rounded-lg...">
+                        <_c2 className="pb-2">
+                          <div ref={null} className="flex flex-...">
+                            <FrostedGlassIcon icon={<BuildingIcon>} color="rgba(59, 1..." className="mb-4">
+                              <div
+                                className="relative rounded-xl flex items-center justify-center w-12 h-12 mb-4"
+                                style={{
++                                 background: "linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0..."
++                                 backdropFilter: "blur(10px)"
++                                 WebkitBackdropFilter: "blur(10px)"
++                                 border: "1px solid rgba(255, 255, 255, 0.1)"
++                                 boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1)"
+-                                 background-image: "linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, ..."
+-                                 background-position-x: "initial"
+-                                 background-position-y: "initial"
+-                                 background-size: "initial"
+-                                 background-repeat: "initial"
+-                                 background-attachment: "initial"
+-                                 background-origin: "initial"
+-                                 background-clip: "initial"
+-                                 background-color: "initial"
+-                                 backdrop-filter: "blur(10px)"
+-                                 border-top-width: "1px"
+-                                 border-right-width: "1px"
+-                                 border-bottom-width: "1px"
+-                                 border-left-width: "1px"
+-                                 border-top-style: "solid"
+-                                 border-right-style: "solid"
+-                                 border-bottom-style: "solid"
+-                                 border-left-style: "solid"
+-                                 border-top-color: "rgba(255, 255, 255, 0.7)"
+-                                 border-right-color: "rgba(255, 255, 255, 0.7)"
+-                                 border-bottom-color: "rgba(255, 255, 255, 0.7)"
+-                                 border-left-color: "rgba(255, 255, 255, 0.7)"
+-                                 border-image-source: "initial"
+-                                 border-image-slice: "initial"
+-                                 border-image-width: "initial"
+-                                 border-image-outset: "initial"
+-                                 border-image-repeat: "initial"
+-                                 box-shadow: "rgba(0, 0, 0, 0.05) 0px 4px 12px, rgba(255, 255, 255, 0.7) 0px 1px 1px ..."
+                                }}
+                              >
+                            ...
+                        ...
+                <motion.div variants={{hidden:{...}, ...}}>
+                  <div style={{opacity:0, ...}} ref={function useMotionRef.useCallback}>
+                    <_c className="h-full bg-...">
+                      <div ref={null} className="rounded-lg...">
+                        <_c2 className="pb-2">
+                          <div ref={null} className="flex flex-...">
+                            <FrostedGlassIcon icon={<GovernmentIcon>} color="rgba(139, ..." className="mb-4">
+                              <div
+                                className="relative rounded-xl flex items-center justify-center w-12 h-12 mb-4"
+                                style={{
++                                 background: "linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0..."
++                                 backdropFilter: "blur(10px)"
++                                 WebkitBackdropFilter: "blur(10px)"
++                                 border: "1px solid rgba(255, 255, 255, 0.1)"
++                                 boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1)"
+-                                 background-image: "linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, ..."
+-                                 background-position-x: "initial"
+-                                 background-position-y: "initial"
+-                                 background-size: "initial"
+-                                 background-repeat: "initial"
+-                                 background-attachment: "initial"
+-                                 background-origin: "initial"
+-                                 background-clip: "initial"
+-                                 background-color: "initial"
+-                                 backdrop-filter: "blur(10px)"
+-                                 border-top-width: "1px"
+-                                 border-right-width: "1px"
+-                                 border-bottom-width: "1px"
+-                                 border-left-width: "1px"
+-                                 border-top-style: "solid"
+-                                 border-right-style: "solid"
+-                                 border-bottom-style: "solid"
+-                                 border-left-style: "solid"
+-                                 border-top-color: "rgba(255, 255, 255, 0.7)"
+-                                 border-right-color: "rgba(255, 255, 255, 0.7)"
+-                                 border-bottom-color: "rgba(255, 255, 255, 0.7)"
+-                                 border-left-color: "rgba(255, 255, 255, 0.7)"
+-                                 border-image-source: "initial"
+-                                 border-image-slice: "initial"
+-                                 border-image-width: "initial"
+-                                 border-image-outset: "initial"
+-                                 border-image-repeat: "initial"
+-                                 box-shadow: "rgba(0, 0, 0, 0.05) 0px 4px 12px, rgba(255, 255, 255, 0.7) 0px 1px 1px ..."
+                                }}
+                              >
+                            ...
+                        ...
+                <motion.div variants={{hidden:{...}, ...}}>
+                  <div style={{opacity:0, ...}} ref={function useMotionRef.useCallback}>
+                    <_c className="h-full bg-...">
+                      <div ref={null} className="rounded-lg...">
+                        <_c2 className="pb-2">
+                          <div ref={null} className="flex flex-...">
+                            <FrostedGlassIcon icon={<FinanceIcon>} color="rgba(245, ..." className="mb-4">
+                              <div
+                                className="relative rounded-xl flex items-center justify-center w-12 h-12 mb-4"
+                                style={{
++                                 background: "linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0..."
++                                 backdropFilter: "blur(10px)"
++                                 WebkitBackdropFilter: "blur(10px)"
++                                 border: "1px solid rgba(255, 255, 255, 0.1)"
++                                 boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1)"
+-                                 background-image: "linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, ..."
+-                                 background-position-x: "initial"
+-                                 background-position-y: "initial"
+-                                 background-size: "initial"
+-                                 background-repeat: "initial"
+-                                 background-attachment: "initial"
+-                                 background-origin: "initial"
+-                                 background-clip: "initial"
+-                                 background-color: "initial"
+-                                 backdrop-filter: "blur(10px)"
+-                                 border-top-width: "1px"
+-                                 border-right-width: "1px"
+-                                 border-bottom-width: "1px"
+-                                 border-left-width: "1px"
+-                                 border-top-style: "solid"
+-                                 border-right-style: "solid"
+-                                 border-bottom-style: "solid"
+-                                 border-left-style: "solid"
+-                                 border-top-color: "rgba(255, 255, 255, 0.7)"
+-                                 border-right-color: "rgba(255, 255, 255, 0.7)"
+-                                 border-bottom-color: "rgba(255, 255, 255, 0.7)"
+-                                 border-left-color: "rgba(255, 255, 255, 0.7)"
+-                                 border-image-source: "initial"
+-                                 border-image-slice: "initial"
+-                                 border-image-width: "initial"
+-                                 border-image-outset: "initial"
+-                                 border-image-repeat: "initial"
+-                                 box-shadow: "rgba(0, 0, 0, 0.05) 0px 4px 12px, rgba(255, 255, 255, 0.7) 0px 1px 1px ..."
+                                }}
+                              >
+                            ...
+                        ...
+                <motion.div variants={{hidden:{...}, ...}}>
+                  <div style={{opacity:0, ...}} ref={function useMotionRef.useCallback}>
+                    <_c className="h-full bg-...">
+                      <div ref={null} className="rounded-lg...">
+                        <_c2 className="pb-2">
+                          <div ref={null} className="flex flex-...">
+                            <FrostedGlassIcon icon={<HealthcareIcon>} color="rgba(239, ..." className="mb-4">
+                              <div
+                                className="relative rounded-xl flex items-center justify-center w-12 h-12 mb-4"
+                                style={{
++                                 background: "linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0..."
++                                 backdropFilter: "blur(10px)"
++                                 WebkitBackdropFilter: "blur(10px)"
++                                 border: "1px solid rgba(255, 255, 255, 0.1)"
++                                 boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1)"
+-                                 background-image: "linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, ..."
+-                                 background-position-x: "initial"
+-                                 background-position-y: "initial"
+-                                 background-size: "initial"
+-                                 background-repeat: "initial"
+-                                 background-attachment: "initial"
+-                                 background-origin: "initial"
+-                                 background-clip: "initial"
+-                                 background-color: "initial"
+-                                 backdrop-filter: "blur(10px)"
+-                                 border-top-width: "1px"
+-                                 border-right-width: "1px"
+-                                 border-bottom-width: "1px"
+-                                 border-left-width: "1px"
+-                                 border-top-style: "solid"
+-                                 border-right-style: "solid"
+-                                 border-bottom-style: "solid"
+-                                 border-left-style: "solid"
+-                                 border-top-color: "rgba(255, 255, 255, 0.7)"
+-                                 border-right-color: "rgba(255, 255, 255, 0.7)"
+-                                 border-bottom-color: "rgba(255, 255, 255, 0.7)"
+-                                 border-left-color: "rgba(255, 255, 255, 0.7)"
+-                                 border-image-source: "initial"
+-                                 border-image-slice: "initial"
+-                                 border-image-width: "initial"
+-                                 border-image-outset: "initial"
+-                                 border-image-repeat: "initial"
+-                                 box-shadow: "rgba(0, 0, 0, 0.05) 0px 4px 12px, rgba(255, 255, 255, 0.7) 0px 1px 1px ..."
+                                }}
+                              >
+                            ...
+                        ...
+                <motion.div variants={{hidden:{...}, ...}}>
+                  <div style={{opacity:0, ...}} ref={function useMotionRef.useCallback}>
+                    <_c className="h-full bg-...">
+                      <div ref={null} className="rounded-lg...">
+                        <_c2 className="pb-2">
+                          <div ref={null} className="flex flex-...">
+                            <FrostedGlassIcon icon={<LegalIcon>} color="rgba(132, ..." className="mb-4">
+                              <div
+                                className="relative rounded-xl flex items-center justify-center w-12 h-12 mb-4"
+                                style={{
++                                 background: "linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0..."
++                                 backdropFilter: "blur(10px)"
++                                 WebkitBackdropFilter: "blur(10px)"
++                                 border: "1px solid rgba(255, 255, 255, 0.1)"
++                                 boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1)"
+-                                 background-image: "linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, ..."
+-                                 background-position-x: "initial"
+-                                 background-position-y: "initial"
+-                                 background-size: "initial"
+-                                 background-repeat: "initial"
+-                                 background-attachment: "initial"
+-                                 background-origin: "initial"
+-                                 background-clip: "initial"
+-                                 background-color: "initial"
+-                                 backdrop-filter: "blur(10px)"
+-                                 border-top-width: "1px"
+-                                 border-right-width: "1px"
+-                                 border-bottom-width: "1px"
+-                                 border-left-width: "1px"
+-                                 border-top-style: "solid"
+-                                 border-right-style: "solid"
+-                                 border-bottom-style: "solid"
+-                                 border-left-style: "solid"
+-                                 border-top-color: "rgba(255, 255, 255, 0.7)"
+-                                 border-right-color: "rgba(255, 255, 255, 0.7)"
+-                                 border-bottom-color: "rgba(255, 255, 255, 0.7)"
+-                                 border-left-color: "rgba(255, 255, 255, 0.7)"
+-                                 border-image-source: "initial"
+-                                 border-image-slice: "initial"
+-                                 border-image-width: "initial"
+-                                 border-image-outset: "initial"
+-                                 border-image-repeat: "initial"
+-                                 box-shadow: "rgba(0, 0, 0, 0.05) 0px 4px 12px, rgba(255, 255, 255, 0.7) 0px 1px 1px ..."
+                                }}
+                              >
+                            ...
+                        ...
+                <motion.div variants={{hidden:{...}, ...}}>
+                  <div style={{opacity:0, ...}} ref={function useMotionRef.useCallback}>
+                    <_c className="h-full bg-...">
+                      <div ref={null} className="rounded-lg...">
+                        <_c2 className="pb-2">
+                          <div ref={null} className="flex flex-...">
+                            <FrostedGlassIcon icon={<EducationIcon>} color="rgba(14, 1..." className="mb-4">
+                              <div
+                                className="relative rounded-xl flex items-center justify-center w-12 h-12 mb-4"
+                                style={{
++                                 background: "linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0..."
++                                 backdropFilter: "blur(10px)"
++                                 WebkitBackdropFilter: "blur(10px)"
++                                 border: "1px solid rgba(255, 255, 255, 0.1)"
++                                 boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1)"
+-                                 background-image: "linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, ..."
+-                                 background-position-x: "initial"
+-                                 background-position-y: "initial"
+-                                 background-size: "initial"
+-                                 background-repeat: "initial"
+-                                 background-attachment: "initial"
+-                                 background-origin: "initial"
+-                                 background-clip: "initial"
+-                                 background-color: "initial"
+-                                 backdrop-filter: "blur(10px)"
+-                                 border-top-width: "1px"
+-                                 border-right-width: "1px"
+-                                 border-bottom-width: "1px"
+-                                 border-left-width: "1px"
+-                                 border-top-style: "solid"
+-                                 border-right-style: "solid"
+-                                 border-bottom-style: "solid"
+-                                 border-left-style: "solid"
+-                                 border-top-color: "rgba(255, 255, 255, 0.7)"
+-                                 border-right-color: "rgba(255, 255, 255, 0.7)"
+-                                 border-bottom-color: "rgba(255, 255, 255, 0.7)"
+-                                 border-left-color: "rgba(255, 255, 255, 0.7)"
+-                                 border-image-source: "initial"
+-                                 border-image-slice: "initial"
+-                                 border-image-width: "initial"
+-                                 border-image-outset: "initial"
+-                                 border-image-repeat: "initial"
+-                                 box-shadow: "rgba(0, 0, 0, 0.05) 0px 4px 12px, rgba(255, 255, 255, 0.7) 0px 1px 1px ..."
+                                }}
+                              >
+                            ...
+                        ...
+          ...
+    ...
+
+    at createUnhandledError (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/errors/console-error.js:27:71)
+    at handleClientError (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/errors/use-error-handler.js:45:56)
+    at console.error (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/globals/intercept-console-error.js:47:56)
+    at Proxy.<anonymous> (https://ddfd3929-2798-4ade-8134-b9b92c8ee488-00-3lxxmowewzaqm.riker.replit.dev/__replco/static/devtools/injected.js:37:27)
+    at eval (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:13502:19)
+    at runWithFiberInDEV (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:1511:30)
+    at emitPendingHydrationWarnings (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:13501:9)
+    at completeWork (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:13662:18)
+    at runWithFiberInDEV (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:1514:13)
+    at completeUnitOfWork (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:15256:19)
+    at performUnitOfWork (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:15137:11)
+    at workLoopConcurrentByScheduler (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:15114:9)
+    at renderRootConcurrent (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:15089:15)
+    at performWorkOnRoot (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:14410:13)
+    at performWorkOnRootViaSchedulerTask (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:16275:7)
+    at MessagePort.performWorkUntilDeadline (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/scheduler/cjs/scheduler.development.js:45:48)
+    at div (<anonymous>)
+    at FrostedGlassIcon (webpack-internal:///(app-pages-browser)/./components/frosted-glass-icon.tsx:20:87)
+    at FeatureCard (webpack-internal:///(app-pages-browser)/./components/feature-card.tsx:46:100)
+    at eval (rsc://React/Server/webpack-internal:///(rsc)/./components/features-section.tsx?70:145:137)
+    at FeaturesSection (rsc://React/Server/webpack-internal:///(rsc)/./components/features-section.tsx?71:145:40)
+    at Home (rsc://React/Server/webpack-internal:///(rsc)/./app/page.tsx?6:182:96)

@@ -1,6 +1,6 @@
 "use client"
 
-import type { ReactNode } from "react"
+import { useState, useEffect, type ReactNode } from "react"
 import { motion } from "framer-motion"
 import { Card } from "@/components/ui/card"
 import { useTheme } from "next-themes"
@@ -19,10 +19,15 @@ export default function FeatureCard({
   description,
   accentColor = "rgba(120, 120, 255, 0.5)",
 }: FeatureCardProps) {
+  const [mounted, setMounted] = useState(false)
   const { resolvedTheme } = useTheme()
-  const isDark = resolvedTheme === "dark"
 
-  // Adjust accent color opacity for dark mode
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const isDark = mounted && resolvedTheme === "dark"
+
   const adjustedAccentColor = isDark
     ? accentColor.replace(/rgba$$(\d+),\s*(\d+),\s*(\d+),\s*[\d.]+$$/, "rgba($1, $2, $3, 0.3)")
     : accentColor

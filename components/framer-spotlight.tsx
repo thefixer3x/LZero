@@ -11,7 +11,6 @@ export default function FramerSpotlight() {
   const heroRef = useRef<HTMLElement | null>(null)
   const defaultPositionRef = useRef({ x: 0, y: 0 })
   const { resolvedTheme } = useTheme()
-  const isDark = resolvedTheme === "dark"
 
   // Motion values for the spotlight position with spring physics
   const mouseX = useMotionValue(0)
@@ -105,6 +104,8 @@ export default function FramerSpotlight() {
   if (!isMounted) {
     return null
   }
+
+  const isDark = resolvedTheme === "dark"
 
   return (
     <div ref={containerRef} className="absolute inset-0 overflow-hidden pointer-events-none">
