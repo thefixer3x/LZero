@@ -24,13 +24,12 @@ export default function Home() {
           <FramerSpotlight />
           <div className="container px-4 md:px-6 py-16 md:py-20">
             <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
-              <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm mb-6">Enterprise AI Solution</div>
+              <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm mb-6">Enterprise Edge AI</div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter mb-6">
-                Secure AI Conversations for Enterprise & Government
+                Reasoning at the Edge
               </h1>
               <p className="text-xl text-muted-foreground md:text-2xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed max-w-2xl mb-12">
-                Unlock the power of AI with enterprise-grade security, customizable agents, and comprehensive knowledge
-                management.
+                Zero-latency AI that works offline, keeps data home, and costs zero per inference. Enterprise reasoning infrastructure for organizations that can't compromise on speed, privacy, or control.
               </p>
 
               <TypingPromptInput />
@@ -40,12 +39,12 @@ export default function Home() {
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/30 to-primary/0 dark:opacity-30 opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-x-[-100%] group-hover:translate-x-[100%]"></div>
                   <Zap className="h-5 w-5 text-white relative z-10" />
                   <div className="flex flex-col items-start relative z-10">
-                    <span className="text-[15px] font-medium">Request Demo</span>
+                    <span className="text-[15px] font-medium">Request Enterprise Demo</span>
                     <span className="text-xs text-gray-400 dark:text-gray-300 -mt-0.5">v1.0.0</span>
                   </div>
                 </Button>
                 <Button className="px-5 py-6 h-[60px] rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-[15px] font-medium text-foreground">
-                  Learn More
+                  View Architecture Docs
                 </Button>
               </div>
             </div>

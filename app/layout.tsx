@@ -7,31 +7,31 @@ import { ThemeProvider } from "@/components/theme-provider"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Enterprise AI Platform | Secure AI Solutions for Business & Government",
+  title: "L0 | Edge Reasoning Infrastructure for Enterprise",
   description:
-    "Enterprise-grade AI platform with LLM conversations, customizable agents, secure knowledge base, and MCP server support for businesses and government agencies.",
-  keywords: "enterprise AI, secure AI, government AI solutions, LLM, knowledge base, AI agents, MCP server",
+    "Millisecond-latency AI that works offline, keeps data home, and costs zero per inference. Enterprise reasoning infrastructure designed for organizations that can't compromise on speed, privacy, or control.",
+  keywords: "edge AI, on-device AI, zero latency AI, offline AI, enterprise AI, data privacy, edge reasoning, persistent memory",
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "https://your-domain.com",
-    title: "Enterprise AI Platform | Secure AI Solutions",
+    title: "L0 | Reasoning at the Edge",
     description:
-      "Enterprise-grade AI platform with advanced security, customization, and control for businesses and government agencies.",
-    siteName: "Enterprise AI Platform",
+      "Zero-latency AI that works offline, keeps data home, and costs zero per inference. Enterprise edge reasoning infrastructure.",
+    siteName: "L0",
     images: [
       {
         url: "https://your-domain.com/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Enterprise AI Platform",
+        alt: "L0 Edge Reasoning Infrastructure",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Enterprise AI Platform | Secure AI Solutions",
-    description: "Enterprise-grade AI platform with advanced security, customization, and control.",
+    title: "L0 | Reasoning at the Edge",
+    description: "Millisecond-latency AI that works offline, keeps data home, and costs zero per inference.",
     images: ["https://your-domain.com/twitter-image.jpg"],
   },
   robots: {
