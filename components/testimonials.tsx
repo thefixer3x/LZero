@@ -5,21 +5,21 @@ export default function Testimonials() {
   const testimonials = [
     {
       quote:
-        "This AI platform has transformed how our organization handles knowledge management and customer support. The security features give us peace of mind when dealing with sensitive data.",
+        "L0's persistent memory service transformed how we manage sensitive financial data. Zero cloud transmission means we actually sleep at night. The latency improvements are a bonus.",
       name: "Sarah Chen",
       title: "CTO, Global Financial Services",
       avatar: "SC",
     },
     {
       quote:
-        "The ability to customize agents and integrate with our existing systems has made this platform invaluable for our government operations. The ROI has been substantial.",
+        "We deployed L0 in air-gapped environments for government operations. Finally, enterprise-grade AI reasoning without cloud dependencies. Cost savings alone justify the migration.",
       name: "Michael Johnson",
-      title: "IT Director, Government Agency",
+      title: "IT Director, Federal Agency",
       avatar: "MJ",
     },
     {
       quote:
-        "We've seen a 40% increase in productivity since implementing this solution. The knowledge base integration and custom prompt templates have been game-changers.",
+        "The zero per-inference cost model is a game-changer. We scaled to millions of edge devices without touching cloud billing. ROI was immediate.",
       name: "David Rodriguez",
       title: "Head of Innovation, Enterprise Tech",
       avatar: "DR",
@@ -38,7 +38,7 @@ export default function Testimonials() {
               Trusted by Leading Organizations
             </h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-              See what our enterprise and government clients have to say about our AI platform.
+              See what enterprise and government clients have to say about edge reasoning with L0.
             </p>
           </div>
         </div>
