@@ -7,11 +7,11 @@ import { Send } from "lucide-react"
 
 export default function TypingPromptInput() {
   const prompts = [
-    "Analyze our customer feedback from last month and identify key trends...",
-    "Summarize the latest policy documents and highlight important changes...",
-    "Create a knowledge base article about our new security features...",
-    "Generate a report on our department's performance metrics...",
-    "Draft a response to the government RFP based on our previous submissions...",
+    "Analyze sensitive patient records locally without cloud transmission...",
+    "Process classified documents in our air-gapped environment...",
+    "Run real-time fraud detection at the edge with zero latency...",
+    "Search our proprietary knowledge base with persistent memory...",
+    "Deploy reasoning agents across our field operations offline...",
   ]
 
   const [displayText, setDisplayText] = useState("")

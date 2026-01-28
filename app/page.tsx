@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { Bot, Database, Shield, Users, Zap } from "lucide-react"
+import { Bot, Database, Shield, Zap } from "lucide-react"
 import ContactForm from "@/components/contact-form"
 import Testimonials from "@/components/testimonials"
 import UseCases from "@/components/use-cases"
@@ -60,10 +60,10 @@ export default function Home() {
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
               <div className="space-y-2">
                 <h2 id="how-it-works-heading" className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                  How It Works
+                  From Edge to Enterprise in Three Steps
                 </h2>
                 <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-                  Our platform seamlessly integrates with your existing workflows and systems.
+                  Deploy L0 on your infrastructure with complete control over where code executes and where data lives.
                 </p>
               </div>
             </div>
@@ -72,27 +72,27 @@ export default function Home() {
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
                   <span className="text-2xl font-bold">1</span>
                 </div>
-                <h3 className="text-xl font-bold">Connect Your Data</h3>
+                <h3 className="text-xl font-bold">Deploy on Your Infrastructure</h3>
                 <p className="text-muted-foreground">
-                  Securely connect your organization's knowledge base, documents, and data sources.
+                  Install L0 on your edge devices, on-premise servers, or private clouds. No cloud dependencies.
                 </p>
               </div>
               <div className="flex flex-col items-center space-y-4 text-center">
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
                   <span className="text-2xl font-bold">2</span>
                 </div>
-                <h3 className="text-xl font-bold">Configure Your AI</h3>
+                <h3 className="text-xl font-bold">Populate Persistent Memory</h3>
                 <p className="text-muted-foreground">
-                  Choose LLMs, set up agents, and customize prompt templates to match your needs.
+                  Ingest organizational knowledge into L0's semantic memory layer. Indexed locally, retrieved instantly.
                 </p>
               </div>
               <div className="flex flex-col items-center space-y-4 text-center">
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
                   <span className="text-2xl font-bold">3</span>
                 </div>
-                <h3 className="text-xl font-bold">Deploy & Scale</h3>
+                <h3 className="text-xl font-bold">Launch Reasoning Workloads</h3>
                 <p className="text-muted-foreground">
-                  Roll out to your organization with enterprise-grade security and scale as needed.
+                  Deploy customized agents that reason autonomously. Build complex workflows and scale without cloud API costs.
                 </p>
               </div>
             </div>
@@ -115,31 +115,30 @@ export default function Home() {
                     Custom Enterprise Pricing
                   </h2>
                   <p className="text-muted-foreground md:text-xl">
-                    We offer tailored pricing packages for enterprises and government agencies based on your specific
-                    needs and scale.
+                    L0 licensing is based on deployment scope and infrastructure needs, not tokens or inference counts.
                   </p>
                 </div>
                 <div className="space-y-4">
                   <div className="flex items-center gap-2">
-                    <Users className="h-5 w-5 text-primary" />
-                    <span>Unlimited users with role-based access control</span>
+                    <Zap className="h-5 w-5 text-primary" />
+                    <span>Unlimited reasoning inference (no per-token billing)</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Database className="h-5 w-5 text-primary" />
-                    <span>Customizable knowledge base size</span>
+                    <span>Scalable from mobile to enterprise infrastructure</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Bot className="h-5 w-5 text-primary" />
-                    <span>Access to all LLM models</span>
+                    <span>Edge, Enterprise, or Government deployment options</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Shield className="h-5 w-5 text-primary" />
-                    <span>Enterprise-grade security and compliance</span>
+                    <span>FedRAMP-ready, air-gap capable</span>
                   </div>
                 </div>
                 <div className="pt-4">
                   <p className="font-medium">
-                    Contact us for a personalized quote and to discuss your specific requirements.
+                    Contact our enterprise team to discuss edge reasoning at scale and receive a custom deployment quote.
                   </p>
                 </div>
               </div>

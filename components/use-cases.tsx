@@ -15,44 +15,44 @@ import {
 export default function UseCases() {
   const useCases = [
     {
-      icon: <BuildingIcon />,
-      title: "Enterprise Knowledge Management",
-      description:
-        "Centralize organizational knowledge and enable AI-powered search and retrieval across all your data sources.",
-      accentColor: "rgba(59, 130, 246, 0.5)",
-    },
-    {
-      icon: <GovernmentIcon />,
-      title: "Government Operations",
-      description:
-        "Streamline processes, enhance citizen services, and improve decision-making with secure AI solutions.",
-      accentColor: "rgba(139, 92, 246, 0.5)",
-    },
-    {
-      icon: <FinanceIcon />,
-      title: "Financial Services",
-      description:
-        "Enhance compliance, risk assessment, and customer service with AI that respects strict data security requirements.",
-      accentColor: "rgba(245, 158, 11, 0.5)",
-    },
-    {
       icon: <HealthcareIcon />,
-      title: "Healthcare",
+      title: "Privacy-Compliant Diagnostics",
       description:
-        "Improve patient care and operational efficiency while maintaining HIPAA compliance and data privacy.",
+        "Process patient data with on-device reasoning. Meet HIPAA compliance without cloud residency. Millisecond latency for real-time clinical support.",
       accentColor: "rgba(239, 68, 68, 0.5)",
     },
     {
-      icon: <LegalIcon />,
-      title: "Legal",
+      icon: <FinanceIcon />,
+      title: "Real-Time Risk Assessment",
       description:
-        "Accelerate legal research, contract analysis, and case preparation with secure, accurate AI assistance.",
+        "Analyze transactions and detect anomalies without transmitting financial data. Edge reasoning enables instant decisions at the point of transaction.",
+      accentColor: "rgba(245, 158, 11, 0.5)",
+    },
+    {
+      icon: <GovernmentIcon />,
+      title: "Secure Government Operations",
+      description:
+        "Deploy reasoning workloads in classified environments and air-gapped networks. FedRAMP compliant, offline-first operation.",
+      accentColor: "rgba(139, 92, 246, 0.5)",
+    },
+    {
+      icon: <BuildingIcon />,
+      title: "Field Operations & Logistics",
+      description:
+        "Enable field agents with AI reasoning that works offline. Real-time decisions happen locally and sync when connectivity returns.",
+      accentColor: "rgba(59, 130, 246, 0.5)",
+    },
+    {
+      icon: <LegalIcon />,
+      title: "Secure Legal Intelligence",
+      description:
+        "Analyze sensitive legal documents with on-device reasoning. Privileged information never leaves attorney-client networks.",
       accentColor: "rgba(132, 204, 22, 0.5)",
     },
     {
       icon: <EducationIcon />,
-      title: "Education",
-      description: "Transform learning experiences and administrative processes with customizable AI solutions.",
+      title: "R&D & IP Protection",
+      description: "Develop AI capabilities using proprietary data and research. Everything stays on-device. No risk of IP leakage through cloud APIs.",
       accentColor: "rgba(14, 165, 233, 0.5)",
     },
   ]
@@ -96,9 +96,9 @@ export default function UseCases() {
             <div className="inline-block rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground mb-2">
               Use Cases
             </div>
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Transforming Industries</h2>
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">L0 in Action</h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-              Our AI platform is designed to meet the unique challenges of various sectors.
+              Real-world enterprise applications where edge reasoning delivers immediate value.
             </p>
           </div>
         </motion.div>
