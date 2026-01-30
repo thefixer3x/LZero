@@ -10,7 +10,10 @@ export default function Footer() {
           <div className="space-y-4">
             <h3 className="text-lg font-bold">L0</h3>
             <p className="text-sm text-muted-foreground">
-              Edge reasoning infrastructure for organizations that can't compromise on latency, privacy, or control.
+              Enterprise Edge Reasoning Infrastructure.
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Zero latency. Complete privacy. Enterprise grade.
             </p>
           </div>
           <div className="space-y-4">
@@ -23,18 +26,18 @@ export default function Footer() {
                   </Link>
                 </li>
                 <li>
-                  <Link href="#security" className="text-muted-foreground hover:text-foreground">
-                    Security
+                  <Link href="#features" className="text-muted-foreground hover:text-foreground">
+                    Persistent Memory
                   </Link>
                 </li>
                 <li>
-                  <Link href="#enterprise" className="text-muted-foreground hover:text-foreground">
-                    Enterprise
+                  <Link href="#use-cases" className="text-muted-foreground hover:text-foreground">
+                    Use Cases
                   </Link>
                 </li>
                 <li>
-                  <Link href="#government" className="text-muted-foreground hover:text-foreground">
-                    Government
+                  <Link href="#contact" className="text-muted-foreground hover:text-foreground">
+                    Pricing
                   </Link>
                 </li>
               </ul>
@@ -45,8 +48,13 @@ export default function Footer() {
             <nav aria-label="Resources Navigation">
               <ul className="space-y-2 text-sm">
                 <li>
-                  <Link href="/documentation" className="text-muted-foreground hover:text-foreground">
+                  <Link href="/docs" className="text-muted-foreground hover:text-foreground">
                     Documentation
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/docs/api" className="text-muted-foreground hover:text-foreground">
+                    API Reference
                   </Link>
                 </li>
                 <li>
@@ -55,40 +63,35 @@ export default function Footer() {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/blog" className="text-muted-foreground hover:text-foreground">
-                    Blog
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/support" className="text-muted-foreground hover:text-foreground">
-                    Support
+                  <Link href="/docs/security" className="text-muted-foreground hover:text-foreground">
+                    Security Docs
                   </Link>
                 </li>
               </ul>
             </nav>
           </div>
           <div className="space-y-4">
-            <h3 className="text-sm font-bold">Company</h3>
-            <nav aria-label="Company Navigation">
+            <h3 className="text-sm font-bold">Enterprise</h3>
+            <nav aria-label="Enterprise Navigation">
               <ul className="space-y-2 text-sm">
+                <li>
+                  <Link href="#contact" className="text-muted-foreground hover:text-foreground">
+                    Contact Sales
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/security" className="text-muted-foreground hover:text-foreground">
+                    Security & Compliance
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/government" className="text-muted-foreground hover:text-foreground">
+                    Government Solutions
+                  </Link>
+                </li>
                 <li>
                   <Link href="/about" className="text-muted-foreground hover:text-foreground">
                     About
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/careers" className="text-muted-foreground hover:text-foreground">
-                    Careers
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/contact" className="text-muted-foreground hover:text-foreground">
-                    Contact
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/privacy" className="text-muted-foreground hover:text-foreground">
-                    Privacy Policy
                   </Link>
                 </li>
               </ul>
