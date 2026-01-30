@@ -1,0 +1,52 @@
+{
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "name": "l0-landing",
+  "projectType": "application",
+  "sourceRoot": "apps/vortexai-l0/L0-saas-index/app",
+  "tags": ["scope:l0", "type:app", "platform:web"],
+  "implicitDependencies": ["vortexai-l0"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/vortexai-l0/L0-saas-index",
+        "command": "NODE_ENV=production npx next build"
+      },
+      "outputs": ["{projectRoot}/.next"],
+      "cache": true
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/vortexai-l0/L0-saas-index",
+        "command": "npx next dev"
+      },
+      "cache": false
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "cwd": "apps/vortexai-l0/L0-saas-index",
+        "command": "npx next start"
+      },
+      "cache": false
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/vortexai-l0/L0-saas-index",
+        "command": "npx next lint"
+      },
+      "cache": true
+    },
+    "type-check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/vortexai-l0/L0-saas-index",
+        "command": "npx tsc --noEmit"
+      },
+      "cache": true
+    }
+  }
+}

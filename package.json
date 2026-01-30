@@ -104,5 +104,9 @@
   "homepage": "https://vortexai.com/l0",
   "engines": {
     "node": ">=18.0.0"
+  },
+  "nx": {
+    "name": "vortexai-l0",
+    "tags": ["scope:l0", "type:cli", "platform:node"]
   }
 }
