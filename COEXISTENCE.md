@@ -2,7 +2,6 @@
 
 ## Structure
 
-```
 vortexai-l0/ (root - CLI package)
 ├── src/                  # CLI source code
 ├── dist/                 # Compiled CLI (browser + node)
@@ -14,7 +13,6 @@ vortexai-l0/ (root - CLI package)
 │   └── ...
 ├── examples/
 └── docs/
-```
 
 ## Key Points
 
