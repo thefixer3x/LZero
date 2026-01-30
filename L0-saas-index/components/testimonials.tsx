@@ -19,6 +19,13 @@ export default function Testimonials() {
     },
     {
       quote:
+        "Healthcare compliance was our biggest concern. L0's on-device-first architecture means HIPAA compliance is built in, not bolted on. Our patients' privacy is guaranteed.",
+      name: "Dr. Elizabeth Moore",
+      title: "Chief Clinical Officer, Healthcare Network",
+      avatar: "EM",
+    },
+    {
+      quote:
         "The zero per-inference cost model is a game-changer. We scaled to millions of edge devices without touching cloud billing. ROI was immediate.",
       name: "David Rodriguez",
       title: "Head of Innovation, Enterprise Tech",
@@ -27,15 +34,15 @@ export default function Testimonials() {
   ]
 
   return (
-    <section className="py-20">
+    <section id="testimonials" className="py-20" aria-labelledby="testimonials-heading">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
           <div className="space-y-2">
             <div className="inline-block rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground mb-2">
               Testimonials
             </div>
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-              Trusted by Leading Organizations
+            <h2 id="testimonials-heading" className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+              Trusted by Enterprise & Government
             </h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
               See what enterprise and government clients have to say about edge reasoning with L0.

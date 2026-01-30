@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   title: "L0 | Edge Reasoning Infrastructure for Enterprise",
   description:
     "Millisecond-latency AI that works offline, keeps data home, and costs zero per inference. Enterprise reasoning infrastructure designed for organizations that can't compromise on speed, privacy, or control.",
@@ -14,14 +15,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://your-domain.com",
+    url: "/",
     title: "L0 | Reasoning at the Edge",
     description:
       "Zero-latency AI that works offline, keeps data home, and costs zero per inference. Enterprise edge reasoning infrastructure.",
     siteName: "L0",
     images: [
       {
-        url: "https://your-domain.com/og-image.jpg",
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "L0 Edge Reasoning Infrastructure",
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "L0 | Reasoning at the Edge",
     description: "Millisecond-latency AI that works offline, keeps data home, and costs zero per inference.",
-    images: ["https://your-domain.com/twitter-image.jpg"],
+    images: ["/twitter-image.jpg"],
   },
   robots: {
     index: true,

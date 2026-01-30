@@ -15,7 +15,6 @@ export default function Navbar() {
     { label: "Use Cases", href: "#use-cases" },
     { label: "Testimonials", href: "#testimonials" },
     { label: "Contact", href: "#contact" },
-    { label: "Docs", href: "#docs" },
   ]
 
   return (

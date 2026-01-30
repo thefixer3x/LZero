@@ -1,297 +1,69 @@
-# 🌪️ VortexAI L0 - Universal Work Orchestrator
+# L0 Edge Reasoning Infrastructure (VortexAI L0)
 
-**Beyond AI chat. True orchestration.**
+L0 is enterprise-grade edge reasoning infrastructure with persistent memory, millisecond latency, offline-first execution, and zero per-inference costs. This repository contains the L0 SaaS landing site plus the complete messaging and positioning package used to align product, marketing, and enterprise sales.
 
-VortexAI L0 is a revolutionary CLI tool that doesn't just answer questions—it orchestrates your entire workflow. From development workflow to task execution deep research, viral social media campaigns to code development, L0 delegates tasks to specialized agents and delivers complete solutions.
+## What's in this app
 
-## 🎯 What Makes L0 Different
+### L0 SaaS landing site
+- Location: `apps/vortexai-l0/L0-saas-index`
+- Stack: Next.js 15, React 19, Tailwind
+- Purpose: Enterprise-focused marketing site for L0
 
-Traditional AI assistants chat. **L0 orchestrates.**
+### The complete L0 messaging package
+All six core documents live in `apps/vortexai-l0/L0-saas-index/attached_assets`:
 
-- **Content Strategy**: Research, plan, create, and optimize content across platforms
-- **Multi-Agent Delegation**: Coordinate specialized agents for complex workflows
-- **Real-World Results**: Not just advice—actual deliverables and implementations
+1. `L0_BRAND_COPY_1769621416262.md`
+   - Master messaging framework (hero copy, features, competitive positioning)
+2. `L0_ENTERPRISE_README_1769621416342.md`
+   - Production-ready technical README with code examples and benchmarks
+3. `L0_LANDING_PAGE_SECTIONS_1769621416350.md`
+   - Drop-in landing page copy and implementation notes
+4. `L0_ENTERPRISE_POSITIONING_1769621416337.md`
+   - Investor and enterprise sales positioning (valuation multipliers, TAM)
+5. `L0_IMPLEMENTATION_GUIDE_1769621416346.md`
+   - 6-phase implementation roadmap with checklists
+6. `L0_MASTER_INDEX_1769621416353.md`
+   - Quick-reference "Choose Your Path" guide
 
-## 🚀 Quick Start
+## Core L0 positioning
 
-### CLI Installation
+"Reasoning Without Compromise"
+- Persistent Edge Memory (the moat)
+- Zero-Latency Reasoning (5-50ms)
+- Complete Privacy (nothing leaves your perimeter)
+- Offline-First (works anywhere, syncs when possible)
+- Zero Per-Inference Costs (5-50x cheaper at scale)
+
+## Local development (landing site)
 
 ```bash
-# Install VortexAI L0 globally
-npm install -g vortexai-l0
-
-# Or use as a project dependency
-npm install vortexai-l0
+cd apps/vortexai-l0/L0-saas-index
+npm --workspaces=false install --no-package-lock
+npm --workspaces=false run dev
 ```
 
-### CLI Usage (Node)
-
-The CLI is available under multiple command names for convenience:
-- `vortex` - Full name
-- `vortexai` - Alternative full name
-- `l0` - Short alias
-- `vxai` - Short alias (new)
-- `lzero` - Short alias (new)
+## Production build (landing site)
 
 ```bash
-# Initialize workspace (any command works)
-vortex init
-lzero init
-vxai init
-
-# Real-world orchestration examples
-vortex l0 "develop a new feature for my application"
-vortex l0 "research options for security tools"
-vortex l0 "research options for marketing"
-vortex l0 "research options for sales"
-vortex l0 "research options for customer support"
-vortex orchestrate "analyze trending hashtags and create content calendar"
-vortex orchestrate "research competitors and update Q4 strategy"
-
-# Campaign management
-vortex campaign "increase brand awareness among millennials"
-
-# Development workflows  
-vortex l0 code "social media scheduler component"
-vortex l0 memory "oauth implementation patterns"
+cd apps/vortexai-l0/L0-saas-index
+npm --workspaces=false run build
 ```
 
-### Programmatic API
+## Vercel deployment notes
 
-```typescript
-import { L0Orchestrator } from 'vortexai-l0/orchestrator';
+- Root Directory: `apps/vortexai-l0/L0-saas-index`
+- Install Command: `npm --workspaces=false install --no-package-lock`
+- Build Command: `npm --workspaces=false run build`
+- Output: `.next`
+- Recommended env var: `NEXT_PUBLIC_SITE_URL` (used by sitemap/robots metadata)
 
-const orchestrator = new L0Orchestrator();
+## How to use the package
 
-// Orchestrate a campaign
-const response = await orchestrator.query('create viral TikTok campaign');
-console.log(response.workflow);
-console.log(response.agents);
-
-// Find code snippets
-const code = await orchestrator.findCode('floating notification card');
-console.log(code.code);
-
-// Search memories
-const memories = await orchestrator.searchMemories('oauth');
-console.log(memories.data);
-```
-
-See [examples/](examples/) for more usage examples.
-
-## 🎯 Real-World Use Cases
-
-## 🤖 Agent Orchestration
-
-L0 coordinates specialized agents for maximum efficiency:
-
-- **Research Agent**: Market analysis, competitor research, trend monitoring
-- **Creative Agent**: Content creation, visual design, copywriting
-- **Platform Agent**: Algorithm optimization for TikTok, Instagram, Twitter, LinkedIn
-- **Analytics Agent**: Performance tracking, KPI monitoring, ROI analysis
-- **Development Agent**: Code generation, architecture planning, testing
-### Content Creation
-- **Blog Posts**: Research, outline, draft, and SEO optimization
-- **Video Scripts**: Platform-specific optimization for TikTok, YouTube, Instagram
-- **Email Campaigns**: Automated sequences with personalization
-- **Brand Messaging**: Consistent voice across all platforms
-
-### Development & Code
-- **Code Snippets**: Intelligent retrieval from your knowledge base
-- **Architecture Planning**: Multi-service coordination and planning
-- **Implementation Workflows**: Step-by-step development orchestration
-
-
-### Social Media & Marketing
-- **Viral Campaign Creation**: Full strategy, content, and execution plan
-- **Trend Analysis**: Real-time hashtag research and competitor monitoring
-- **Content Calendar**: Automated planning with platform optimization
-- **Influencer Outreach**: Strategy and coordination workflows
-
-## 🛠️ Available Commands
-
-### Core Orchestration
-```bash
-vortex orchestrate "<natural language request>"
-vortex l0 "<any workflow request>"
-```
-
-### Campaign Management
-```bash
-vortex campaign "objective" --platforms "tiktok,instagram" --budget "$5000"
-vortex l0 campaign "viral product launch"
-```
-
-### Trend Analysis
-```bash
-vortex trends --platform tiktok --timeframe 24h
-vortex l0 trends "analyze hashtags for eco products"
-```
-
-### Development
-```bash
-vortex l0 code "component description"
-vortex l0 memory "search term"
-vortex l0 help "technical topic"
-```
-
-### Configuration
-```bash
-vortex init          # Initialize workspace
-vortex status        # Check orchestrator status
-vortex help          # Show all commands
-```
-
-## 📊 Example Workflows
-
-### Viral TikTok Campaign
-```bash
-vortex orchestrate "create viral TikTok campaign for sustainable fashion brand"
-```
-
-**L0 Orchestrates:**
-1. 📊 Market research & competitor analysis
-2. 🎨 Creative strategy & content planning  
-3. 📱 Platform-specific content creation
-4. ⏰ Scheduling & automation setup
-5. 📈 Analytics & performance tracking
-
-### Content Calendar Creation
-```bash
-vortex orchestrate "create Q4 content calendar with holiday themes"
-```
-
-**L0 Delivers:**
-- Weekly content themes
-- Holiday-specific campaigns
-- Platform-optimized posting schedules
-- Hashtag research and recommendations
-- Performance tracking setup
-
-### Competitor Analysis
-```bash
-vortex orchestrate "analyze top 5 competitors and update our strategy"
-```
-
-**L0 Coordinates:**
-- Research Agent: Competitor content analysis
-- Analytics Agent: Performance benchmarking  
-- Strategy Agent: Gap analysis and recommendations
-- Content Agent: Updated messaging frameworks
-
-## 🎨 Output Formats
-
-- **Interactive**: Rich terminal output with workflow visualization
-- **JSON**: Structured data for integration with other tools
-- **Reports**: Comprehensive analysis and recommendations
-
-## 🔧 Advanced Features
-
-### Multi-Platform Optimization
-L0 understands platform-specific requirements:
-- **TikTok**: Hook in first 3 seconds, trending audio usage
-- **Instagram**: Visual-first content, Stories optimization
-- **Twitter**: Thread strategies, hashtag optimization
-- **LinkedIn**: Professional tone, B2B messaging
-
-### Memory Services Integration (v1.2.0+)
-
-L0 integrates with LanOnasis Memory-as-a-Service (MaaS) for persistent, AI-powered memory:
-
-```typescript
-import { memoryAPI, configureMemoryPlugin } from 'vortexai-l0/memory-plugin';
-
-// Configure the memory plugin
-configureMemoryPlugin({
-  apiUrl: 'https://api.lanonasis.com',
-  authToken: 'your-token',
-  timeout: 30000
-});
-
-// Core Memory Operations
-await memoryAPI.create({ title: 'Meeting Notes', content: '...', type: 'context' });
-await memoryAPI.search('project requirements');
-await memoryAPI.list({ type: 'project', limit: 10 });
-
-// Intelligence Features
-await memoryAPI.suggestTags('memory-id');      // AI tag suggestions
-await memoryAPI.findRelated('memory-id');       // Find similar memories
-await memoryAPI.detectDuplicates(0.9);          // Find redundant content
-
-// Behavioral Features
-await memoryAPI.recallBehavior({ task: 'deploy app', directory: '/project' });
-await memoryAPI.suggestNextAction({ task: 'fix bug', completed: ['identified issue'] });
-await memoryAPI.recordPattern({ trigger: 'user asked to deploy', actions: [...] });
-```
-
-**Natural Language Support** - L0 understands 38 trigger phrases:
-- *"remember this for later"* → Creates a memory
-- *"what do I know about OAuth?"* → Searches memories
-- *"suggest tags for this"* → AI tag suggestions
-- *"find similar memories"* → Semantic search
-- *"what should I do next?"* → Behavioral suggestions
-
-### Memory System
-L0 maintains context across sessions:
-- Campaign strategies and learnings
-- Content frameworks and templates
-- Code snippets and implementations
-- Performance insights and optimizations
-
-### Real-Time Intelligence
-- Trending hashtag monitoring
-- Competitor activity tracking
-- Platform algorithm updates
-- Performance metric analysis
-
-## 📈 Why Choose VortexAI L0?
-
-| Traditional AI | VortexAI L0 |
-|---------------|-------------|
-| Answers questions | Orchestrates workflows |
-| Single responses | Complete deliverables |
-| Manual execution | Automated coordination |
-| Limited context | Persistent memory |
-| Generic advice | Platform-specific optimization |
-
-## 🌟 Success Stories
-
-> "L0 helped us create a viral TikTok campaign that generated 2.3M views in 48 hours. The orchestration workflow was incredible—research, content creation, posting schedule, all automated." 
-> — *Marketing Director, Eco Fashion Brand*
-
-> "Our content creation time decreased by 70% with L0's orchestration. It doesn't just suggest—it delivers complete campaigns."
-> — *Social Media Manager, Tech Startup*
-
-## 🔮 Roadmap
-
-- **AI-Powered Content Generation**: Integration with GPT-4, Claude, and specialized models
-- **Visual Content Creation**: Automated image and video generation
-- **Performance Optimization**: Machine learning-driven campaign optimization
-- **Team Collaboration**: Multi-user orchestration and delegation
-- **Platform Integrations**: Direct publishing to social media platforms
-
-## 🤝 Contributing
-
-VortexAI L0 is built for the community. Contribute workflows, agents, and optimizations:
-
-```bash
-git clone https://github.com/vortexai/l0-orchestrator
-cd l0-orchestrator
-npm install
-npm run dev
-```
-
-## 📄 License
-
-MIT License - Use VortexAI L0 for personal and commercial projects.
-
-## 🔗 Links
-
-- **Documentation**: https://docs.vortexcore.app/l0
-- **Platform**: https://vortexcore.app
-- **Community**: https://discord.gg/vortexai
-- **Issues**: https://github.com/vortexcore/vortexai-l0/issues
+1. Start with `L0_MASTER_INDEX_1769621416353.md` to choose your path.
+2. Use `L0_LANDING_PAGE_SECTIONS_1769621416350.md` for direct website copy swaps.
+3. Use `L0_BRAND_COPY_1769621416262.md` for consistent messaging everywhere.
+4. Use `L0_ENTERPRISE_POSITIONING_1769621416337.md` for investor and sales materials.
 
 ---
 
-**🌪️ VortexAI L0: Your productivity multiplied. Not just assisted.**
+L0 is positioned to win where latency, privacy, and cost constraints are non-negotiable. Lead with Persistent Edge Memory and build from there.

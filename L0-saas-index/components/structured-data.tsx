@@ -2,30 +2,18 @@ export default function StructuredData() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    name: "Enterprise AI Platform",
+    name: "L0 Edge Reasoning Infrastructure",
     applicationCategory: "BusinessApplication",
     operatingSystem: "Web",
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "USD",
-      availability: "https://schema.org/InStock",
-      priceValidUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split("T")[0],
-    },
     description:
-      "Enterprise-grade AI platform with LLM conversations, customizable agents, secure knowledge base, and MCP server support.",
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.8",
-      ratingCount: "127",
-    },
+      "Edge reasoning infrastructure for enterprise: persistent memory, zero-latency inference, offline-first execution, and complete data privacy.",
     featureList: [
-      "Advanced LLM Conversations",
-      "Customizable Agents",
-      "Enterprise Knowledge Base",
-      "Prompt Templates",
-      "MCP Server Support",
-      "Enterprise Security",
+      "Persistent Edge Memory",
+      "Zero-Latency Reasoning",
+      "Offline-First Execution",
+      "Zero Per-Inference Costs",
+      "Compliance-Native Privacy",
+      "Multi-Agent Orchestration",
     ],
   }
 

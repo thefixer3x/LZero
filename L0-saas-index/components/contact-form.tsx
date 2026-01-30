@@ -95,7 +95,7 @@ export default function ContactForm() {
             <Textarea id="message" placeholder="Tell us about your specific requirements and use cases..." rows={4} />
           </div>
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Submitting..." : "Request Information"}
+            {isSubmitting ? "Submitting..." : "Request Enterprise Information"}
           </Button>
           <p className="text-xs text-muted-foreground text-center">
             By submitting this form, you agree to our privacy policy and terms of service.

@@ -83,7 +83,11 @@ export default function UseCases() {
   }
 
   return (
-    <section className="py-20 bg-gradient-to-b from-background to-muted/30 dark:from-background dark:to-muted/10">
+    <section
+      id="use-cases"
+      className="py-20 bg-gradient-to-b from-background to-muted/30 dark:from-background dark:to-muted/10"
+      aria-labelledby="use-cases-heading"
+    >
       <div className="container px-4 md:px-6">
         <motion.div
           className="flex flex-col items-center justify-center space-y-4 text-center mb-12"
@@ -96,7 +100,9 @@ export default function UseCases() {
             <div className="inline-block rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground mb-2">
               Use Cases
             </div>
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">L0 in Action</h2>
+            <h2 id="use-cases-heading" className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+              L0 in Action: Real-World Enterprise Applications
+            </h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
               From healthcare to government, finance to field operations—L0 powers reasoning where it matters most.
             </p>

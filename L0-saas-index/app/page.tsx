@@ -63,7 +63,7 @@ export default function Home() {
                   From Edge to Enterprise in Three Steps
                 </h2>
                 <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-                  Deploy L0 on your infrastructure with complete control over where code executes and where data lives.
+                  Deploy, populate, and launch enterprise-grade reasoning on your infrastructure.
                 </p>
               </div>
             </div>
@@ -112,7 +112,7 @@ export default function Home() {
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
                   <h2 id="contact-heading" className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                    Custom Enterprise Pricing
+                    Custom Enterprise Pricing for Edge Reasoning at Scale
                   </h2>
                   <p className="text-muted-foreground md:text-xl">
                     L0 licensing is based on deployment scope and infrastructure needs, not tokens or inference counts.
@@ -129,11 +129,11 @@ export default function Home() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Bot className="h-5 w-5 text-primary" />
-                    <span>Edge, Enterprise, or Government deployment options</span>
+                    <span>One-time or annual licensing (your choice)</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Shield className="h-5 w-5 text-primary" />
-                    <span>FedRAMP-ready, air-gap capable</span>
+                    <span>HIPAA, GDPR, FedRAMP compliance ready</span>
                   </div>
                 </div>
                 <div className="pt-4">

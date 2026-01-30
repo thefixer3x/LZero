@@ -76,7 +76,7 @@ export default function FeaturesSection() {
               Edge Reasoning, Enterprise Grade
             </h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-              Infrastructure designed for organizations that can't compromise on latency, privacy, or control.
+              Built from the ground up for organizations demanding millisecond latency, complete privacy, and zero API costs.
             </p>
           </div>
         </div>
