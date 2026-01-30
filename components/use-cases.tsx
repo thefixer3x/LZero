@@ -44,15 +44,15 @@ export default function UseCases() {
     },
     {
       icon: <LegalIcon />,
-      title: "Secure Legal Intelligence",
+      title: "Centralized Knowledge, Distributed Reasoning",
       description:
-        "Analyze sensitive legal documents with on-device reasoning. Privileged information never leaves attorney-client networks.",
+        "Build a single source of truth that lives on your infrastructure. Instant knowledge retrieval and intelligent search across all organizational data.",
       accentColor: "rgba(132, 204, 22, 0.5)",
     },
     {
       icon: <EducationIcon />,
-      title: "R&D & IP Protection",
-      description: "Develop AI capabilities using proprietary data and research. Everything stays on-device. No risk of IP leakage through cloud APIs.",
+      title: "IoT & Edge Intelligence",
+      description: "Deploy reasoning directly on IoT devices and edge nodes. Process sensor data locally with millisecond decisions. No cloud round-trips.",
       accentColor: "rgba(14, 165, 233, 0.5)",
     },
   ]
@@ -98,7 +98,7 @@ export default function UseCases() {
             </div>
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">L0 in Action</h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-              Real-world enterprise applications where edge reasoning delivers immediate value.
+              From healthcare to government, finance to field operations—L0 powers reasoning where it matters most.
             </p>
           </div>
         </motion.div>
