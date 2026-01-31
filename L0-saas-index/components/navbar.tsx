@@ -15,6 +15,7 @@ export default function Navbar() {
     { label: "Use Cases", href: "#use-cases" },
     { label: "Testimonials", href: "#testimonials" },
     { label: "Contact", href: "#contact" },
+    { label: "Docs", href: "https://docs.lanonasis.com/intro", external: true },
   ]
 
   return (
@@ -27,11 +28,23 @@ export default function Navbar() {
         </div>
 
         <nav className="hidden md:flex gap-6" aria-label="Main Navigation">
-          {navItems.map((item, index) => (
-            <Link key={index} href={item.href} className="text-sm font-medium transition-colors hover:text-primary">
-              {item.label}
-            </Link>
-          ))}
+          {navItems.map((item, index) =>
+            item.external ? (
+              <a
+                key={index}
+                href={item.href}
+                target="_blank"
+                rel="noreferrer"
+                className="text-sm font-medium transition-colors hover:text-primary"
+              >
+                {item.label}
+              </a>
+            ) : (
+              <Link key={index} href={item.href} className="text-sm font-medium transition-colors hover:text-primary">
+                {item.label}
+              </Link>
+            )
+          )}
         </nav>
 
         <div className="flex items-center gap-4">
@@ -59,16 +72,29 @@ export default function Navbar() {
             </SheetTrigger>
             <SheetContent side="right">
               <nav className="flex flex-col gap-4 mt-8" aria-label="Mobile Navigation">
-                {navItems.map((item, index) => (
-                  <Link
-                    key={index}
-                    href={item.href}
-                    className="text-lg font-medium transition-colors hover:text-primary"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
+                {navItems.map((item, index) =>
+                  item.external ? (
+                    <a
+                      key={index}
+                      href={item.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-lg font-medium transition-colors hover:text-primary"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {item.label}
+                    </a>
+                  ) : (
+                    <Link
+                      key={index}
+                      href={item.href}
+                      className="text-lg font-medium transition-colors hover:text-primary"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  )
+                )}
                 <div className="flex items-center gap-4 mt-4">
                   <ThemeToggle />
                   <Button

@@ -1,69 +1,99 @@
-# L0 Edge Reasoning Infrastructure (VortexAI L0)
+# VortexAI L0 (Lzero Platform CLI)
 
-L0 is enterprise-grade edge reasoning infrastructure with persistent memory, millisecond latency, offline-first execution, and zero per-inference costs. This repository contains the L0 SaaS landing site plus the complete messaging and positioning package used to align product, marketing, and enterprise sales.
+VortexAI L0 is the CLI entry point for the Lzero platform — a local-first reasoning and orchestration stack with persistent memory, millisecond latency, and offline-ready execution. This package ships the CLI and the core orchestration runtime used by the SDKs.
 
-## What's in this app
+## Lzero platform package map
 
-### L0 SaaS landing site
-- Location: `apps/vortexai-l0/L0-saas-index`
-- Stack: Next.js 15, React 19, Tailwind
-- Purpose: Enterprise-focused marketing site for L0
+- **CLI + Orchestrator (this package)**: `vortexai-l0`
+  - Node-first CLI with multiple aliases and local orchestration runtime.
+- **Web & multi-platform SDK**: `@lanonasis/ai-sdk`
+  - Browser/Node SDK for apps and UI integrations.
+- **Persistent memory**: `@lanonasis/memory-sdk-standalone`
+  - Memory client used by the SDK and orchestration workflows.
 
-### The complete L0 messaging package
-All six core documents live in `apps/vortexai-l0/L0-saas-index/attached_assets`:
-
-1. `L0_BRAND_COPY_1769621416262.md`
-   - Master messaging framework (hero copy, features, competitive positioning)
-2. `L0_ENTERPRISE_README_1769621416342.md`
-   - Production-ready technical README with code examples and benchmarks
-3. `L0_LANDING_PAGE_SECTIONS_1769621416350.md`
-   - Drop-in landing page copy and implementation notes
-4. `L0_ENTERPRISE_POSITIONING_1769621416337.md`
-   - Investor and enterprise sales positioning (valuation multipliers, TAM)
-5. `L0_IMPLEMENTATION_GUIDE_1769621416346.md`
-   - 6-phase implementation roadmap with checklists
-6. `L0_MASTER_INDEX_1769621416353.md`
-   - Quick-reference "Choose Your Path" guide
-
-## Core L0 positioning
-
-"Reasoning Without Compromise"
-- Persistent Edge Memory (the moat)
-- Zero-Latency Reasoning (5-50ms)
-- Complete Privacy (nothing leaves your perimeter)
-- Offline-First (works anywhere, syncs when possible)
-- Zero Per-Inference Costs (5-50x cheaper at scale)
-
-## Local development (landing site)
+## CLI Installation
 
 ```bash
-cd apps/vortexai-l0/L0-saas-index
-npm --workspaces=false install --no-package-lock
-npm --workspaces=false run dev
+# Install VortexAI L0 globally
+npm install -g vortexai-l0
+
+# Or use as a project dependency
+npm install vortexai-l0
 ```
 
-## Production build (landing site)
+## CLI Usage (Node)
+
+The CLI is available under multiple command names for convenience:
+
+- `vortex` - Full name
+- `vortexai` - Alternative full name
+- `l0` - Short alias
+- `vxai` - Short alias (new)
+- `lzero` - Short alias (new)
 
 ```bash
-cd apps/vortexai-l0/L0-saas-index
-npm --workspaces=false run build
+# Initialize workspace (any command works)
+vortex init
+lzero init
+vxai init
+
+# Real-world orchestration examples
+vortex l0 "develop a new feature for my application"
+vortex l0 "research options for security tools"
+vortex l0 "research options for marketing"
+vortex l0 "research options for sales"
+vortex l0 "research options for customer support"
+vortex orchestrate "analyze trending hashtags and create content calendar"
+vortex orchestrate "research competitors and update Q4 strategy"
+
+# Campaign management
+vortex campaign "increase brand awareness among millennials"
+
+# Development workflows
+vortex l0 code "social media scheduler component"
+vortex l0 memory "oauth implementation patterns"
+vortex l0 help "technical topic"
 ```
 
-## Vercel deployment notes
+## Programmatic API
 
-- Root Directory: `apps/vortexai-l0/L0-saas-index`
-- Install Command: `npm --workspaces=false install --no-package-lock`
-- Build Command: `npm --workspaces=false run build`
-- Output: `.next`
-- Recommended env var: `NEXT_PUBLIC_SITE_URL` (used by sitemap/robots metadata)
+```ts
+import { L0Orchestrator } from 'vortexai-l0/orchestrator';
 
-## How to use the package
+const orchestrator = new L0Orchestrator();
 
-1. Start with `L0_MASTER_INDEX_1769621416353.md` to choose your path.
-2. Use `L0_LANDING_PAGE_SECTIONS_1769621416350.md` for direct website copy swaps.
-3. Use `L0_BRAND_COPY_1769621416262.md` for consistent messaging everywhere.
-4. Use `L0_ENTERPRISE_POSITIONING_1769621416337.md` for investor and sales materials.
+const response = await orchestrator.query('create viral TikTok campaign');
+console.log(response.workflow);
+console.log(response.agents);
+
+const code = await orchestrator.findCode('floating notification card');
+console.log(code.code);
+```
+
+## Repository layout
+
+- CLI package: `apps/vortexai-l0`
+- SaaS landing site: `apps/vortexai-l0/L0-saas-index`
+- SDK package: `packages/ai-sdk`
+
+## Build & publish (CLI)
+
+```bash
+cd apps/vortexai-l0
+npm install
+npm run build
+npm publish --access public
+```
+
+Note: the landing site lives in `apps/vortexai-l0/L0-saas-index` and is not published to npm. Always publish from `apps/vortexai-l0` to avoid conflicts.
+
+## Links
+
+- Marketing site: https://l0.vortexcore.app
+- Docs: https://docs.lanonasis.com
+- SDK: https://www.npmjs.com/package/@lanonasis/ai-sdk
+- CLI: https://www.npmjs.com/package/vortexai-l0
 
 ---
 
-L0 is positioned to win where latency, privacy, and cost constraints are non-negotiable. Lead with Persistent Edge Memory and build from there.
+Lzero = persistent memory + edge reasoning + orchestration. Lead with the CLI for automation workflows, and use the SDK for web and multi-platform products.

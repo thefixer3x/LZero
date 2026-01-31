@@ -48,24 +48,44 @@ export default function Footer() {
             <nav aria-label="Resources Navigation">
               <ul className="space-y-2 text-sm">
                 <li>
-                  <Link href="/docs" className="text-muted-foreground hover:text-foreground">
+                  <a
+                    href="https://docs.lanonasis.com/intro"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-muted-foreground hover:text-foreground"
+                  >
                     Documentation
-                  </Link>
+                  </a>
                 </li>
                 <li>
-                  <Link href="/docs/api" className="text-muted-foreground hover:text-foreground">
+                  <a
+                    href="https://docs.lanonasis.com/api/overview"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-muted-foreground hover:text-foreground"
+                  >
                     API Reference
-                  </Link>
+                  </a>
                 </li>
                 <li>
-                  <Link href="/case-studies" className="text-muted-foreground hover:text-foreground">
-                    Case Studies
-                  </Link>
+                  <a
+                    href="https://docs.lanonasis.com/sdks/overview"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    SDKs & Libraries
+                  </a>
                 </li>
                 <li>
-                  <Link href="/docs/security" className="text-muted-foreground hover:text-foreground">
+                  <a
+                    href="https://docs.lanonasis.com/security/privacy-implementation"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-muted-foreground hover:text-foreground"
+                  >
                     Security Docs
-                  </Link>
+                  </a>
                 </li>
               </ul>
             </nav>
@@ -80,19 +100,34 @@ export default function Footer() {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/security" className="text-muted-foreground hover:text-foreground">
+                  <a
+                    href="https://docs.lanonasis.com/security/privacy-implementation"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-muted-foreground hover:text-foreground"
+                  >
                     Security & Compliance
-                  </Link>
+                  </a>
                 </li>
                 <li>
-                  <Link href="/government" className="text-muted-foreground hover:text-foreground">
-                    Government Solutions
-                  </Link>
+                  <a
+                    href="https://docs.lanonasis.com/mcp/overview"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    MCP Platform
+                  </a>
                 </li>
                 <li>
-                  <Link href="/about" className="text-muted-foreground hover:text-foreground">
-                    About
-                  </Link>
+                  <a
+                    href="https://docs.lanonasis.com/platform/architecture"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    Platform Architecture
+                  </a>
                 </li>
               </ul>
             </nav>

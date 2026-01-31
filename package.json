@@ -71,7 +71,7 @@
     "postbuild": "cp package.json dist/",
     "prepublishOnly": "npm run build",
     "type-check": "tsc --noEmit",
-    "lint": "echo \"Linting not configured yet\""
+    "lint": "tsc -p tsconfig.browser.json --noEmit && tsc -p tsconfig.node.json --noEmit"
   },
   "keywords": [
     "ai",
@@ -101,7 +101,7 @@
     "type": "git",
     "url": "https://github.com/thefixer3x/LZero.git"
   },
-  "homepage": "https://vortexai.com/l0",
+  "homepage": "https://l0.vortexcore.app",
   "engines": {
     "node": ">=18.0.0"
   },
