@@ -65,7 +65,7 @@
     "build:node": "tsc -p tsconfig.node.json",
     "dev": "tsc --watch",
     "start": "node dist/node/cli.js",
-    "test": "vitest",
+    "test": "vitest run",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
     "postbuild": "cp package.json dist/",
