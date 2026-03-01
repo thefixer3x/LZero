@@ -1,0 +1,10 @@
+{
+  "name": "vortexai-l0",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/vortexai-l0/src",
+  "projectType": "application",
+  "tags": [
+    "scope:ai",
+    "type:service"
+  ]
+}
