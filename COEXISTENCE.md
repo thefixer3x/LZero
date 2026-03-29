@@ -1,4 +1,4 @@
-# VortexAI L0: CLI + Dashboard Coexistence
+# VortexAI L0: CLI + Dashboard + 21st Agent Coexistence
 
 ## Structure
 
@@ -11,6 +11,11 @@ vortexai-l0/ (root - CLI package)
 │   ├── app/
 │   ├── package.json
 │   └── ...
+├── l0-21st-agents/       # 21st agent deployment workspace
+│   ├── agents/
+│   │   └── vortexai-l0-orchestrator/
+│   │       └── index.ts
+│   └── package.json
 ├── examples/
 └── docs/
 
@@ -19,7 +24,7 @@ vortexai-l0/ (root - CLI package)
 - **L0-saas-index is NOT a git submodule** - just a regular directory
 - **No embedded .git** - both tracked in main vortexai-l0 repo
 - **Independent builds** - each has its own package.json and build process
-- **Separate deployments** - CLI to npm, Dashboard to Vercel/Netlify
+- **Separate deployments** - CLI to npm, Dashboard to Vercel/Netlify, Agent to 21st
 
 ## Development
 
@@ -40,6 +45,15 @@ npm install
 npm run dev      # Dev server on localhost:3000
 ```
 
+### 21st Agent Only
+
+```bash
+cd /Users/seyederick/DevOps/_project_folders/lan-onasis-monorepo/apps/vortexai-l0/l0-21st-agents
+npm install
+npm run login
+npm run deploy   # Builds CLI package first, then deploys agent
+```
+
 ### Both Simultaneously
 
 **Terminal 1:**
@@ -54,6 +68,23 @@ npm run dev
 ```bash
 cd /Users/seyederick/DevOps/_project_folders/lan-onasis-monorepo/apps/vortexai-l0/L0-saas-index
 npm run dev
+```
+
+### Full Side-by-Side Deployment
+
+```bash
+# 1) CLI (publish from root)
+cd /Users/seyederick/DevOps/_project_folders/lan-onasis-monorepo/apps/vortexai-l0
+npm run build
+npm publish --access public
+
+# 2) Dashboard (deploy from L0-saas-index)
+cd /Users/seyederick/DevOps/_project_folders/lan-onasis-monorepo/apps/vortexai-l0/L0-saas-index
+# deploy with your host command (Vercel/Netlify)
+
+# 3) 21st Agent (deploy from l0-21st-agents)
+cd /Users/seyederick/DevOps/_project_folders/lan-onasis-monorepo/apps/vortexai-l0/l0-21st-agents
+npm run deploy
 ```
 
 ## Git Workflow
@@ -83,6 +114,8 @@ npm publish
 
 **Dashboard:** Deploy separately to Vercel, Netlify, etc.
 
+**21st Agent:** Deploy from `l0-21st-agents` via `@21st-sdk/cli`.
+
 ---
 
-**Rule:** Two independent projects coexisting in one git repository, with separate builds and deployments.
+**Rule:** Three independent projects coexisting in one git repository, with separate builds and deployments.

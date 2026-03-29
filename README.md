@@ -74,6 +74,7 @@ console.log(code.code);
 
 - CLI package: `apps/vortexai-l0`
 - SaaS landing site: `apps/vortexai-l0/L0-saas-index`
+- 21st Agents workspace: `apps/vortexai-l0/l0-21st-agents`
 - SDK package: `packages/ai-sdk`
 
 ## Build & publish (CLI)
@@ -86,6 +87,17 @@ npm publish --access public
 ```
 
 Note: the landing site lives in `apps/vortexai-l0/L0-saas-index` and is not published to npm. Always publish from `apps/vortexai-l0` to avoid conflicts.
+
+## 21st Agent deploy (side-by-side)
+
+```bash
+cd apps/vortexai-l0/l0-21st-agents
+npm install
+npm run login
+npm run deploy
+```
+
+This deployment lane is separate from npm publishing (CLI) and web hosting (landing site).
 
 ## Links
 

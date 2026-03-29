@@ -1,0 +1,29 @@
+{
+  "name": "@lanonasis/l0-21st-agents",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "21st Agents deployment workspace for VortexAI L0",
+  "scripts": {
+    "login": "npx @21st-sdk/cli login",
+    "build:l0": "npm --prefix .. run build",
+    "deploy": "npm run build:l0 && npx @21st-sdk/cli deploy --agent vortexai-l0-orchestrator",
+    "deploy:all": "npm run build:l0 && npx @21st-sdk/cli deploy",
+    "env:list": "npx @21st-sdk/cli env list vortexai-l0-orchestrator",
+    "logs": "npx @21st-sdk/cli logs vortexai-l0-orchestrator",
+    "logs:json": "npx @21st-sdk/cli logs vortexai-l0-orchestrator --json"
+  },
+  "dependencies": {
+    "@21st-sdk/agent": "latest",
+    "vortexai-l0": "file:..",
+    "zod": "^3.25.76"
+  },
+  "nx": {
+    "name": "l0-21st-agents",
+    "tags": [
+      "scope:l0",
+      "type:agent",
+      "platform:21st"
+    ]
+  }
+}
