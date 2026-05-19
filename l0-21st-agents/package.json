@@ -6,6 +6,7 @@
   "description": "21st Agents deployment workspace for VortexAI L0",
   "scripts": {
     "login": "npx @21st-sdk/cli login",
+    "check:l0": "npm run build:l0 && node scripts/check-l0.mjs",
     "build:l0": "npm --prefix .. run build",
     "deploy": "npm run build:l0 && npx @21st-sdk/cli deploy --agent vortexai-l0-orchestrator",
     "deploy:all": "npm run build:l0 && npx @21st-sdk/cli deploy",
