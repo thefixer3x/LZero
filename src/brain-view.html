@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Vortex Core — Brain View (CQ Dashboard)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+  <style>
+    html, body { margin:0; padding:0; height:100%; background:#0b0f18; color:#e8ecf1; font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    #app { position:fixed; inset:0; display:grid; grid-template-rows:auto 1fr auto; }
+    header {
+      display:flex; align-items:center; gap:10px; padding:10px 14px; flex-wrap:wrap;
+      background:linear-gradient(180deg, rgba(19,24,40,0.85), rgba(19,24,40,0.35));
+      backdrop-filter: blur(6px); border-bottom:1px solid rgba(255,255,255,0.06);
+    }
+    header .dot { width:10px; height:10px; border-radius:50%; background:#7cc0ff; box-shadow:0 0 8px #58a6ff; flex-shrink:0; }
+    header h1 { font-size:14px; font-weight:600; margin:0 8px 0 0; letter-spacing:0.4px; flex-shrink:0; }
+    header .sep { opacity:0.5; flex-shrink:0; }
+    .header-left { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+    .header-right { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-left:auto; }
+    .ring-badge {
+      padding:4px 10px; border-radius:20px; font-size:11px; font-weight:700; letter-spacing:0.5px;
+      border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04);
+    }
+    .ring-badge.ring-1 { background:rgba(43,108,255,0.25); border-color:#2b6cff; color:#7cc0ff; }
+    .ring-badge.ring-2 { background:rgba(65,209,255,0.25); border-color:#41d1ff; color:#41d1ff; }
+    .ring-badge.ring-3 { background:rgba(167,107,255,0.25); border-color:#a76bff; color:#c9a0ff; }
+    .offline-badge {
+      padding:4px 10px; border-radius:20px; font-size:11px; font-weight:700; letter-spacing:0.5px;
+      background:rgba(255,100,80,0.2); border:1px solid #ff6452; color:#ff8a7a;
+    }
+    .cq-score { font-size:18px; font-weight:800; color:#7cc0ff; letter-spacing:1px; }
+    .api-key-wrap { display:flex; align-items:center; gap:6px; }
+    .api-key-wrap label { font-size:12px; opacity:0.9; }
+    #apiKeyInput {
+      background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); color:#e8ecf1;
+      padding:5px 8px; border-radius:6px; font-size:12px; width:180px;
+    }
+    #apiKeyInput::placeholder { color:rgba(255,255,255,0.35); }
+    header .btn, .chip {
+      appearance:none; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04);
+      color:#e8ecf1; padding:6px 10px; border-radius:8px; cursor:pointer; font-size:12px; flex-shrink:0;
+    }
+    header .btn:hover { background:rgba(255,255,255,0.08); }
+    header select {
+      appearance:none; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04);
+      color:#e8ecf1; padding:6px 8px; border-radius:8px; cursor:pointer; font-size:12px;
+    }
+    header select option { background:#1a2030; }
+    header label { font-size:12px; opacity:0.9; flex-shrink:0; }
+    header input[type="range"] { width:140px; flex-shrink:0; }
+    header input[type="checkbox"] { flex-shrink:0; }
+    #scene { position:relative; overflow:hidden; }
+    #overlay {
+      position:absolute; right:16px; top:70px; width:280px; background:rgba(13,18,30,0.72);
+      border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:12px; backdrop-filter: blur(6px); pointer-events:auto;
+    }
+    #overlay h3 { margin:0 0 6px 0; font-size:14px; }
+    #overlay .row { display:flex; justify-content:space-between; font-size:12px; padding:3px 0; opacity:0.9; }
+    #overlay .cq-big { font-size:28px; font-weight:800; color:#7cc0ff; text-align:center; margin:4px 0; }
+    #inspect {
+      position:absolute; left:16px; bottom:18px; width:320px; background:rgba(13,18,30,0.72);
+      border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:12px; backdrop-filter: blur(6px); pointer-events:auto;
+    }
+    #inspect h3 { margin:0 0 8px 0; font-size:14px; }
+    #inspect .kv { display:grid; grid-template-columns:auto 1fr; gap:6px 10px; font-size:12px; }
+    #inspect .tag { padding:2px 6px; border-radius:6px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); font-size:11px; }
+    footer {
+      display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px 14px; color:#a7b0c0;
+      background:linear-gradient(0deg, rgba(19,24,40,0.8), rgba(19,24,40,0.2)); border-top:1px solid rgba(255,255,255,0.06);
+      font-size:11px;
+    }
+    .link { color:#7cc0ff; text-decoration:none; }
+    .link:hover { text-decoration:underline; }
+    .hidden { display:none; }
+    #lastUpdated { font-size:11px; color:#a7b0c0; }
+    .loading-overlay {
+      position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+      background:rgba(11,15,24,0.7); z-index:10; font-size:14px; color:#7cc0ff;
+    }
+    .loading-overlay.hidden { display:none; }
+    .spinner {
+      width:24px; height:24px; border:2px solid rgba(124,192,255,0.3); border-top-color:#7cc0ff;
+      border-radius:50%; animation:spin 0.8s linear infinite; margin-right:10px;
+    }
+    @keyframes spin { to { transform:rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <header>
+      <div class="header-left">
+        <div class="dot"></div>
+        <h1>Brain View</h1><span class="sep">—</span>
+        <span style="opacity:0.8; font-size:12px;">CQ Dashboard</span>
+        <span id="ringBadge" class="ring-badge ring-1" style="display:none">—</span>
+        <span id="offlineBadge" class="offline-badge" style="display:none">OFFLINE</span>
+      </div>
+      <div class="header-right">
+        <div class="api-key-wrap">
+          <label>API Key</label>
+          <input id="apiKeyInput" type="password" placeholder="Paste your API key…" autocomplete="off" />
+        </div>
+        <button id="connectBtn" class="btn">Connect</button>
+        <span class="sep">|</span>
+        <label>Filter</label>
+        <select id="namespaceFilter">
+          <option value="">All Namespaces</option>
+        </select>
+        <label>Days</label>
+        <input id="timeWindow" type="range" min="1" max="60" step="1" value="60" />
+        <span id="twLabel" style="width:32px; text-align:right; font-size:12px;">60</span>
+        <button id="reseed" class="btn" title="Reload from API">Refresh</button>
+        <label><input id="reducedMotion" type="checkbox" /> Less motion</label>
+        <label><input id="lowPower" type="checkbox" /> Low power</label>
+      </div>
+    </header>
+
+    <div id="scene">
+      <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <span id="loadingText">Connecting to memory API…</span>
+      </div>
+    </div>
+
+    <div id="overlay">
+      <h3>Continuity Quotient</h3>
+      <div id="cqBig" class="cq-big">—</div>
+      <div id="ringLine" style="text-align:center; font-size:11px; opacity:0.7; margin-bottom:8px;">—</div>
+      <div class="row"><span>Items (N)</span><strong id="nVal">—</strong></div>
+      <div class="row"><span>Namespaces (D)</span><strong id="dVal">—</strong></div>
+      <div class="row"><span>Recency (R)</span><strong id="rVal">—</strong></div>
+      <div class="row"><span>Thresholds</span><strong style="font-size:11px;">120 / 240 / 400 / 650</strong></div>
+      <div class="row" style="margin-top:6px; border-top:1px solid rgba(255,255,255,0.06); padding-top:6px;">
+        <span id="lastUpdated">—</span>
+      </div>
+    </div>
+
+    <div id="inspect" class="hidden">
+      <h3>Memory Shard</h3>
+      <div class="kv">
+        <div>Title</div><div id="mTitle">—</div>
+        <div>Namespace</div><div id="mNS" class="tag">—</div>
+        <div>Similarity</div><div id="mSim">—</div>
+        <div>Recency</div><div id="mRec">—</div>
+        <div>Quality</div><div id="mQual">—</div>
+        <div>Type</div><div id="mType" class="tag">—</div>
+        <div>ID</div><div id="mId">—</div>
+      </div>
+    </div>
+
+    <footer>
+      <div>
+        Similarity → radius; Recency → angular velocity; Quality → size/glow; Namespace → hue.
+        $CQ=42\log(1+N)+30D+20R$; Ring 1≥120, Ring 2≥240, Ring 3≥400.
+        <span id="footerStatus" style="margin-left:8px;"></span>
+      </div>
+      <div>
+        <a class="link" href="https://l0.vortexcore.app" target="_blank" rel="noreferrer">L0</a> ·
+        <a class="link" href="https://docs.lanonasis.com/memory/overview" target="_blank" rel="noreferrer">Memory Docs</a> ·
+        <a class="link" href="https://lzero-aether-memmory.vercel.app" target="_blank" rel="noreferrer">Aether</a>
+      </div>
+    </footer>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+    import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js';
+
+    (async function main() {
+      try {
+        // ----------------------------------------------------------------------------------
+        // Config
+        // ----------------------------------------------------------------------------------
+        const CONFIG = {
+          baseRadiusMin: 0.9,
+          baseRadiusMax: 6.0,
+          coreRadius: 0.35,
+          thresholds: [120, 240, 400, 650],
+          alpha: 42, beta: 30, gamma: 20,
+          daysHalfLife: 14,
+          ringColors: [0x2b6cff, 0x41d1ff, 0xa76bff, 0xffc857],
+          namespaces: [
+            'research/vision','sales/notes','product/specs','support/cases',
+            'eng/tickets','design/briefs','ops/runbooks','marketing/copy'
+          ],
+          types: ['note','doc','embed','log','email','snippet','chunk'],
+          apiBase: 'https://api.lanonasis.com',
+          pollIntervalMs: 60000,
+        };
+
+        // ----------------------------------------------------------------------------------
+        // State
+        // ----------------------------------------------------------------------------------
+        let renderer, scene, camera, controls, raycaster, clock;
+        let points, core, rings = [], particleData = [];
+        let reducedMotion = false, lowPower = false, selectedIndex = -1;
+        let allItems = [];          // full unfiltered list from API
+        let filteredItems = [];     // after namespace + time filter
+        let pollTimer = null;
+        let isOffline = false;
+
+        const ui = {
+          timeWindow: document.getElementById('timeWindow'),
+          twLabel: document.getElementById('twLabel'),
+          reseed: document.getElementById('reseed'),
+          reducedMotion: document.getElementById('reducedMotion'),
+          lowPower: document.getElementById('lowPower'),
+          cqVal: document.getElementById('cqBig'),
+          cqBig: document.getElementById('cqBig'),
+          ringLine: document.getElementById('ringLine'),
+          nVal: document.getElementById('nVal'),
+          dVal: document.getElementById('dVal'),
+          rVal: document.getElementById('rVal'),
+          lastUpdated: document.getElementById('lastUpdated'),
+          inspect: document.getElementById('inspect'),
+          mTitle: document.getElementById('mTitle'),
+          mNS: document.getElementById('mNS'),
+          mSim: document.getElementById('mSim'),
+          mRec: document.getElementById('mRec'),
+          mQual: document.getElementById('mQual'),
+          mType: document.getElementById('mType'),
+          mId: document.getElementById('mId'),
+          ringBadge: document.getElementById('ringBadge'),
+          offlineBadge: document.getElementById('offlineBadge'),
+          loadingOverlay: document.getElementById('loadingOverlay'),
+          loadingText: document.getElementById('loadingText'),
+          footerStatus: document.getElementById('footerStatus'),
+          namespaceFilter: document.getElementById('namespaceFilter'),
+          apiKeyInput: document.getElementById('apiKeyInput'),
+          connectBtn: document.getElementById('connectBtn'),
+        };
+
+        // ----------------------------------------------------------------------------------
+        // Helpers
+        // ----------------------------------------------------------------------------------
+        function nsColor(namespace) {
+          let h = 0;
+          for (let i = 0; i < namespace.length; i++) h = (h * 31 + namespace.charCodeAt(i)) % 360;
+          return new THREE.Color().setHSL(h / 360, 0.55, 0.6);
+        }
+
+        function momentumScore(items) {
+          const N = items.length;
+          const D = new Set(items.map(x => x.namespace)).size;
+          const HL = CONFIG.daysHalfLife;
+          const R = N ? items.reduce((a, x) => a + Math.exp(-x.recency_days / HL), 0) / N : 0;
+          const CQ = CONFIG.alpha * Math.log(1 + N) + CONFIG.beta * D + CONFIG.gamma * R;
+          return { CQ, N, D, R: +R.toFixed(3) };
+        }
+
+        function ringName(cq) {
+          if (cq >= CONFIG.thresholds[2]) return 'Ring 3 — Compound insight territory';
+          if (cq >= CONFIG.thresholds[1]) return 'Ring 2 — Cross-domain connections forming';
+          if (cq >= CONFIG.thresholds[0]) return 'Ring 1 — Pattern recognition begins';
+          return 'Pre-ring — Seed your memory constellation';
+        }
+
+        function ringClass(cq) {
+          if (cq >= CONFIG.thresholds[2]) return 'ring-3';
+          if (cq >= CONFIG.thresholds[1]) return 'ring-2';
+          if (cq >= CONFIG.thresholds[0]) return 'ring-1';
+          return '';
+        }
+
+        function surge() {
+          const base = core.scale.x; let t = 0;
+          const id = setInterval(() => {
+            t += 0.04; const s = base + 0.15 * Math.sin(Math.min(t, 1.2) * Math.PI);
+            core.scale.setScalar(s); if (t >= 1.2) { clearInterval(id); core.scale.setScalar(base); }
+          }, 16);
+        }
+
+        function rndItem(i) {
+          const ns = CONFIG.namespaces[Math.floor(Math.random() * CONFIG.namespaces.length)];
+          const type = CONFIG.types[Math.floor(Math.random() * CONFIG.types.length)];
+          const similarity = Math.pow(Math.random(), 0.6);
+          const recencyDays = Math.floor(Math.random() * 60);
+          const quality = 0.4 + Math.random() * 0.6;
+          return { id: 'm_' + (10000 + i), title: `Memory ${i}`, namespace: ns, type, similarity, recency_days: recencyDays, quality_score: quality };
+        }
+
+        function maskKey(k) {
+          if (!k || k.length < 8) return '••••••••';
+          return k.slice(0, 4) + '••••••••' + k.slice(-4);
+        }
+
+        // ----------------------------------------------------------------------------------
+        // API fetch
+        // ----------------------------------------------------------------------------------
+        function getApiKey() {
+          return ui.apiKeyInput.value.trim() || localStorage.getItem('LANONASIS_API_KEY') || '';
+        }
+
+        async function fetchMemories() {
+          const apiKey = getApiKey();
+          if (!apiKey) throw new Error('No API key');
+
+          const url = `${CONFIG.apiBase}/api/v1/memory/list?limit=500`;
+          const res = await fetch(url, { headers: { 'X-API-Key': apiKey } });
+          if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.message || `HTTP ${res.status}`);
+          }
+          const json = await res.json();
+          return (json.data ?? []).map(m => ({
+            id: m.id,
+            title: m.title ?? 'Untitled',
+            namespace: m.tags?.[0] ?? m.memory_type ?? 'general',
+            type: m.memory_type ?? 'context',
+            similarity: m.similarity ?? 0.6,
+            recency_days: Math.floor((Date.now() - new Date(m.created_at).getTime()) / 86400000),
+            quality_score: Math.min(0.4 + (m.tags?.length ?? 0) * 0.08, 1.0),
+          }));
+        }
+
+        // ----------------------------------------------------------------------------------
+        // Build namespace filter options
+        // ----------------------------------------------------------------------------------
+        function buildNamespaceOptions(items) {
+          const nsSet = new Set(items.map(x => x.namespace).filter(Boolean));
+          const sel = ui.namespaceFilter;
+          const current = sel.value;
+          sel.innerHTML = '<option value="">All Namespaces</option>';
+          [...nsSet].sort().forEach(ns => {
+            const opt = document.createElement('option');
+            opt.value = ns; opt.textContent = ns;
+            sel.appendChild(opt);
+          });
+          sel.value = current;
+        }
+
+        // ----------------------------------------------------------------------------------
+        // Apply filters → update visualization
+        // ----------------------------------------------------------------------------------
+        function applyFilters() {
+          const nsFilter = ui.namespaceFilter.value;
+          const tw = parseInt(ui.timeWindow.value, 10);
+          filteredItems = allItems.filter(m => {
+            const matchNs = !nsFilter || m.namespace === nsFilter;
+            const matchTw = m.recency_days <= tw;
+            return matchNs && matchTw;
+          });
+          buildParticles(filteredItems);
+          updateHUD(filteredItems);
+        }
+
+        // ----------------------------------------------------------------------------------
+        // Live load
+        // ----------------------------------------------------------------------------------
+        async function seedAndBuild() {
+          ui.loadingOverlay.classList.remove('hidden');
+          ui.loadingText.textContent = 'Connecting to memory API…';
+          ui.footerStatus.textContent = '';
+
+          try {
+            allItems = await fetchMemories();
+            isOffline = false;
+            ui.offlineBadge.style.display = 'none';
+            ui.footerStatus.textContent = `Loaded ${allItems.length} memories`;
+            ui.loadingOverlay.classList.add('hidden');
+
+            buildNamespaceOptions(allItems);
+            applyFilters();
+
+            const now = new Date();
+            ui.lastUpdated.textContent = `Updated ${now.toLocaleTimeString()}`;
+          } catch (err) {
+            console.warn('[Brain View] API unreachable, using offline fallback:', err.message);
+            isOffline = true;
+            ui.offlineBadge.style.display = '';
+            ui.loadingOverlay.classList.add('hidden');
+            ui.footerStatus.textContent = `API error: ${maskKey(getApiKey())} — using sample data`;
+
+            // Graceful fallback: sample particles
+            allItems = Array.from({ length: 200 }, (_, i) => rndItem(i));
+            buildNamespaceOptions(allItems);
+            applyFilters();
+          }
+
+          // Schedule next poll
+          if (pollTimer) clearTimeout(pollTimer);
+          pollTimer = setTimeout(seedAndBuild, CONFIG.pollIntervalMs);
+        }
+
+        // ----------------------------------------------------------------------------------
+        // Init scene
+        // ----------------------------------------------------------------------------------
+        const container = document.getElementById('scene');
+        renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+
+        scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x0b0f18, 0.06);
+
+        camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
+        camera.position.set(0, 1.3, 8.5);
+
+        controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true; controls.dampingFactor = 0.06;
+        controls.rotateSpeed = 0.65; controls.zoomSpeed = 0.7;
+        controls.minDistance = 2; controls.maxDistance = 16;
+
+        clock = new THREE.Clock();
+
+        // Core
+        const coreMat = new THREE.MeshStandardMaterial({ color: 0x88caff, emissive: 0x2b6cff, emissiveIntensity: 1.2, roughness: 0.2, metalness: 0.5 });
+        core = new THREE.Mesh(new THREE.SphereGeometry(CONFIG.coreRadius, 40, 40), coreMat);
+        scene.add(core);
+
+        const light1 = new THREE.PointLight(0x60a6ff, 1.2, 30); light1.position.set(3, 2.5, 4); scene.add(light1);
+        const light2 = new THREE.PointLight(0x9c63ff, 0.8, 30); light2.position.set(-4, -3, -2); scene.add(light2);
+        scene.add(new THREE.AmbientLight(0xbfd4ff, 0.2));
+
+        // Spiral field lines
+        const spiral = new THREE.Group();
+        const lineMat = new THREE.LineBasicMaterial({ color: 0x234a8a, transparent: true, opacity: 0.35 });
+        for (let i = 0; i < 18; i++) {
+          const pts = []; const turns = 6, h = 2.4;
+          for (let t = 0; t <= 1; t += 1 / 220) {
+            const a = (i / 18) * Math.PI * 2 + t * turns * Math.PI * 2;
+            const r = THREE.MathUtils.lerp(CONFIG.baseRadiusMax * 0.9, CONFIG.coreRadius * 0.6, t);
+            const y = THREE.MathUtils.lerp(-h, h, t);
+            pts.push(new THREE.Vector3(Math.cos(a) * r, y, Math.sin(a) * r));
+          }
+          spiral.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), lineMat));
+        }
+        spiral.rotation.x = -0.35; scene.add(spiral);
+
+        // Rings
+        const ringsArr = [];
+        const baseR = 2.4;
+        CONFIG.thresholds.forEach((_, idx) => {
+          const r = baseR + idx * 0.45;
+          const geo = new THREE.TorusGeometry(r, 0.02 + idx * 0.01, 16, 160);
+          const mat = new THREE.MeshBasicMaterial({ color: CONFIG.ringColors[idx], transparent: true, opacity: 0.25 });
+          const tor = new THREE.Mesh(geo, mat); tor.rotation.x = Math.PI / 2;
+          scene.add(tor); ringsArr.push(tor);
+        });
+        rings = ringsArr;
+
+        // Raycaster
+        raycaster = new THREE.Raycaster();
+        raycaster.params.Points = { threshold: 0.12 };
+
+        // Responsive sizing
+        function resizeToContainer() {
+          const w = container.clientWidth || window.innerWidth;
+          const h = container.clientHeight || (window.innerHeight - document.querySelector('header').offsetHeight - document.querySelector('footer').offsetHeight);
+          renderer.setSize(w, h, false);
+          camera.aspect = w / h; camera.updateProjectionMatrix();
+        }
+        const ro = new ResizeObserver(resizeToContainer);
+        ro.observe(container);
+        window.addEventListener('resize', resizeToContainer);
+        resizeToContainer();
+
+        // Build particles
+        function buildParticles(items) {
+          particleData = items.map((m, i) => {
+            const radius = THREE.MathUtils.lerp(CONFIG.baseRadiusMin, CONFIG.baseRadiusMax, 1 - m.similarity);
+            const angle = Math.random() * Math.PI * 2;
+            const w = (0.3 + Math.random() * 0.7) * Math.exp(-m.recency_days / CONFIG.daysHalfLife);
+            const size = 0.02 + m.quality_score * 0.045;
+            const color = nsColor(m.namespace);
+            return { m, radius, angle, w, size, color, visible: true };
+          });
+
+          const geo = new THREE.BufferGeometry();
+          const positions = new Float32Array(particleData.length * 3);
+          const colors = new Float32Array(particleData.length * 3);
+          const sizes = new Float32Array(particleData.length);
+          for (let i = 0; i < particleData.length; i++) {
+            const p = particleData[i];
+            positions[i*3+0] = Math.cos(p.angle) * p.radius;
+            positions[i*3+1] = (Math.random() - 0.5) * 0.6;
+            positions[i*3+2] = Math.sin(p.angle) * p.radius;
+            colors[i*3+0] = p.color.r; colors[i*3+1] = p.color.g; colors[i*3+2] = p.color.b;
+            sizes[i] = p.size;
+          }
+          geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+          geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+          geo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+          const mat = new THREE.ShaderMaterial({
+            transparent: true, depthWrite: false, vertexColors: true, blending: THREE.AdditiveBlending,
+            uniforms: { uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) } },
+            vertexShader: `
+              attribute float size;
+              varying vec3 vColor;
+              void main() {
+                vColor = color;
+                vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+                gl_PointSize = size * 500.0 / max(1.0, -mvPosition.z);
+                gl_Position = projectionMatrix * mvPosition;
+              }
+            `,
+            fragmentShader: `
+              varying vec3 vColor;
+              void main() {
+                vec2 uv = gl_PointCoord - vec2(0.5);
+                float d = dot(uv, uv);
+                float a = smoothstep(0.25, 0.0, d);
+                gl_FragColor = vec4(vColor, a);
+              }
+            `
+          });
+
+          if (points) scene.remove(points);
+          points = new THREE.Points(geo, mat);
+          scene.add(points);
+        }
+
+        function updateHUD(items) {
+          const { CQ, N, D, R } = momentumScore(items);
+          ui.cqBig.textContent = CQ.toFixed(1);
+          ui.cqVal.textContent = CQ.toFixed(1);
+          ui.nVal.textContent = N; ui.dVal.textContent = D; ui.rVal.textContent = R.toFixed(2);
+          ui.ringLine.textContent = ringName(CQ);
+
+          const rc = ringClass(CQ);
+          ui.ringBadge.className = 'ring-badge ' + rc;
+          ui.ringBadge.textContent = CQ >= CONFIG.thresholds[0]
+            ? `Ring ${CQ >= CONFIG.thresholds[2] ? 3 : CQ >= CONFIG.thresholds[1] ? 2 : 1}`
+            : 'Pre-ring';
+
+          const tMax = CONFIG.thresholds[CONFIG.thresholds.length - 1];
+          const k = Math.min(CQ / (tMax * 1.2), 1);
+          core.material.emissiveIntensity = 0.8 + 1.6 * k;
+          core.material.color.setHSL(0.56 - 0.25 * k, 0.8, 0.6 + 0.2 * k);
+          CONFIG.thresholds.forEach((T, i) => {
+            const active = CQ >= T;
+            rings[i].material.opacity = active ? 0.65 : 0.18;
+            rings[i].scale.setScalar(active ? 1.05 : 1.0);
+          });
+        }
+
+        function onPointerDown(e) {
+          if (!points) return;
+          const rect = renderer.domElement.getBoundingClientRect();
+          const mouse = new THREE.Vector2(
+            ((e.clientX - rect.left) / rect.width) * 2 - 1,
+            -((e.clientY - rect.top) / rect.height) * 2 + 1
+          );
+          raycaster.setFromCamera(mouse, camera);
+          const hit = raycaster.intersectObject(points);
+          if (hit.length) {
+            const idx = hit[0].index;
+            const p = particleData[idx];
+            ui.inspect.classList.remove('hidden');
+            ui.mTitle.textContent = p.m.title; ui.mNS.textContent = p.m.namespace; ui.mType.textContent = p.m.type;
+            ui.mSim.textContent = p.m.similarity.toFixed(2); ui.mRec.textContent = `${p.m.recency_days}d`; ui.mQual.textContent = p.m.quality_score.toFixed(2);
+            ui.mId.textContent = p.m.id;
+            const sizes = points.geometry.attributes.size.array; sizes[idx] = p.size * 1.9; points.geometry.attributes.size.needsUpdate = true;
+            setTimeout(() => { sizes[idx] = p.size; points.geometry.attributes.size.needsUpdate = true; }, 900);
+          } else {
+            ui.inspect.classList.add('hidden');
+          }
+        }
+
+        function animate() {
+          requestAnimationFrame(animate);
+          const dt = clock.getDelta();
+          rings.forEach((r, i) => { r.rotation.z += 0.05 * (i % 2 === 0 ? 1 : -1) * dt; });
+          if (points && particleData.length) {
+            const pos = points.geometry.attributes.position.array;
+            const speedScale = reducedMotion ? 0.05 : 1.0;
+            const density = reducedMotion ? 0.3 : 1.0;
+            for (let i = 0; i < particleData.length; i++) {
+              if (lowPower && (i % 2)) continue;
+              const p = particleData[i];
+              p.angle += p.w * speedScale * dt;
+              const wobble = Math.sin((p.angle + i * 0.01)) * 0.015 * density;
+              const x = Math.cos(p.angle) * p.radius + wobble;
+              const z = Math.sin(p.angle) * p.radius;
+              const y = (Math.sin(p.angle * 0.9 + i) * 0.08) * density;
+              pos[i*3+0] = x; pos[i*3+1] = y; pos[i*3+2] = z;
+            }
+            points.geometry.attributes.position.needsUpdate = true;
+          }
+          controls.update();
+          renderer.render(scene, camera);
+        }
+
+        // ----------------------------------------------------------------------------------
+        // UI events
+        // ----------------------------------------------------------------------------------
+        renderer.domElement.addEventListener('pointerdown', onPointerDown);
+        ui.timeWindow.addEventListener('input', () => {
+          ui.twLabel.textContent = ui.timeWindow.value;
+          applyFilters();
+        });
+        ui.namespaceFilter.addEventListener('change', applyFilters);
+        ui.reseed.addEventListener('click', () => { seedAndBuild(); surge(); });
+        ui.reducedMotion.addEventListener('change', e => reducedMotion = e.target.checked);
+        ui.lowPower.addEventListener('change', e => {
+          lowPower = e.target.checked;
+          renderer.setPixelRatio(lowPower ? 1 : Math.min(window.devicePixelRatio, 2));
+        });
+        ui.connectBtn.addEventListener('click', () => {
+          const key = getApiKey();
+          if (key) {
+            localStorage.setItem('LANONASIS_API_KEY', key);
+            ui.footerStatus.textContent = `Key ${maskKey(key)} stored`;
+          }
+          seedAndBuild();
+        });
+        ui.apiKeyInput.addEventListener('keydown', e => { if (e.key === 'Enter') ui.connectBtn.click(); });
+
+        // ----------------------------------------------------------------------------------
+        // Start
+        // ----------------------------------------------------------------------------------
+        // Pre-fill from localStorage
+        ui.apiKeyInput.value = localStorage.getItem('LANONASIS_API_KEY') || '';
+        seedAndBuild();
+        animate();
+      } catch (err) {
+        console.error('Brain View init failed:', err);
+      }
+    })();
+  </script>
+</body>
+</html>
