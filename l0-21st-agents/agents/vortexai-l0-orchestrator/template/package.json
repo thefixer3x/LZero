@@ -1,0 +1,11 @@
+{
+  "name": "vortexai-l0-template",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Template sandbox for vortexai-l0 orchestrator",
+  "dependencies": {
+    "vortexai-l0": "file:./dist",
+    "zod": "^3.25.76"
+  }
+}
