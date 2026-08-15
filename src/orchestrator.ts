@@ -6,31 +6,9 @@
  */
 
 import { pluginManager, PluginManager } from './plugins.js';
-
-// ============================================================================
-// Type Definitions
-// ============================================================================
-
-export type L0ResponseType = 'snippet' | 'memory' | 'context' | 'help' | 'orchestration' | 'campaign';
-export type OutputFormat = 'text' | 'json' | 'workflow';
-
-export interface L0Response {
-  message: string;
-  type: L0ResponseType;
-  code?: string;
-  data?: Record<string, unknown> | string;
-  related?: string[];
-  clipboard?: boolean;
-  dashboardUrl?: string;
-  workflow?: string[];
-  agents?: string[];
-}
-
-export interface L0QueryOptions {
-  project?: string;
-  format?: OutputFormat;
-  [key: string]: unknown;
-}
+import { executeConciergeRequest, type ConciergeExecutionContext } from './concierge-executor.js';
+import type { ConciergeRequest, ConciergeResponse } from '@lanonasis/concierge-core';
+import { L0Response, L0ResponseType, OutputFormat, L0QueryOptions } from './types.js';
 
 interface CodeSnippet {
   id: string;
@@ -67,18 +45,10 @@ interface MockDatabase {
   campaigns: Campaign[];
 }
 
-// ============================================================================
-// Constants
-// ============================================================================
-
 const COMMON_STOP_WORDS = ['the', 'and', 'for', 'with', 'from', 'that', 'this', 'nonexistent', 'component'] as const;
 const MIN_KEYWORD_LENGTH = 2;
 const MIN_MATCH_COUNT = 2;
 const PREVIEW_LENGTH = 100;
-
-// ============================================================================
-// L0 Orchestrator Class
-// ============================================================================
 
 /**
  * VortexAI L0 Universal Work Orchestrator
@@ -106,15 +76,7 @@ export class L0Orchestrator {
       {
         id: 'floating-card-1',
         title: 'Floating Black Card Component',
-        content: `<div className="fixed bottom-4 right-4 bg-black rounded-lg shadow-xl p-4 text-white max-w-sm animate-fade-in">
-  <div className="flex items-center gap-3">
-    <div className="w-8 h-8 bg-blue-500 rounded-full" />
-    <div>
-      <h3 className="font-medium">Notification</h3>
-      <p className="text-sm opacity-75">{message}</p>
-    </div>
-  </div>
-</div>`,
+        content: `<div className="fixed bottom-4 right-4 bg-black rounded-lg shadow-xl p-4 text-white max-w-sm animate-fade-in">\n  <div className="flex items-center gap-3">\n    <div className="w-8 h-8 bg-blue-500 rounded-full" />\n    <div>\n      <h3 className="font-medium">Notification</h3>\n      <p className="text-sm opacity-75">{message}</p>\n    </div>\n  </div>\n</div>`,
         language: 'react',
         tags: ['ui', 'floating', 'notification', 'card'],
         lastUsed: '2 days ago',
@@ -123,17 +85,7 @@ export class L0Orchestrator {
       {
         id: 'social-post-scheduler',
         title: 'Social Media Post Scheduler',
-        content: `const schedulePost = async (content, platforms, scheduledTime) => {
-  const post = {
-    content,
-    platforms: platforms.split(','),
-    scheduledTime: new Date(scheduledTime),
-    status: 'scheduled',
-    analytics: { impressions: 0, engagement: 0 }
-  };
-  
-  return await socialMediaAPI.schedule(post);
-};`,
+        content: `const schedulePost = async (content, platforms, scheduledTime) => {\n  const post = {\n    content,\n    platforms: platforms.split(','),\n    scheduledTime: new Date(scheduledTime),\n    status: 'scheduled',\n    analytics: { impressions: 0, engagement: 0 }\n  };\n  \n  return await socialMediaAPI.schedule(post);\n};`,
         language: 'javascript',
         tags: ['social-media', 'scheduler', 'automation'],
         lastUsed: '1 hour ago',
@@ -142,20 +94,7 @@ export class L0Orchestrator {
       {
         id: 'trend-analyzer',
         title: 'Trending Topics Analyzer',
-        content: `const analyzeTrends = async (platform, timeframe = '24h') => {
-  const trends = await trendingAPI.getTrends({
-    platform,
-    timeframe,
-    location: 'global'
-  });
-  
-  return trends.map(trend => ({
-    hashtag: trend.name,
-    volume: trend.tweet_volume,
-    growth: trend.growth_rate,
-    relevanceScore: calculateRelevance(trend)
-  }));
-};`,
+        content: `const analyzeTrends = async (platform, timeframe = '24h') => {\n  const trends = await trendingAPI.getTrends({\n    platform,\n    timeframe,\n    location: 'global'\n  });\n  \n  return trends.map(trend => ({\n    hashtag: trend.name,\n    volume: trend.tweet_volume,\n    growth: trend.growth_rate,\n    relevanceScore: calculateRelevance(trend)\n  }));\n};`,
         language: 'javascript',
         tags: ['trends', 'social-media', 'analytics'],
         lastUsed: '30 minutes ago',
@@ -201,21 +140,15 @@ export class L0Orchestrator {
     ]
   };
 
-  // ==========================================================================
-  // Public API Methods
-  // ==========================================================================
-
-  /**
-   * Query the orchestrator with a natural language request
-   *
-   * @param query - Natural language query describing the workflow
-   * @param options - Optional configuration for the query
-   * @returns Promise resolving to an L0Response
-   */
   async query(query: string, options?: L0QueryOptions): Promise<L0Response> {
     const lowerQuery = query.toLowerCase();
 
-    // Route query to appropriate handler based on intent detection
+    if (options?.conciergeRequest) {
+      const ctx = options.conciergeRequest as ConciergeExecutionContext;
+      const conciergeResponse = await executeConciergeRequest(ctx);
+      return mapConciergeResponse(conciergeResponse);
+    }
+
     if (this.isHelpRequest(lowerQuery)) {
       return this.getHelp(query);
     }
@@ -240,7 +173,6 @@ export class L0Orchestrator {
       return this.analyzeTrends(query);
     }
 
-    // Try plugins before falling back to general orchestration
     const pluginResponse = await this.plugins.execute(query, options as Record<string, unknown>);
     if (pluginResponse) {
       return pluginResponse;
@@ -249,16 +181,9 @@ export class L0Orchestrator {
     return this.orchestrateGeneral(query);
   }
 
-  /**
-   * Get the plugin manager for direct access
-   */
   getPluginManager(): PluginManager {
     return this.plugins;
   }
-
-  // ==========================================================================
-  // Intent Detection Helpers
-  // ==========================================================================
 
   private isHelpRequest(query: string): boolean {
     return query.startsWith('help') || query.includes('help ') || query.includes('how to');
@@ -284,13 +209,6 @@ export class L0Orchestrator {
     return query.includes('trend') || query.includes('hashtag') || query.includes('analytics');
   }
 
-  // ==========================================================================
-  // Orchestration Methods
-  // ==========================================================================
-
-  /**
-   * Orchestrate a social media campaign
-   */
   async orchestrateCampaign(request: string): Promise<L0Response> {
     const campaignTypes: { [key: string]: string } = {
       'viral': 'Viral Campaign Strategy',
@@ -329,9 +247,6 @@ export class L0Orchestrator {
     };
   }
 
-  /**
-   * Orchestrate content creation workflow
-   */
   async orchestrateContent(request: string): Promise<L0Response> {
     return {
       message: `📝 Orchestrating Content Creation Workflow`,
@@ -358,9 +273,6 @@ export class L0Orchestrator {
     };
   }
 
-  /**
-   * Analyze trending topics and hashtags
-   */
   async analyzeTrends(request: string): Promise<L0Response> {
     const mockTrends = [
       { hashtag: '#EcoFriendly', volume: '2.3M', growth: '+45%' },
@@ -391,12 +303,6 @@ export class L0Orchestrator {
     };
   }
 
-  /**
-   * Find code snippets matching a description
-   *
-   * @param description - Natural language description of the code snippet
-   * @returns Promise resolving to code snippet or no-match response
-   */
   async findCode(description: string): Promise<L0Response> {
     const filteredKeywords = this.extractKeywords(description);
 
@@ -413,12 +319,6 @@ export class L0Orchestrator {
     return this.createCodeResponse(matches);
   }
 
-  /**
-   * Search memories and knowledge base
-   *
-   * @param query - Search query for memories
-   * @returns Promise resolving to memory search results
-   */
   async searchMemories(query: string): Promise<L0Response> {
     const keywords = query.toLowerCase().split(' ');
     const matches = this.mockDatabase.memories.filter((memory) =>
@@ -449,10 +349,6 @@ export class L0Orchestrator {
     };
   }
 
-  // ==========================================================================
-  // Code Search Helpers
-  // ==========================================================================
-
   private extractKeywords(description: string): string[] {
     const keywords = description.toLowerCase().split(' ').filter((k) => k.length > MIN_KEYWORD_LENGTH);
     return keywords.filter((k) => !COMMON_STOP_WORDS.includes(k as any));
@@ -468,13 +364,11 @@ export class L0Orchestrator {
       const contentLower = snippet.content.toLowerCase();
       const allTags = snippet.tags.join(' ').toLowerCase();
 
-      // Single keyword matching title is acceptable
       const titleMatch = keywords.some((kw) => titleLower.includes(kw));
       if (titleMatch && keywords.length === 1) {
         return true;
       }
 
-      // For multiple keywords, require at least MIN_MATCH_COUNT matches
       const matchCount = keywords.filter(
         (keyword) => titleLower.includes(keyword) || allTags.includes(keyword) || contentLower.includes(keyword)
       ).length;
@@ -511,10 +405,6 @@ export class L0Orchestrator {
     };
   }
 
-
-  /**
-   * Get help and guidance on a topic
-   */
   async getHelp(query: string): Promise<L0Response> {
     const helpTopics: { [key: string]: string } = {
       'social media': 'Social Media: Platform-specific strategies, content calendars, hashtag research, viral mechanics',
@@ -542,9 +432,6 @@ export class L0Orchestrator {
     };
   }
 
-  /**
-   * General orchestration for unspecified requests
-   */
   async orchestrateGeneral(request: string): Promise<L0Response> {
     return {
       message: `🧠 L0 analyzing: "${request}"`,
@@ -572,6 +459,13 @@ export class L0Orchestrator {
   }
 }
 
-// Export singleton instance for convenience
-export const orchestrator = new L0Orchestrator();
+function mapConciergeResponse(response: ConciergeResponse): L0Response {
+  return {
+    message: response.message,
+    type: response.type === 'error' ? 'help' : response.type === 'approval_required' ? 'orchestration' : 'memory',
+    data: response.data as Record<string, unknown> | undefined,
+    related: response.sources,
+  };
+}
 
+export const orchestrator = new L0Orchestrator();

@@ -5,39 +5,11 @@
  * @module plugins
  */
 
-import { L0Response, L0ResponseType } from './orchestrator.js';
+import { L0Response, L0ResponseType, PluginMetadata, PluginContext, PluginResult, PluginHandler, L0Plugin } from './types.js';
 
 // ============================================================================
 // Type Definitions
 // ============================================================================
-
-export interface PluginMetadata {
-  name: string;
-  version: string;
-  description: string;
-  author?: string;
-  keywords?: string[];
-}
-
-export interface PluginContext {
-  query: string;
-  options?: Record<string, unknown>;
-}
-
-export interface PluginResult {
-  success: boolean;
-  data?: unknown;
-  error?: string;
-}
-
-export type PluginHandler = (context: PluginContext) => Promise<L0Response>;
-
-export interface L0Plugin {
-  metadata: PluginMetadata;
-  triggers: string[];
-  handler: PluginHandler;
-  priority?: number;
-}
 
 export interface PluginRegistration {
   plugin: L0Plugin;
