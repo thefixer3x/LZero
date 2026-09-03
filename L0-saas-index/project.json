@@ -36,7 +36,7 @@
       "executor": "nx:run-commands",
       "options": {
         "cwd": "apps/vortexai-l0/L0-saas-index",
-        "command": "npx next lint"
+        "command": "npx eslint ."
       },
       "cache": true
     },
