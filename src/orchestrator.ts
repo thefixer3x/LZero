@@ -7,7 +7,7 @@
 
 import { pluginManager, PluginManager } from './plugins.js';
 import { executeConciergeRequest, type ConciergeExecutionContext } from './concierge-executor.js';
-import type { ConciergeRequest, ConciergeResponse } from '@lanonasis/concierge-core';
+import type { ConciergeRequest, ConciergeResponse } from './concierge-contract.js';
 import { L0Response, L0ResponseType, OutputFormat, L0QueryOptions } from './types.js';
 
 interface CodeSnippet {

@@ -1,4 +1,4 @@
-import type { ConciergeRequest, ConciergeResponse } from '@lanonasis/concierge-core';
+import type { ConciergeRequest, ConciergeResponse } from './concierge-contract.js';
 
 export type L0ResponseType = 'snippet' | 'memory' | 'context' | 'help' | 'orchestration' | 'campaign';
 export type OutputFormat = 'text' | 'json' | 'workflow';

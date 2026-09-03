@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { L0Orchestrator } from './orchestrator.js';
 import { executeConciergeRequest } from './concierge-executor.js';
-import type { ConciergeRequest } from '@lanonasis/concierge-core';
+import type { ConciergeRequest } from './concierge-contract.js';
 
 function sampleRequest(text: string): ConciergeRequest {
   return {

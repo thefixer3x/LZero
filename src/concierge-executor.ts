@@ -1,5 +1,5 @@
-import type { ConciergeRequest, ConciergeResponse } from '@lanonasis/concierge-core';
-import { classifyTool, requiresApproval, type ToolCallRequest } from '@lanonasis/concierge-core';
+import type { ConciergeRequest, ConciergeResponse, ToolCallRequest } from './concierge-contract.js';
+import { classifyTool, requiresApproval } from './concierge-contract.js';
 
 /**
  * L0ConciergeExecutor is the bridge between chat-platform adapters and VortexAI-L0.
