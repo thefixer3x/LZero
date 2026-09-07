@@ -4,7 +4,8 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import boxen from 'boxen';
 import clipboardy from 'clipboardy';
-import { L0Orchestrator, L0Response } from '../orchestrator.js';
+import { L0Orchestrator } from '../orchestrator.js';
+import type { L0Response } from '../types.js';
 import { pluginManager } from '../plugins.js';
 
 // ============================================================================
