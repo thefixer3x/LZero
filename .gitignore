@@ -24,6 +24,12 @@ build/
 out/
 *.tsbuildinfo
 
+# Vendored @lanonasis/concierge-core: keep dist committed (package is not
+# published to npm; the workspace member must be consumable from a fresh
+# checkout without a pre-build step). Refresh procedure in packages/concierge-core/VENDORED.md
+!packages/concierge-core/dist/
+!packages/concierge-core/dist/**
+
 # IDEs
 .vscode/
 .idea/

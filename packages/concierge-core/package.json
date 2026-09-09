@@ -1,0 +1,19 @@
+{
+  "name": "@lanonasis/concierge-core",
+  "version": "0.1.0",
+  "description": "Platform-agnostic core for the LanOnasis memory concierge",
+  "type": "module",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "type-check": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.1",
+    "typescript": "^5.7.2",
+    "vitest": "^4.1.9"
+  }
+}

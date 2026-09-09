@@ -7,8 +7,8 @@
  * @module memory-plugin
  */
 
-import type { L0Plugin, PluginContext } from './plugins.js';
-import type { L0Response } from './orchestrator.js';
+import type { L0Plugin, PluginContext } from './types.js';
+import type { L0Response } from './types.js';
 
 // ============================================================================
 // Configuration
