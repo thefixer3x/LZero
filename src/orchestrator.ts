@@ -6,6 +6,8 @@
  */
 
 import { pluginManager, PluginManager } from './plugins.js';
+import { executeConciergeRequest, type ConciergeExecutionContext } from './concierge-executor.js';
+import type { ConciergeResponse } from './concierge-contract.js';
 
 // ============================================================================
 // Type Definitions
@@ -214,6 +216,15 @@ export class L0Orchestrator {
    */
   async query(query: string, options?: L0QueryOptions): Promise<L0Response> {
     const lowerQuery = query.toLowerCase();
+
+    // A concierge request carries its own memory + AI-router context, and means
+    // "answer this for this user", not "match a workflow intent". When present
+    // it takes precedence: the intent matchers below are for standalone use.
+    if (options?.conciergeRequest) {
+      const ctx = options.conciergeRequest as ConciergeExecutionContext;
+      return mapConciergeResponse(await executeConciergeRequest(ctx));
+    }
+
 
     // Route query to appropriate handler based on intent detection
     if (this.isHelpRequest(lowerQuery)) {
@@ -570,6 +581,15 @@ export class L0Orchestrator {
       related: ['Use more specific keywords for better orchestration', 'Try: "create social campaign" or "analyze trends"']
     };
   }
+}
+
+function mapConciergeResponse(response: ConciergeResponse): L0Response {
+  return {
+    message: response.message,
+    type: response.type === 'error' ? 'help' : response.type === 'approval_required' ? 'orchestration' : 'memory',
+    data: response.data as Record<string, unknown> | undefined,
+    related: response.sources,
+  };
 }
 
 // Export singleton instance for convenience
