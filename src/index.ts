@@ -9,3 +9,10 @@ export {
   configureMemoryPlugin,
   type MemoryPluginConfig,
 } from './memory-plugin.js';
+
+// Concierge execution for Slack / Discord / external surfaces
+export {
+  executeConciergeRequest,
+  type ConciergeExecutionContext,
+  type MemoryResult,
+} from './concierge-executor.js';
