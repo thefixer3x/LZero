@@ -1,8 +1,8 @@
 {
   "name": "vortexai-l0",
-  "version": "1.2.2",
+  "version": "2.0.0",
   "type": "module",
-  "description": "VortexAI L0 - Universal Work Orchestrator CLI",
+  "description": "LanOnasis Memory Concierge — your context-aware memory service",
   "main": "./dist/node/index.js",
   "types": "./dist/browser/index.d.ts",
   "module": "./dist/browser/index.js",
@@ -26,10 +26,10 @@
       "default": "./dist/browser/index.js"
     },
     "./orchestrator": {
-      "types": "./dist/browser/orchestrator.d.ts",
-      "import": "./dist/browser/orchestrator.js",
-      "require": "./dist/node/orchestrator.js",
-      "default": "./dist/browser/orchestrator.js"
+      "types": "./dist/browser/concierge.d.ts",
+      "import": "./dist/browser/concierge.js",
+      "require": "./dist/node/concierge.js",
+      "default": "./dist/browser/concierge.js"
     },
     "./plugins": {
       "types": "./dist/browser/plugins.d.ts",
@@ -47,7 +47,7 @@
   },
   "browser": {
     "./dist/node/index.js": "./dist/browser/index.js",
-    "./dist/node/orchestrator.js": "./dist/browser/orchestrator.js",
+    "./dist/node/concierge.js": "./dist/browser/concierge.js",
     "./dist/node/plugins.js": "./dist/browser/plugins.js"
   },
   "files": [
@@ -77,9 +77,8 @@
     "ai",
     "orchestrator",
     "automation",
-    "social-media",
-    "content-creation",
     "workflow",
+    "memory",
     "vortex",
     "l0"
   ],

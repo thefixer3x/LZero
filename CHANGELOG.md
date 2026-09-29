@@ -1,96 +1,70 @@
 # Changelog
 
-
 All notable changes to VortexAI L0 will be documented in this file.
 
-## [1.2.0] - 2026-01-23
+## [2.0.0] - 2026-01-26
+
+### Breaking Changes
+
+- **Memory-first positioning**: Repositioned from "social media orchestrator" to "memory concierge"
+  - All CLI commands now focus on memory capture, search, and behavioral recall
+  - `vortex campaign`, `vortex l0 ask`, `vortex l0 trends` replaced with `vortex capture`, `vortex l0 memory`, `vortex l0 recall`
+  - Mock database replaced with memory/decision/pattern entries
+
+- **Plugin system overhaul**:
+  - `dev-tools` → `dev-workflows` (removed `agents: [...]` delegation arrays)
+  - `analytics` → `memory-insights`
+  - `collaboration` → `team-context`
+  - Removed `agents` field from all plugin responses (no longer an agent delegator)
+
+- **Type changes**:
+  - `L0Orchestrator` → `MemoryConcierge`
+  - `L0Response` → `MemoryResponse`
+  - `L0ResponseType` → `MemoryResponseType` (`'snippet' | 'memory' | 'context' | 'help' | 'recall' | 'suggestion'`)
+  - Removed `'orchestration' | 'campaign'` from response types
+  - Removed `'workflow'` from `OutputFormat`
+
+- **Package name unchanged** at `vortexai-l0` (per user decision), but keywords updated:
+  - Removed: `social-media`, `content-creation`
+  - Added: `memory`
 
 ### Added
-- **Memory Services Plugin**: Lean integration with LanOnasis MaaS API
-  - Core CRUD operations: `search`, `create`, `list`, `get`, `delete`
-  - New `./memory-plugin` export path for modular imports
-  - Browser-safe REST-only design (no SDK-in-SDK coupling)
-  - Configurable via `configureMemoryPlugin({ apiUrl, authToken })`
 
-- **Intelligence Features**: AI-powered memory enhancements
-  - `suggestTags(memoryId)` - AI tag suggestions for memories
-  - `findRelated(memoryId)` - Semantic similarity search
-  - `detectDuplicates(threshold)` - Find redundant memories
-
-- **Behavioral Features**: Workflow pattern learning
-  - `recallBehavior(context)` - Recall similar past workflows
-  - `suggestNextAction(state)` - AI-powered next step suggestions
-  - `recordPattern(input)` - Record successful workflow patterns
-
-- **38 Trigger Keywords**: Expanded intent detection for natural language routing
-  - Core: `remember`, `recall`, `find`, `search`, `save`, `store`, `list`, `delete`, `forget`
-  - Intelligence: `suggest tags`, `tag this`, `related`, `similar`, `duplicate`, `cleanup`
-  - Behavioral: `pattern`, `workflow`, `what next`, `next step`, `record this`, `that worked`
-
-- **Browser-safe entrypoint**: new `src/index.ts` that only exports programmatic APIs (no Node-only deps)
-- **Split CLI entry**: moved CLI implementation to `src/cli.ts` to keep browser builds clean
-- **Dual build configs**:
-  - `tsconfig.browser.json` (ESM + DOM)
-  - `tsconfig.node.json` (Node)
-- **Conditional exports**: explicit subpath exports for `./`, `./browser`, `./cli`, `./orchestrator`, `./plugins`, `./memory-plugin`
+- `vortex capture <text>` — Capture new memory entries from CLI
+- `vortex recall <query>` — Behavioral pattern recall from CLI
+- `src/concierge.ts` — New `MemoryConcierge` class replacing `L0Orchestrator`
+- `artifacts/legacy/` — Archived pre-2.0 files preserved for reference
+- `MESSAGING_MIGRATION.md` — Documents the brand positioning transition
 
 ### Changed
-- `package.json` output mapping:
-  - `main` → `dist/node/index.js` (Node)
-  - `module` / `types` → `dist/browser/index.js` / `.d.ts` (browser)
-- `bin` now points to `dist/node/cli.js` (Node-only CLI)
-- `browser` field remaps Node bundles to browser bundles
-- Build scripts now include `build:browser` and `build:node`
-- Environment variable access now uses `globalThis` pattern for browser safety
+
+- CLI `init` now highlights memory capture, pattern recall, and development workflows
+- CLI `status` lists memory-focused capabilities
+- All social media, viral, TikTok, hashtag, campaign references removed from source
+- Plugin handlers return `MemoryResponse` instead of `L0Response`
+- Plugin responses use `type: 'suggestion'` instead of `type: 'orchestration'`
+- `concierge-contract.ts`: removed `orchestrate` from tool classification
+- Examples rewritten for memory concierge patterns
+- Version bumped to `2.0.0`
+
+### Removed
+
+- Social media campaign orchestration workflow
+- Trend analysis commands and mock data
+- Agent delegation arrays (`agents: [...]`) from all plugin responses
+- `orchestrate` alias from `classifyTool()` in concierge-contract
+- `social-media` and `content-creation` from package keywords
 
 ### Notes
-- All 10 intent routing tests pass
-- Memory plugin bundle size: ~21KB (browser)
-- Total package size: 44.3 KB compressed
 
-## [1.1.0] - 2024-12-15
-
-### Added
-- **Plugin System**: Extensible plugin architecture for custom agents and workflows
-  - `PluginManager` class for registering and managing plugins
-  - 3 built-in plugins: `dev-tools`, `analytics`, `collaboration`
-  - CLI commands: `vortex l0 plugins list|info|enable|disable`
-  - Programmatic API: `import { PluginManager } from 'vortexai-l0/plugins'`
-- **New CLI Aliases**: Added shorter command alternatives
-  - `vxai` - Quick 4-character alias
-  - `lzero` - Memorable alternative to `l0`
-- **24 new tests** for plugin system (38 total tests)
-
-### Changed
-- `L0Orchestrator` now accepts optional `PluginManager` in constructor
-- Query routing now checks plugins before falling back to general orchestration
-- Updated `package.json` exports to include `/plugins` subpath
-
-## [1.0.0] - 2024-11-22
-
-### Added
-- **Programmatic API**: Export `L0Orchestrator` class for use in other applications
-- **Type Definitions**: Full TypeScript support with exported types
-- **Modern Module Exports**: Added `exports` field for ESM and CommonJS compatibility
-- **Testing Framework**: Vitest setup with comprehensive unit tests
-- **Examples Directory**: Usage examples for both CLI and programmatic API
-- **CI/CD**: GitHub Actions workflow for automated testing
-- **Publishing Configuration**: Proper npm publishing setup with `files`, `types`, and `publishConfig`
-
-### Changed
-- Refactored orchestrator logic into separate module for reusability
-- Updated package.json with proper npm publishing fields
-- Improved TypeScript configuration for better type definitions
-
-### Fixed
-- Missing `types` field in package.json
-- Missing `files` field for controlled npm publishing
-- Missing `prepublishOnly` script
-- Missing `publishConfig` for public npm access
+- All pre-2.0 files preserved in `artifacts/legacy/`
+- `L0-saas-index` and `l0-21st-agents` subdirectories retain their own package references
+- Concierge executor (`concierge-executor.ts`) remains unchanged — already memory-focused
 
 ## [Unreleased]
 
 ### Planned
+
 - Dual format build (ESM + CJS)
 - Plugin marketplace and remote loading
 - Integration tests for CLI commands

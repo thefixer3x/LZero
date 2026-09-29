@@ -108,7 +108,7 @@ export function classifyTool(name: string): ToolClass {
   if (lower.includes('execute') || lower.includes('run') || lower.includes('deploy')) {
     return 'execute';
   }
-  if (lower.includes('agent') || lower.includes('orchestrate')) {
+  if (lower.includes('agent')) {
     return 'agent';
   }
   return 'read';

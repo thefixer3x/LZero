@@ -5,7 +5,7 @@ This directory contains examples demonstrating how to use VortexAI L0.
 ## Examples
 
 ### Programmatic API
-- **`programmatic-api.ts`** - Example of using the MemoryConcierge in your own applications
+- **`programmatic-api.ts`** - Example of using the L0Orchestrator class in your own applications
 
 ### CLI Usage
 - **`cli-usage.md`** - Comprehensive guide to using the CLI commands
@@ -30,17 +30,17 @@ See `cli-usage.md` for detailed CLI usage examples.
 
 ### Node.js Application
 ```typescript
-import { MemoryConcierge } from 'vortexai-l0/memory-concierge';
+import { L0Orchestrator } from 'vortexai-l0/orchestrator';
 
-const concierge = new MemoryConcierge();
-const response = await concierge.search('oauth patterns');
+const orchestrator = new L0Orchestrator();
+const response = await orchestrator.query('create campaign');
 ```
 
 ### TypeScript Project
 ```typescript
-import { memoryConcierge } from 'vortexai-l0';
+import { orchestrator } from 'vortexai-l0/orchestrator';
 
-const response = await memoryConcierge.recall('deployment decisions');
+const response = await orchestrator.query('analyze trends');
 ```
 
 ### CLI Integration
@@ -48,3 +48,4 @@ const response = await memoryConcierge.recall('deployment decisions');
 # Use in shell scripts
 vortex l0 ask "your request" --format json | jq '.workflow'
 ```
+

@@ -4,7 +4,8 @@
   "sourceRoot": "apps/vortexai-l0/src",
   "projectType": "application",
   "tags": [
-    "scope:ai",
-    "type:service"
+    "scope:l0",
+    "type:cli",
+    "platform:node"
   ]
 }

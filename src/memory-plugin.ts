@@ -8,7 +8,7 @@
  */
 
 import type { L0Plugin, PluginContext } from './plugins.js';
-import type { L0Response } from './orchestrator.js';
+import type { MemoryResponse } from './concierge.js';
 
 // ============================================================================
 // Configuration
@@ -327,7 +327,7 @@ function extractContent(query: string, intent: string): string {
   return query;
 }
 
-function formatMemoryResponse(memories: Memory[], action: string): L0Response {
+function formatMemoryResponse(memories: Memory[], action: string): MemoryResponse {
   if (memories.length === 0) {
     return {
       message: `No memories found. Your knowledge base is ready to grow!`,
@@ -353,7 +353,7 @@ function formatMemoryResponse(memories: Memory[], action: string): L0Response {
 // Main Plugin Handler
 // ============================================================================
 
-async function memoryPluginHandler(ctx: PluginContext): Promise<L0Response> {
+async function memoryPluginHandler(ctx: PluginContext): Promise<MemoryResponse> {
   const { query } = ctx;
   const intent = detectIntent(query);
   const content = extractContent(query, intent);

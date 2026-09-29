@@ -1,11 +1,11 @@
 # VortexAI L0 (Lzero Platform CLI)
 
-VortexAI L0 is the CLI entry point for the Lzero platform — a local-first reasoning and orchestration stack with persistent memory, millisecond latency, and offline-ready execution. This package ships the CLI and the core orchestration runtime used by the SDKs.
+VortexAI L0 is the CLI entry point for the Lzero platform — a memory-first orchestration stack with persistent memory, semantic search, and behavioral pattern recall. This package ships the CLI and the core orchestration runtime used by the SDKs.
 
 ## Lzero platform package map
 
 - **CLI + Orchestrator (this package)**: `vortexai-l0`
-  - Node-first CLI with multiple aliases and local orchestration runtime.
+  - Node-first CLI with multiple aliases and memory-enhanced orchestration runtime.
 - **Web & multi-platform SDK**: `@lanonasis/ai-sdk`
   - Browser/Node SDK for apps and UI integrations.
 - **Persistent memory**: `@lanonasis/memory-sdk-standalone`
@@ -37,37 +37,43 @@ vortex init
 lzero init
 vxai init
 
-# Real-world orchestration examples
-vortex l0 "develop a new feature for my application"
-vortex l0 "research options for security tools"
-vortex l0 "research options for marketing"
-vortex l0 "research options for sales"
-vortex l0 "research options for customer support"
-vortex orchestrate "analyze trending hashtags and create content calendar"
-vortex orchestrate "research competitors and update Q4 strategy"
-
-# Campaign management
-vortex campaign "increase brand awareness among millennials"
+# Memory-first orchestration examples
+vortex l0 "remember that auth uses PKCE"
+vortex l0 memory "oauth implementation patterns"
+vortex l0 "recall deployment decisions"
 
 # Development workflows
-vortex l0 code "social media scheduler component"
-vortex l0 memory "oauth implementation patterns"
-vortex l0 help "technical topic"
+vortex l0 code "floating notification component"
+vortex l0 help "oauth patterns"
 ```
 
 ## Programmatic API
 
 ```ts
-import { L0Orchestrator } from 'vortexai-l0/orchestrator';
+import { MemoryConcierge } from 'vortexai-l0/memory-concierge';
 
-const orchestrator = new L0Orchestrator();
+const concierge = new MemoryConcierge();
 
-const response = await orchestrator.query('create viral TikTok campaign');
-console.log(response.workflow);
-console.log(response.agents);
+// Search memories
+const result = await concierge.search('oauth patterns');
+console.log(result.message);
 
-const code = await orchestrator.findCode('floating notification card');
-console.log(code.code);
+// Recall patterns
+const recall = await concierge.recall('deployment');
+console.log(recall.workflow);
+```
+
+### MaaS Integration
+
+For production memory storage, configure the memory plugin:
+
+```ts
+import { configureMemoryPlugin } from 'vortexai-l0/memory-plugin';
+
+configureMemoryPlugin({
+  apiUrl: 'https://api.lanonasis.com',
+  authToken: process.env.MAAS_API_KEY,
+});
 ```
 
 ## Repository layout
@@ -76,6 +82,7 @@ console.log(code.code);
 - SaaS landing site: `apps/vortexai-l0/L0-saas-index`
 - 21st Agents workspace: `apps/vortexai-l0/l0-21st-agents`
 - SDK package: `packages/ai-sdk`
+- Archived legacy: `artifacts/legacy/` (pre-2.0 files)
 
 ## Build & publish (CLI)
 

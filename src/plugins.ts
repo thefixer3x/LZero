@@ -1,11 +1,11 @@
 /**
- * VortexAI L0 Plugin System
+ * LanOnasis Memory Concierge — Plugin System
  *
- * Extensible plugin architecture for custom agents and workflows
+ * Extensible plugin architecture for memory operations and workflows.
  * @module plugins
  */
 
-import { L0Response, L0ResponseType } from './orchestrator.js';
+import { MemoryResponse, MemoryResponseType } from './concierge.js';
 
 // ============================================================================
 // Type Definitions
@@ -30,7 +30,7 @@ export interface PluginResult {
   error?: string;
 }
 
-export type PluginHandler = (context: PluginContext) => Promise<L0Response>;
+export type PluginHandler = (context: PluginContext) => Promise<MemoryResponse>;
 
 export interface L0Plugin {
   metadata: PluginMetadata;
@@ -45,12 +45,18 @@ export interface PluginRegistration {
   registeredAt: Date;
 }
 
+export interface PluginDetail {
+  metadata: PluginMetadata;
+  enabled: boolean;
+  triggers: string[];
+}
+
 // ============================================================================
 // Plugin Manager Class
 // ============================================================================
 
 /**
- * Manages L0 plugins for extensible workflow orchestration
+ * Manages L0 plugins for extensible workflow suggestion
  *
  * @example
  * ```typescript
@@ -60,7 +66,7 @@ export interface PluginRegistration {
  * manager.register({
  *   metadata: { name: 'my-plugin', version: '1.0.0', description: 'Custom workflow' },
  *   triggers: ['custom', 'my-workflow'],
- *   handler: async (ctx) => ({ message: 'Custom response', type: 'orchestration' })
+ *   handler: async (ctx) => ({ message: 'Custom response', type: 'suggestion' })
  * });
  * ```
  */
@@ -134,7 +140,7 @@ export class PluginManager {
    */
   findMatching(query: string): L0Plugin[] {
     const lowerQuery = query.toLowerCase();
-    const matches: { plugin: L0Plugin; score: number }[] = [];
+    const matches: Array<{ plugin: L0Plugin; score: number }> = [];
 
     for (const [, registration] of this.plugins) {
       if (!registration.enabled) continue;
@@ -165,7 +171,7 @@ export class PluginManager {
    * @param options - Execution options
    * @returns Plugin response or null if no match
    */
-  async execute(query: string, options?: Record<string, unknown>): Promise<L0Response | null> {
+  async execute(query: string, options?: Record<string, unknown>): Promise<MemoryResponse | null> {
     const matches = this.findMatching(query);
 
     if (matches.length === 0) {
@@ -192,9 +198,9 @@ export class PluginManager {
   /**
    * Get detailed info about all plugins
    */
-  listDetailed(): Array<PluginMetadata & { enabled: boolean; triggers: string[] }> {
+  listDetailed(): Array<PluginDetail> {
     return Array.from(this.plugins.values()).map(r => ({
-      ...r.plugin.metadata,
+      metadata: r.plugin.metadata,
       enabled: r.enabled,
       triggers: r.plugin.triggers,
     }));
@@ -278,37 +284,32 @@ export class PluginManager {
 // ============================================================================
 
 /**
- * Development Tools Plugin
- * Provides dev-focused orchestration workflows
+ * Dev Workflows Plugin
+ * Provides development and deployment workflow patterns
  */
-export const devToolsPlugin: L0Plugin = {
+export const devWorkflowsPlugin: L0Plugin = {
   metadata: {
-    name: 'dev-tools',
+    name: 'dev-workflows',
     version: '1.0.0',
-    description: 'Development workflow orchestration tools',
-    author: 'VortexAI',
-    keywords: ['development', 'debugging', 'testing', 'ci/cd'],
+    description: 'Development and deployment workflow patterns',
+    author: 'LanOnasis',
+    keywords: ['development', 'debugging', 'testing', 'ci-cd', 'deployment'],
   },
   triggers: ['debug', 'test', 'deploy', 'ci', 'cd', 'build', 'lint', 'refactor'],
   priority: 10,
-  handler: async (ctx: PluginContext): Promise<L0Response> => {
+  handler: async (ctx: PluginContext): Promise<MemoryResponse> => {
     const lowerQuery = ctx.query.toLowerCase();
 
     if (lowerQuery.includes('debug')) {
       return {
-        message: '🔧 Development Debugging Workflow',
-        type: 'orchestration',
+        message: 'Development Debugging Workflow',
+        type: 'suggestion',
         workflow: [
-          '📋 Reproduce the issue with minimal test case',
-          '🔍 Analyze stack traces and error logs',
-          '🎯 Identify root cause vs symptoms',
-          '🛠️  Implement targeted fix',
-          '✅ Verify fix with regression tests',
-        ],
-        agents: [
-          'Debug Agent: Analyzing error patterns and stack traces',
-          'Test Agent: Creating reproduction cases',
-          'Code Agent: Implementing fixes',
+          'Reproduce the issue with minimal test case',
+          'Analyze stack traces and error logs',
+          'Identify root cause vs symptoms',
+          'Implement targeted fix',
+          'Verify fix with regression tests',
         ],
         data: {
           recommendedTools: ['console.log', 'debugger', 'breakpoints', 'profiler'],
@@ -319,90 +320,73 @@ export const devToolsPlugin: L0Plugin = {
 
     if (lowerQuery.includes('test')) {
       return {
-        message: '🧪 Testing Strategy Workflow',
-        type: 'orchestration',
+        message: 'Testing Strategy Workflow',
+        type: 'suggestion',
         workflow: [
-          '📊 Analyze code coverage gaps',
-          '🎯 Identify critical paths for testing',
-          '✍️  Write unit tests for core logic',
-          '🔗 Add integration tests for workflows',
-          '🚀 Set up CI/CD test automation',
-        ],
-        agents: [
-          'Test Agent: Generating test cases',
-          'Coverage Agent: Analyzing test coverage',
-          'CI Agent: Configuring automated testing',
+          'Analyze code coverage gaps',
+          'Identify critical paths for testing',
+          'Write unit tests for core logic',
+          'Add integration tests for workflows',
+          'Set up CI/CD test automation',
         ],
       };
     }
 
     if (lowerQuery.includes('deploy') || lowerQuery.includes('ci') || lowerQuery.includes('cd')) {
       return {
-        message: '🚀 Deployment Pipeline Workflow',
-        type: 'orchestration',
+        message: 'Deployment Pipeline Workflow',
+        type: 'suggestion',
         workflow: [
-          '📋 Review deployment checklist',
-          '🧪 Run pre-deployment tests',
-          '🔒 Security scan and vulnerability check',
-          '📦 Build and package artifacts',
-          '🚀 Deploy to target environment',
-          '✅ Post-deployment verification',
-        ],
-        agents: [
-          'Build Agent: Compiling and packaging',
-          'Security Agent: Running vulnerability scans',
-          'Deploy Agent: Orchestrating deployment',
-          'Monitor Agent: Verifying health checks',
+          'Review deployment checklist',
+          'Run pre-deployment tests',
+          'Security scan and vulnerability check',
+          'Build and package artifacts',
+          'Deploy to target environment',
+          'Post-deployment verification',
         ],
       };
     }
 
     return {
-      message: '🛠️  Development Workflow Orchestration',
-      type: 'orchestration',
+      message: 'Development Workflow Pattern',
+      type: 'suggestion',
       workflow: [
-        '🔍 Analyze development request',
-        '📋 Create task breakdown',
-        '⚡ Execute development tasks',
-        '✅ Validate and test changes',
+        'Analyze development request',
+        'Create task breakdown',
+        'Execute development tasks',
+        'Validate and test changes',
       ],
-      agents: ['Dev Agent: Coordinating development tasks'],
     };
   },
 };
 
 /**
- * Analytics Plugin
- * Provides data analysis and reporting workflows
+ * Memory Insights Plugin
+ * Provides memory insights and tag suggestions
  */
-export const analyticsPlugin: L0Plugin = {
+export const memoryInsightsPlugin: L0Plugin = {
   metadata: {
-    name: 'analytics',
+    name: 'memory-insights',
     version: '1.0.0',
-    description: 'Data analytics and reporting workflows',
-    author: 'VortexAI',
-    keywords: ['analytics', 'data', 'reports', 'metrics', 'kpi'],
+    description: 'Memory insights and tag suggestions',
+    author: 'LanOnasis',
+    keywords: ['memory', 'insights', 'tags', 'duplicates', 'related'],
   },
   triggers: ['report', 'analytics', 'metrics', 'kpi', 'dashboard', 'insights', 'performance report'],
   priority: 10,
-  handler: async (ctx: PluginContext): Promise<L0Response> => {
+  handler: async (ctx: PluginContext): Promise<MemoryResponse> => {
     const lowerQuery = ctx.query.toLowerCase();
 
     if (lowerQuery.includes('kpi') || lowerQuery.includes('metrics')) {
       return {
-        message: '📊 KPI & Metrics Analysis Workflow',
-        type: 'orchestration',
+        message: 'KPI & Metrics Analysis Pattern',
+        type: 'suggestion',
         workflow: [
-          '📈 Define key performance indicators',
-          '📊 Collect data from relevant sources',
-          '🧮 Calculate metrics and benchmarks',
-          '📉 Identify trends and anomalies',
-          '📝 Generate actionable insights',
-        ],
-        agents: [
-          'Data Agent: Aggregating metrics data',
-          'Analysis Agent: Processing and calculating KPIs',
-          'Insights Agent: Generating recommendations',
+          'Define key performance indicators',
+          'Collect data from relevant sources',
+          'Calculate metrics and benchmarks',
+          'Identify trends and anomalies',
+          'Generate actionable insights',
         ],
         data: {
           sampleKPIs: ['Conversion Rate', 'Engagement Rate', 'Customer Acquisition Cost', 'Lifetime Value'],
@@ -412,55 +396,46 @@ export const analyticsPlugin: L0Plugin = {
     }
 
     return {
-      message: '📈 Analytics & Reporting Workflow',
-      type: 'orchestration',
+      message: 'Analytics & Reporting Pattern',
+      type: 'suggestion',
       workflow: [
-        '🔍 Define report objectives and scope',
-        '📊 Gather and validate data sources',
-        '📈 Analyze trends and patterns',
-        '📝 Create visualizations and summaries',
-        '🎯 Derive actionable recommendations',
-      ],
-      agents: [
-        'Data Agent: Collecting and cleaning data',
-        'Analytics Agent: Running statistical analysis',
-        'Report Agent: Creating visualizations and reports',
+        'Define report objectives and scope',
+        'Gather and validate data sources',
+        'Analyze trends and patterns',
+        'Create visualizations and summaries',
+        'Derive actionable recommendations',
       ],
     };
   },
 };
 
 /**
- * Team Collaboration Plugin
- * Provides team coordination workflows
+ * Team Context Plugin
+ * Provides team coordination and shared knowledge workflows
  */
-export const collaborationPlugin: L0Plugin = {
+export const teamContextPlugin: L0Plugin = {
   metadata: {
-    name: 'collaboration',
+    name: 'team-context',
     version: '1.0.0',
-    description: 'Team collaboration and coordination workflows',
-    author: 'VortexAI',
-    keywords: ['team', 'collaboration', 'meeting', 'standup', 'review'],
+    description: 'Shared team knowledge and decision tracking',
+    author: 'LanOnasis',
+    keywords: ['team', 'context', 'decisions', 'meeting', 'standup'],
   },
   triggers: ['meeting', 'standup', 'review', 'sprint', 'retrospective', 'planning', 'team', 'collaborate'],
   priority: 5,
-  handler: async (ctx: PluginContext): Promise<L0Response> => {
+  handler: async (ctx: PluginContext): Promise<MemoryResponse> => {
     const lowerQuery = ctx.query.toLowerCase();
 
     if (lowerQuery.includes('standup') || lowerQuery.includes('daily')) {
       return {
-        message: '🤝 Daily Standup Facilitation',
-        type: 'orchestration',
+        message: 'Daily Standup Facilitation Pattern',
+        type: 'suggestion',
         workflow: [
-          '📋 Gather team availability and blockers',
-          '✅ Review yesterday\'s completed tasks',
-          '🎯 Outline today\'s priorities',
-          '🚧 Identify and escalate blockers',
-          '📝 Document action items',
-        ],
-        agents: [
-          'Coordination Agent: Facilitating standup flow',
-          'Tracking Agent: Recording updates and blockers',
+          'Gather team availability and blockers',
+          "Review yesterday's completed tasks",
+          "Outline today's priorities",
+          'Identify and escalate blockers',
+          'Document action items',
         ],
         data: {
           format: '15-minute timeboxed meeting',
@@ -471,33 +446,27 @@ export const collaborationPlugin: L0Plugin = {
 
     if (lowerQuery.includes('retrospective') || lowerQuery.includes('retro')) {
       return {
-        message: '🔄 Sprint Retrospective Workflow',
-        type: 'orchestration',
+        message: 'Sprint Retrospective Pattern',
+        type: 'suggestion',
         workflow: [
-          '✅ What went well this sprint?',
-          '❌ What didn\'t go well?',
-          '💡 What can we improve?',
-          '🎯 Define action items',
-          '📝 Document and track improvements',
-        ],
-        agents: [
-          'Facilitation Agent: Guiding retrospective discussion',
-          'Analysis Agent: Identifying patterns and themes',
-          'Action Agent: Creating improvement tasks',
+          "What went well this sprint?",
+          "What didn't go well?",
+          'What can we improve?',
+          'Define action items',
+          'Document and track improvements',
         ],
       };
     }
 
     return {
-      message: '🤝 Team Collaboration Workflow',
-      type: 'orchestration',
+      message: 'Team Collaboration Pattern',
+      type: 'suggestion',
       workflow: [
-        '📋 Define collaboration objectives',
-        '👥 Coordinate team members',
-        '📝 Document decisions and action items',
-        '✅ Follow up on commitments',
+        'Define collaboration objectives',
+        'Coordinate team members',
+        'Document decisions and action items',
+        'Follow up on commitments',
       ],
-      agents: ['Collaboration Agent: Coordinating team activities'],
     };
   },
 };
@@ -526,9 +495,9 @@ export function createPluginManager(options: PluginManagerOptions | boolean = tr
     typeof options === 'boolean' ? { includeBuiltins: options } : options;
 
   if (opts.includeBuiltins !== false) {
-    manager.register(devToolsPlugin);
-    manager.register(analyticsPlugin);
-    manager.register(collaborationPlugin);
+    manager.register(devWorkflowsPlugin);
+    manager.register(memoryInsightsPlugin);
+    manager.register(teamContextPlugin);
   }
 
   // Memory services plugin is opt-in (requires API config)

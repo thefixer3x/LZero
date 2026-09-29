@@ -12,56 +12,49 @@ vortex init
 vortex status
 ```
 
-## Orchestration Commands
+## Memory Commands
 
-### General Orchestration
+### Capture a Memory
 ```bash
-vortex l0 ask "create viral TikTok campaign for eco-friendly product"
-vortex l0 ask "analyze trending hashtags and create content calendar"
-vortex l0 ask "research competitors and update our Q4 strategy"
+vortex capture "decision: we use PKCE for auth"
+vortex capture --type decision "token rotation every 24h"
+vortex capture --type pattern "deploy flow: lint -> test -> build -> deploy"
 ```
 
-### Campaign Management
+### Search Memories
 ```bash
-vortex l0 campaign "increase brand awareness among millennials" --platforms "tiktok,instagram" --budget "$5000"
-vortex l0 campaign "product launch campaign" --duration 14
+vortex l0 memory "authentication patterns"
+vortex l0 memory "deployment decisions" --limit 10
+```
+
+### Recall Patterns
+```bash
+vortex l0 recall "deployment patterns"
+vortex l0 recall "how did we set up auth"
 ```
 
 ### Code Snippets
 ```bash
-vortex l0 code "floating notification component"
-vortex l0 code "social media scheduler" --language javascript
-```
-
-### Memory Search
-```bash
-vortex l0 memory "oauth implementation patterns"
-vortex l0 memory "campaign strategies" --limit 10
-```
-
-### Trend Analysis
-```bash
-vortex l0 trends tiktok --timeframe 24h
-vortex l0 trends instagram --timeframe 7d --location "US"
+vortex l0 code "notification component"
+vortex l0 code "auth hook" --language typescript
 ```
 
 ### Get Help
 ```bash
-vortex l0 help "social media"
-vortex l0 help "oauth"
-vortex l0 help "react patterns"
+vortex l0 help "memory"
+vortex l0 help "recalling patterns"
 ```
 
 ## Output Formats
 
 ### JSON Output
 ```bash
-vortex l0 ask "create campaign" --format json
+vortex l0 ask "your request" --format json
 ```
 
 ### Interactive Output (default)
 ```bash
-vortex l0 ask "create campaign" --format text
+vortex l0 ask "your request" --format text
 ```
 
 ## Integration Examples
@@ -70,16 +63,15 @@ vortex l0 ask "create campaign" --format text
 ```bash
 #!/bin/bash
 RESULT=$(vortex l0 ask "analyze trends" --format json)
-echo $RESULT | jq '.data.trendingHashtags'
+echo $RESULT | jq '.data'
 ```
 
 ### In Node.js
 ```javascript
 import { exec } from 'child_process';
 
-exec('vortex l0 ask "create campaign" --format json', (error, stdout) => {
+exec('vortex l0 ask "your request" --format json', (error, stdout) => {
   const response = JSON.parse(stdout);
   console.log(response.workflow);
 });
 ```
-

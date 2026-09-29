@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { L0Orchestrator } from './orchestrator.js';
+import { MemoryConcierge } from './concierge.js';
 import { executeConciergeRequest } from './concierge-executor.js';
 import type { ConciergeRequest } from './concierge-contract.js';
 
@@ -46,16 +46,16 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe('L0 concierge orchestration', () => {
-  it('routes a concierge request through orchestrator.query', async () => {
-    const l0 = new L0Orchestrator();
+describe('Memory concierge orchestration', () => {
+  it('routes a concierge request through concierge.query', async () => {
+    const concierge = new MemoryConcierge();
 
     const fetchMock = vi.fn().mockResolvedValue(
       routerResponse('Synthesized answer about OAuth from the router.')
     );
     vi.stubGlobal('fetch', fetchMock);
 
-    const response = await l0.query('what did we decide about oauth?', {
+    const response = await concierge.query('what did we decide about oauth?', {
       conciergeRequest: {
         request: sampleRequest('what did we decide about oauth?'),
         memoryApiUrl: 'https://api.lanonasis.com',

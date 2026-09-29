@@ -1,5 +1,5 @@
-// Browser-safe entrypoint: re-export programmatic APIs only
-export { L0Orchestrator, orchestrator, type L0Response, type L0QueryOptions } from './orchestrator.js';
+// Memory Concierge — barrel re-export
+export { MemoryConcierge, memoryConcierge, type MemoryResponse, type MemoryQueryOptions, type MemoryResponseType, type OutputFormat } from './concierge.js';
 export { PluginManager, pluginManager, createPluginManager, type L0Plugin, type PluginMetadata } from './plugins.js';
 
 // Memory Services Plugin - lean integration with LanOnasis MaaS

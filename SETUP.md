@@ -110,4 +110,3 @@ When ready to publish:
 - The `.gitignore` excludes `node_modules/`, `dist/`, and other build artifacts
 - CI workflow runs on push/PR to main and develop branches
 - The repository uses Bun as the package manager (as per monorepo standards)
-

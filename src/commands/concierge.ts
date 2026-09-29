@@ -4,7 +4,7 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import boxen from 'boxen';
 import clipboardy from 'clipboardy';
-import { L0Orchestrator, L0Response } from '../orchestrator.js';
+import { MemoryConcierge, MemoryResponse } from '../concierge.js';
 import { pluginManager } from '../plugins.js';
 
 // ============================================================================
@@ -18,10 +18,10 @@ const SEPARATOR_LENGTH = 55;
 const VORTEX_EMOJI = '🌪️';
 
 // ============================================================================
-// Orchestrator Instance
+// Memory Concierge Instance
 // ============================================================================
 
-const l0Orchestrator = new L0Orchestrator();
+const memoryConcierge = new MemoryConcierge();
 
 // ============================================================================
 // Display Functions
@@ -32,12 +32,11 @@ const l0Orchestrator = new L0Orchestrator();
  *
  * @param response - The L0 response to display
  */
-function displayL0Response(response: L0Response): void {
+function displayL0Response(response: MemoryResponse): void {
   console.log('\n' + chalk.magenta.bold(`${VORTEX_EMOJI}  L0:`), response.message);
 
   displayCodeSnippet(response);
   displayWorkflow(response);
-  displayAgents(response);
   displayData(response);
   displayRelated(response);
   displayDashboardUrl(response);
@@ -48,7 +47,7 @@ function displayL0Response(response: L0Response): void {
 /**
  * Display code snippet with metadata
  */
-function displayCodeSnippet(response: L0Response): void {
+function displayCodeSnippet(response: MemoryResponse): void {
   if (!response.code) return;
 
   const boxContent = response.code;
@@ -80,31 +79,19 @@ function displayCodeSnippet(response: L0Response): void {
 /**
  * Display workflow steps
  */
-function displayWorkflow(response: L0Response): void {
+function displayWorkflow(response: MemoryResponse): void {
   if (!response.workflow) return;
 
-  console.log(chalk.blue.bold('\n📋 Orchestration Workflow:'));
+  console.log(chalk.blue.bold('\n📋 Workflow Steps:'));
   response.workflow.forEach((step, index) => {
     console.log(`  ${index + 1}. ${step}`);
   });
 }
 
 /**
- * Display agent delegation
- */
-function displayAgents(response: L0Response): void {
-  if (!response.agents) return;
-
-  console.log(chalk.green.bold('\n🤖 Agent Delegation:'));
-  response.agents.forEach((agent) => {
-    console.log(`  • ${agent}`);
-  });
-}
-
-/**
  * Display data payload
  */
-function displayData(response: L0Response): void {
+function displayData(response: MemoryResponse): void {
   if (!response.data || response.code || response.workflow) return;
 
   const content = typeof response.data === 'object' ? JSON.stringify(response.data, null, 2) : response.data;
@@ -121,7 +108,7 @@ function displayData(response: L0Response): void {
 /**
  * Display related items
  */
-function displayRelated(response: L0Response): void {
+function displayRelated(response: MemoryResponse): void {
   if (!response.related || response.related.length === 0) return;
 
   console.log(chalk.gray('\n✨ Related:'), response.related.map((r) => chalk.cyan(r)).join(', '));
@@ -130,7 +117,7 @@ function displayRelated(response: L0Response): void {
 /**
  * Display dashboard URL
  */
-function displayDashboardUrl(response: L0Response): void {
+function displayDashboardUrl(response: MemoryResponse): void {
   if (!response.dashboardUrl) return;
 
   console.log(chalk.gray(`🔗 View in dashboard: https://dashboard.vortexai.com${response.dashboardUrl}`));
@@ -180,23 +167,12 @@ interface MemoryOptions {
   limit: string;
 }
 
-interface CampaignOptions {
-  platforms?: string;
-  budget?: string;
-  duration?: string;
-}
-
-interface TrendsOptions {
-  timeframe: string;
-  location: string;
-}
-
 // ============================================================================
 // Command Registration
 // ============================================================================
 
 /**
- * Register L0 commands with the CLI program
+ * Register L0 memory concierge commands with the CLI program
  *
  * @param program - Commander.js program instance
  */
@@ -204,22 +180,21 @@ export const l0Commands = (program: Command): void => {
   const l0Cmd = program
     .command('l0')
     .alias('orchestrate')
-    .description(chalk.magenta.bold(`${VORTEX_EMOJI}  VortexAI L0 - Universal Work Orchestrator`))
+    .description(chalk.magenta.bold(`${VORTEX_EMOJI}  VortexAI L0 - Memory Concierge`))
     .action(() => {
-      console.log(chalk.magenta.bold(`\n${VORTEX_EMOJI}  VortexAI L0 - Universal Work Orchestrator`));
+      console.log(chalk.magenta.bold(`\n${VORTEX_EMOJI}  VortexAI L0 - Memory Concierge`));
       console.log(chalk.gray('═'.repeat(SEPARATOR_LENGTH)));
-      console.log('\n🎯 L0 orchestrates your entire workflow:');
-      console.log(chalk.cyan('  • Social media campaigns & viral content creation'));
-      console.log(chalk.cyan('  • Multi-platform content strategy & automation'));
-      console.log(chalk.cyan('  • Real-time trend analysis & competitor research'));
-      console.log(chalk.cyan('  • Code development & memory management'));
-      console.log(chalk.cyan('  • Multi-agent task coordination & delegation'));
-      console.log('\n🚀 Real-world orchestration examples:');
-      console.log(chalk.yellow('  vortex l0 "create viral TikTok campaign for eco-product"'));
-      console.log(chalk.yellow('  vortex l0 "analyze trending hashtags and create content calendar"'));
-      console.log(chalk.yellow('  vortex l0 "research competitors and update our Q4 strategy"'));
-      console.log(chalk.yellow('  vortex l0 code "social media scheduler component"'));
-      console.log("\n💫 L0 doesn't just answer. L0 orchestrates, delegates, and delivers.");
+      console.log('\n🧠 L0 orchestrates your memory and context:');
+      console.log(chalk.cyan('  • Memory capture and semantic search'));
+      console.log(chalk.cyan('  • Behavioral pattern recall'));
+      console.log(chalk.cyan('  • Code snippet retrieval'));
+      console.log(chalk.cyan('  • Context-aware workflow orchestration'));
+      console.log('\n🚀 Memory-first orchestration examples:');
+      console.log(chalk.yellow('  vortex l0 "remember that auth uses PKCE"'));
+      console.log(chalk.yellow('  vortex l0 memory "oauth implementation patterns"'));
+      console.log(chalk.yellow('  vortex l0 "recall deployment decisions"'));
+      console.log(chalk.yellow('  vortex l0 code "notification component"'));
+      console.log("\n💫 L0 doesn't just answer. L0 remembers, recalls, and delivers.");
       console.log('');
     });
 
@@ -230,7 +205,7 @@ export const l0Commands = (program: Command): void => {
     .option('-f, --format <type>', 'output format (text, json, workflow)', 'text')
     .action(async (query: string, options: QueryOptions) => {
       try {
-        const response = await l0Orchestrator.query(query, options);
+        const response = await memoryConcierge.query(query, options as any);
         if (options.format === 'json') {
           console.log(JSON.stringify(response, null, 2));
         } else {
@@ -242,16 +217,21 @@ export const l0Commands = (program: Command): void => {
     });
 
   l0Cmd
-    .command('code <description>')
-    .description('Get code snippets from L0 memory')
-    .option('-l, --language <lang>', 'filter by language')
-    .option('--copy', 'copy to clipboard automatically', true)
-    .action(async (description: string, options: CodeOptions) => {
+    .command('capture <text>')
+    .description('Capture a new memory or decision')
+    .option('-t, --type <type>', 'memory type (context, decision, pattern, reference)', 'context')
+    .option('-p, --project <name>', 'scope to a project')
+    .option('-f, --format <type>', 'output format (text, json)', 'text')
+    .action(async (text: string, options: { type: string; project?: string; format?: string }) => {
       try {
-        const response = await l0Orchestrator.findCode(description);
-        displayL0Response(response);
+        const response = await memoryConcierge.query(`remember: ${text}`, { project: options.project });
+        if (options.format === 'json') {
+          console.log(JSON.stringify(response, null, 2));
+        } else {
+          displayL0Response(response);
+        }
       } catch (error) {
-        handleError('Code search failed', error);
+        handleError('Memory capture failed', error);
       }
     });
 
@@ -262,7 +242,7 @@ export const l0Commands = (program: Command): void => {
     .option('-l, --limit <limit>', 'number of results', '5')
     .action(async (query: string, options: MemoryOptions) => {
       try {
-        const response = await l0Orchestrator.searchMemories(query);
+        const response = await memoryConcierge.search(query);
         displayL0Response(response);
       } catch (error) {
         handleError('Memory search failed', error);
@@ -270,33 +250,33 @@ export const l0Commands = (program: Command): void => {
     });
 
   l0Cmd
-    .command('campaign <objective>')
-    .description('Orchestrate social media campaign')
-    .option('-p, --platforms <list>', 'target platforms (comma-separated)')
-    .option('-b, --budget <amount>', 'campaign budget')
-    .option('-d, --duration <days>', 'campaign duration')
-    .action(async (objective: string, options: CampaignOptions) => {
+    .command('recall <query>')
+    .description('Recall behavioral patterns and past decisions')
+    .option('-f, --format <type>', 'output format (text, json)', 'text')
+    .action(async (query: string, options: { format?: string }) => {
       try {
-        const query = `social media campaign: ${objective}`;
-        const response = await l0Orchestrator.orchestrateCampaign(query);
-        displayL0Response(response);
+        const response = await memoryConcierge.recall(query);
+        if (options.format === 'json') {
+          console.log(JSON.stringify(response, null, 2));
+        } else {
+          displayL0Response(response);
+        }
       } catch (error) {
-        handleError('Campaign orchestration failed', error);
+        handleError('Pattern recall failed', error);
       }
     });
 
   l0Cmd
-    .command('trends [platform]')
-    .description('Analyze trending topics and hashtags')
-    .option('-t, --timeframe <period>', 'analysis timeframe (24h, 7d, 30d)', '24h')
-    .option('-l, --location <loc>', 'geographic location', 'global')
-    .action(async (platform = 'all', options: TrendsOptions) => {
+    .command('code <description>')
+    .description('Get code snippets from L0 memory')
+    .option('-l, --language <lang>', 'filter by language')
+    .option('--copy', 'copy to clipboard automatically', true)
+    .action(async (description: string, options: CodeOptions) => {
       try {
-        const query = `analyze trends for ${platform} platform`;
-        const response = await l0Orchestrator.analyzeTrends(query);
+        const response = await memoryConcierge.findSnippet(description);
         displayL0Response(response);
       } catch (error) {
-        handleError('Trend analysis failed', error);
+        handleError('Code search failed', error);
       }
     });
 
@@ -305,7 +285,7 @@ export const l0Commands = (program: Command): void => {
     .description('Get help and guidance from L0')
     .action(async (topic: string) => {
       try {
-        const response = await l0Orchestrator.getHelp(topic);
+        const response = await memoryConcierge.getHelp(topic);
         displayL0Response(response);
       } catch (error) {
         handleError('Help request failed', error);
@@ -340,8 +320,8 @@ export const l0Commands = (program: Command): void => {
 
       plugins.forEach((plugin) => {
         const status = plugin.enabled ? chalk.green('●') : chalk.gray('○');
-        console.log(`${status} ${chalk.bold(plugin.name)} ${chalk.gray(`v${plugin.version}`)}`);
-        console.log(`  ${chalk.dim(plugin.description)}`);
+        console.log(`${status} ${chalk.bold(plugin.metadata.name)} ${chalk.gray(`v${plugin.metadata.version}`)}`);
+        console.log(`  ${chalk.dim(plugin.metadata.description)}`);
         console.log(`  ${chalk.cyan('Triggers:')} ${plugin.triggers.join(', ')}`);
         console.log('');
       });
