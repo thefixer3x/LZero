@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { MemoryConcierge } from './concierge.js';
-import { executeConciergeRequest } from './concierge-executor.js';
+import { executeConciergeRequest, conversationSessionId } from './concierge-executor.js';
 import type { ConciergeRequest } from './concierge-contract.js';
 
 function sampleRequest(text: string): ConciergeRequest {
@@ -86,6 +86,44 @@ describe('Memory concierge orchestration', () => {
     expect(headers['X-API-Key']).toBe('lano_test123');
     // Never send a lano_ key as Bearer.
     expect(headers['Authorization']).toBeUndefined();
+  });
+
+  it('sends a session_id so the router can keep the conversation', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(routerResponse('ok'));
+    vi.stubGlobal('fetch', fetchMock);
+
+    await executeConciergeRequest({
+      request: sampleRequest('summarise those'),
+      memoryApiUrl: 'https://api.lanonasis.com',
+      aiRouterUrl: 'https://ai.vortexcore.app',
+      memoryAuthToken: 'user-concierge-token',
+    });
+
+    const body = JSON.parse(fetchMock.mock.calls[0][1].body);
+    expect(body.session_id).toBe('slack:T123:C123:dm:U123');
+    expect(body.use_case).toBe('memory-analysis');
+    // The linked user's own token, as Bearer — the router forwards exactly this to memory.
+    expect(fetchMock.mock.calls[0][1].headers.Authorization).toBe('Bearer user-concierge-token');
+  });
+
+  it('keys DMs per user (stable across messages) and channels per thread', () => {
+    const dm1 = sampleRequest('a');
+    const dm2 = { ...sampleRequest('b'), conversation: { ...sampleRequest('b').conversation, threadId: 'ts-2', messageId: 'ts-2' } };
+    expect(conversationSessionId(dm1)).toBe(conversationSessionId(dm2));
+
+    const thread = (ts: string) => ({
+      ...sampleRequest('x'),
+      conversation: { channelId: 'C9', threadId: ts, messageId: 'm', conversationId: 'T123:C9', isDirectMessage: false },
+    });
+    expect(conversationSessionId(thread('1700000000.0001'))).toBe('slack:T123:C9:1700000000.0001');
+    expect(conversationSessionId(thread('1700000000.0001'))).not.toBe(conversationSessionId(thread('1700000000.0002')));
+  });
+
+  it('sanitises the session id to the router contract and omits it when ids are missing', () => {
+    const odd = { ...sampleRequest('x'), user: { ...sampleRequest('x').user, externalUserId: 'U 1/é' } };
+    expect(conversationSessionId(odd)).toMatch(/^[A-Za-z0-9._:-]{8,128}$/);
+    const noChannel = { ...sampleRequest('x'), conversation: { ...sampleRequest('x').conversation, channelId: '' } };
+    expect(conversationSessionId(noChannel)).toBeUndefined();
   });
 
   it('falls back to the MaaS memory template when the router fails', async () => {
