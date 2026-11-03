@@ -124,6 +124,24 @@ describe('Memory concierge orchestration', () => {
     expect(conversationSessionId(odd)).toMatch(/^[A-Za-z0-9._:-]{8,128}$/);
     const noChannel = { ...sampleRequest('x'), conversation: { ...sampleRequest('x').conversation, channelId: '' } };
     expect(conversationSessionId(noChannel)).toBeUndefined();
+    const noDmUser = { ...sampleRequest('x'), user: { ...sampleRequest('x').user, externalUserId: '', internalUserId: '' } };
+    expect(conversationSessionId(noDmUser)).toBeUndefined();
+  });
+
+  it('omits session_id from the router body when no session key derives', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(routerResponse('ok'));
+    vi.stubGlobal('fetch', fetchMock);
+
+    const noChannel = { ...sampleRequest('x'), conversation: { ...sampleRequest('x').conversation, channelId: '' } };
+    await executeConciergeRequest({
+      request: noChannel,
+      memoryApiUrl: 'https://api.lanonasis.com',
+      aiRouterUrl: 'https://ai.vortexcore.app',
+      memoryAuthToken: 'user-concierge-token',
+    });
+
+    const body = JSON.parse(fetchMock.mock.calls[0][1].body);
+    expect(body).not.toHaveProperty('session_id');
   });
 
   it('falls back to the MaaS memory template when the router fails', async () => {

@@ -213,8 +213,9 @@ function withSpeakerContext(
 export function conversationSessionId(request: ConciergeRequest): string | undefined {
   const { user, conversation } = request;
   if (!user?.source || !user.workspaceId || !conversation?.channelId) return undefined;
+  const dmUser = user.externalUserId || user.internalUserId;
   const tail = conversation.isDirectMessage
-    ? `dm:${user.externalUserId || user.internalUserId}`
+    ? (dmUser ? `dm:${dmUser}` : '')
     : conversation.threadId || conversation.messageId;
   if (!tail) return undefined;
   const id = [user.source, user.workspaceId, conversation.channelId, tail]
