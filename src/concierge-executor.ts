@@ -190,10 +190,47 @@ function withSpeakerContext(
   return `(You are speaking with ${known}${alias}. Use their name when it reads naturally.)\n\n${text}`;
 }
 
+/**
+ * Stable conversation id for the router's opt-in session memory.
+ *
+ * The router keeps the last few turns of a conversation (TTL ~30 min) when a
+ * request carries `session_id`, so a follow-up like "summarise those" reaches
+ * the model with the turn it refers to. Without it every Slack message was
+ * answered in isolation.
+ *
+ * Shape: `{source}:{workspace}:{channel}:{thread | dm:user}`.
+ *  - Channel threads key on the thread: everyone in a thread shares the
+ *    conversation's context, but the ROUTER also scopes by the caller's
+ *    resolved identity, so two people in one thread never see each other's
+ *    restored turns.
+ *  - DMs key on the user. Slack sets threadId to the message's own ts when
+ *    there is no thread and DM replies are not threaded, so keying a DM on
+ *    threadId would start a new session on every message.
+ *
+ * Router contract: 8–128 chars of [A-Za-z0-9._:-]; anything else is replaced.
+ * Exported for tests.
+ */
+export function conversationSessionId(request: ConciergeRequest): string | undefined {
+  const { user, conversation } = request;
+  if (!user?.source || !user.workspaceId || !conversation?.channelId) return undefined;
+  const dmUser = user.externalUserId || user.internalUserId;
+  const tail = conversation.isDirectMessage
+    ? (dmUser ? `dm:${dmUser}` : '')
+    : conversation.threadId || conversation.messageId;
+  if (!tail) return undefined;
+  const id = [user.source, user.workspaceId, conversation.channelId, tail]
+    .join(':')
+    .replace(/[^A-Za-z0-9._:-]/g, '-')
+    .slice(0, 128);
+  return id.length >= 8 ? id : undefined;
+}
+
 async function callAIRouter(ctx: ConciergeExecutionContext): Promise<string> {
   const { request, memoryAuthToken } = ctx;
   const baseUrl = (ctx.aiRouterUrl || getEnvVar('AI_ROUTER_URL') || DEFAULT_AI_ROUTER_URL).trim().replace(/\/+$/, '');
   const timeoutMs = ctx.aiRouterTimeoutMs ?? parseInt(getEnvVar('AI_ROUTER_TIMEOUT_MS') || String(DEFAULT_AI_ROUTER_TIMEOUT_MS), 10);
+
+  const sessionId = conversationSessionId(request);
 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
@@ -207,6 +244,8 @@ async function callAIRouter(ctx: ConciergeExecutionContext): Promise<string> {
       },
       body: JSON.stringify({
         use_case: 'memory-analysis',
+        // Opt-in conversation continuity; ignored by routers that predate it.
+        ...(sessionId ? { session_id: sessionId } : {}),
         messages: [{
           role: 'user',
           content: withSpeakerContext(
